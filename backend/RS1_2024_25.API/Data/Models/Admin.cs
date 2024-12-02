@@ -2,16 +2,8 @@
 
 namespace RS1_2024_25.API.Data.Models
 {
-    public class Admin
+    public class Admin: UserAccount
     {
-        public int AdminId { get; set; } 
-        public string Name { get; set; } 
-        public string Surname { get; set; }
-        public string Address { get; set; }
-        public string Email { get; set; }
-
-
-        
-    
+       public string AdminLevel { get; set; }
     }
 }
