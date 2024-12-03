@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RS1_2024_25.API.Data;
 
@@ -11,9 +12,11 @@ using RS1_2024_25.API.Data;
 namespace RS1_2024_25.API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241202135855_DataSeedOrder")]
+    partial class DataSeedOrder
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -625,78 +628,6 @@ namespace RS1_2024_25.API.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("FAQs");
-
-                    b.HasData(
-                        new
-                        {
-                            FAQId = 1,
-                            Answer = "Koristite našu pretragu po modelu vozila ili kontaktirajte podršku za pomoć.",
-                            Question = "Kako da pronađem pravi dio za moje vozilo?",
-                            UserId = 2
-                        },
-                        new
-                        {
-                            FAQId = 2,
-                            Answer = "You can track your order using the tracking number sent to your email.",
-                            Question = "How can I track my order?",
-                            UserId = 3
-                        },
-                        new
-                        {
-                            FAQId = 3,
-                            Answer = "Da, povrat novca je moguć unutar 30 dana uz dostavljen dokaz o kupovini.",
-                            Question = "Da li nudite povrat novca za neispravne dijelove?",
-                            UserId = 2
-                        },
-                        new
-                        {
-                            FAQId = 4,
-                            Answer = "We accept card payments, cash on delivery, and bank transfers.",
-                            Question = "What payment methods are available?",
-                            UserId = 3
-                        },
-                        new
-                        {
-                            FAQId = 5,
-                            Answer = "Dostava obično traje 3-5 radnih dana, u zavisnosti od lokacije.",
-                            Question = "Koliko traje dostava?",
-                            UserId = 2
-                        },
-                        new
-                        {
-                            FAQId = 6,
-                            Answer = "Yes, you can return unused parts within 15 days of delivery.",
-                            Question = "Can I return a part if it doesn't fit my vehicle?",
-                            UserId = 3
-                        },
-                        new
-                        {
-                            FAQId = 7,
-                            Answer = "Da, popusti su dostupni za narudžbe veće od 500 BAM. Kontaktirajte nas za detalje.",
-                            Question = "Da li nudite popuste za veće narudžbe?",
-                            UserId = 2
-                        },
-                        new
-                        {
-                            FAQId = 8,
-                            Answer = "Please contact our support team immediately, and we will arrange for a replacement.",
-                            Question = "What should I do if I receive the wrong part?",
-                            UserId = 3
-                        },
-                        new
-                        {
-                            FAQId = 9,
-                            Answer = "Nažalost, trenutno nudimo samo online naručivanje i dostavu.",
-                            Question = "Da li je moguće preuzimanje dijelova u prodavnici?",
-                            UserId = 2
-                        },
-                        new
-                        {
-                            FAQId = 10,
-                            Answer = "Currently, we only ship within Bosnia and Herzegovina.",
-                            Question = "Do you ship internationally?",
-                            UserId = 3
-                        });
                 });
 
             modelBuilder.Entity("RS1_2024_25.API.Data.Models.Gender", b =>
@@ -993,128 +924,6 @@ namespace RS1_2024_25.API.Migrations
                     b.HasIndex("PartId");
 
                     b.ToTable("OrderItems");
-
-                    b.HasData(
-                        new
-                        {
-                            OrderItemId = 1,
-                            OrderId = 1,
-                            PartId = 1,
-                            Price = 45.0,
-                            Quantity = 1
-                        },
-                        new
-                        {
-                            OrderItemId = 2,
-                            OrderId = 1,
-                            PartId = 2,
-                            Price = 90.0,
-                            Quantity = 2
-                        },
-                        new
-                        {
-                            OrderItemId = 3,
-                            OrderId = 2,
-                            PartId = 3,
-                            Price = 15.0,
-                            Quantity = 1
-                        },
-                        new
-                        {
-                            OrderItemId = 4,
-                            OrderId = 2,
-                            PartId = 4,
-                            Price = 70.0,
-                            Quantity = 1
-                        },
-                        new
-                        {
-                            OrderItemId = 5,
-                            OrderId = 3,
-                            PartId = 5,
-                            Price = 25.0,
-                            Quantity = 1
-                        },
-                        new
-                        {
-                            OrderItemId = 6,
-                            OrderId = 3,
-                            PartId = 6,
-                            Price = 20.0,
-                            Quantity = 1
-                        },
-                        new
-                        {
-                            OrderItemId = 7,
-                            OrderId = 4,
-                            PartId = 7,
-                            Price = 50.0,
-                            Quantity = 2
-                        },
-                        new
-                        {
-                            OrderItemId = 8,
-                            OrderId = 4,
-                            PartId = 8,
-                            Price = 40.0,
-                            Quantity = 4
-                        },
-                        new
-                        {
-                            OrderItemId = 9,
-                            OrderId = 5,
-                            PartId = 9,
-                            Price = 150.0,
-                            Quantity = 1
-                        },
-                        new
-                        {
-                            OrderItemId = 10,
-                            OrderId = 5,
-                            PartId = 10,
-                            Price = 30.0,
-                            Quantity = 1
-                        },
-                        new
-                        {
-                            OrderItemId = 11,
-                            OrderId = 6,
-                            PartId = 11,
-                            Price = 100.0,
-                            Quantity = 2
-                        },
-                        new
-                        {
-                            OrderItemId = 12,
-                            OrderId = 6,
-                            PartId = 12,
-                            Price = 35.0,
-                            Quantity = 1
-                        },
-                        new
-                        {
-                            OrderItemId = 13,
-                            OrderId = 7,
-                            PartId = 13,
-                            Price = 200.0,
-                            Quantity = 1
-                        },
-                        new
-                        {
-                            OrderItemId = 14,
-                            OrderId = 8,
-                            PartId = 14,
-                            Price = 250.0,
-                            Quantity = 1
-                        },
-                        new
-                        {
-                            OrderItemId = 15,
-                            OrderId = 9,
-                            PartId = 15,
-                            Price = 20.0,
-                            Quantity = 1
-                        });
                 });
 
             modelBuilder.Entity("RS1_2024_25.API.Data.Models.Part", b =>
@@ -1406,6 +1215,7 @@ namespace RS1_2024_25.API.Migrations
                         .HasColumnType("int");
 
                     b.Property<byte[]>("Picture")
+                        .IsRequired()
                         .HasColumnType("varbinary(max)");
 
                     b.Property<string>("Text")
@@ -1422,64 +1232,6 @@ namespace RS1_2024_25.API.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Reviews");
-
-                    b.HasData(
-                        new
-                        {
-                            ReviewId = 1,
-                            Date = new DateTime(2023, 1, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            PartId = 1,
-                            Text = "Odličan kvalitet kočnica, stigle brzo i lako ih je bilo ugraditi.",
-                            UserId = 2
-                        },
-                        new
-                        {
-                            ReviewId = 2,
-                            Date = new DateTime(2023, 2, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            PartId = 2,
-                            Text = "Ovjes je perfektan, poboljšana stabilnost auta. Preporučujem!",
-                            UserId = 3
-                        },
-                        new
-                        {
-                            ReviewId = 3,
-                            Date = new DateTime(2023, 3, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            PartId = 3,
-                            Text = "Filter ulja je odličan, jednostavan za instalaciju i povoljan.",
-                            UserId = 2
-                        },
-                        new
-                        {
-                            ReviewId = 4,
-                            Date = new DateTime(2023, 4, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            PartId = 4,
-                            Text = "Cijev za auspuh savršeno odgovara. Bez problema je montirana.",
-                            UserId = 3
-                        },
-                        new
-                        {
-                            ReviewId = 5,
-                            Date = new DateTime(2023, 5, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            PartId = 5,
-                            Text = "Crijevo rashladnog sistema odlično obavlja posao. Dostava na vrijeme.",
-                            UserId = 2
-                        },
-                        new
-                        {
-                            ReviewId = 6,
-                            Date = new DateTime(2023, 6, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            PartId = 6,
-                            Text = "Zračni filter je povećao efikasnost motora. Zadovoljan kupovinom.",
-                            UserId = 3
-                        },
-                        new
-                        {
-                            ReviewId = 7,
-                            Date = new DateTime(2023, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            PartId = 7,
-                            Text = "Amortizeri su vrhunski. Auto je sada puno stabilniji.",
-                            UserId = 2
-                        });
                 });
 
             modelBuilder.Entity("RS1_2024_25.API.Data.Models.Status", b =>

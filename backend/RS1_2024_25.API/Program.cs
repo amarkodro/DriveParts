@@ -1,5 +1,6 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using RS1_2024_25.API.Data;
+using RS1_2024_25.API.Data.Models;
 using RS1_2024_25.API.Helper;
 using RS1_2024_25.API.Helper.Auth;
 using RS1_2024_25.API.Services;
@@ -22,7 +23,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(x => x.OperationFilter<MyAuthorizationSwaggerHeader>());
 builder.Services.AddHttpContextAccessor();
 
-//dodajte va�e servise
+//dodajte vaše servise
 builder.Services.AddTransient<MyAuthService>();
 builder.Services.AddTransient<MyTokenGenerator>();
 
@@ -40,6 +41,28 @@ app.UseCors(
         .AllowCredentials()
 ); //This needs to set everything allowed
 
+
+app.Run(async (context) =>
+{
+    using (var scope = app.Services.CreateScope())
+    {
+        var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+        // Dodavanje novog admina
+        var admin = new Admin
+        {
+            Name = "John",
+            Surname = "Doe",
+            Address = "123 Test Street",
+            Email = "john.doe@example.com"
+        };
+
+        dbContext.Admins.Add(admin);
+        await dbContext.SaveChangesAsync();
+
+        await context.Response.WriteAsync("Admin added successfully!");
+    }
+});
 
 app.UseAuthorization();
 
