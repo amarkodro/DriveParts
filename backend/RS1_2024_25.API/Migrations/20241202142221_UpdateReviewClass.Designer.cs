@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RS1_2024_25.API.Data;
 
@@ -11,9 +12,11 @@ using RS1_2024_25.API.Data;
 namespace RS1_2024_25.API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241202142221_UpdateReviewClass")]
+    partial class UpdateReviewClass
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1422,64 +1425,6 @@ namespace RS1_2024_25.API.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Reviews");
-
-                    b.HasData(
-                        new
-                        {
-                            ReviewId = 1,
-                            Date = new DateTime(2023, 1, 11, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            PartId = 1,
-                            Text = "Odličan kvalitet kočnica, stigle brzo i lako ih je bilo ugraditi.",
-                            UserId = 2
-                        },
-                        new
-                        {
-                            ReviewId = 2,
-                            Date = new DateTime(2023, 2, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            PartId = 2,
-                            Text = "Ovjes je perfektan, poboljšana stabilnost auta. Preporučujem!",
-                            UserId = 3
-                        },
-                        new
-                        {
-                            ReviewId = 3,
-                            Date = new DateTime(2023, 3, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            PartId = 3,
-                            Text = "Filter ulja je odličan, jednostavan za instalaciju i povoljan.",
-                            UserId = 2
-                        },
-                        new
-                        {
-                            ReviewId = 4,
-                            Date = new DateTime(2023, 4, 20, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            PartId = 4,
-                            Text = "Cijev za auspuh savršeno odgovara. Bez problema je montirana.",
-                            UserId = 3
-                        },
-                        new
-                        {
-                            ReviewId = 5,
-                            Date = new DateTime(2023, 5, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            PartId = 5,
-                            Text = "Crijevo rashladnog sistema odlično obavlja posao. Dostava na vrijeme.",
-                            UserId = 2
-                        },
-                        new
-                        {
-                            ReviewId = 6,
-                            Date = new DateTime(2023, 6, 25, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            PartId = 6,
-                            Text = "Zračni filter je povećao efikasnost motora. Zadovoljan kupovinom.",
-                            UserId = 3
-                        },
-                        new
-                        {
-                            ReviewId = 7,
-                            Date = new DateTime(2023, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            PartId = 7,
-                            Text = "Amortizeri su vrhunski. Auto je sada puno stabilniji.",
-                            UserId = 2
-                        });
                 });
 
             modelBuilder.Entity("RS1_2024_25.API.Data.Models.Status", b =>
