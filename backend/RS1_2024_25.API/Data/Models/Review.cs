@@ -14,7 +14,7 @@ namespace RS1_2024_25.API.Data.Models
         public Part Part { get; set; }
 
         public string Text { get; set; }
-        public byte[]? Slika { get; set; }
+        public byte[]? Picture { get; set; }
 
     }
 }
