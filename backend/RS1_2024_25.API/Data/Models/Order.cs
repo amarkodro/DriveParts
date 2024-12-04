@@ -20,5 +20,9 @@ namespace RS1_2024_25.API.Data.Models
         public int SupplierId { get; set; }
         public Supplier Supplier { get; set; }
 
+        [ForeignKey(nameof(Payment))]
+        public int PaymentId { get; set; }
+        public Payment Payment { get; set; }
+
     }
 }

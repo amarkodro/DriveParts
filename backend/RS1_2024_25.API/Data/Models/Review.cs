@@ -5,6 +5,9 @@ namespace RS1_2024_25.API.Data.Models
     public class Review
     {
         public int ReviewId { get; set; }
+
+        public DateTime Date {  get; set; }
+
         [ForeignKey(nameof(User))]
         public int UserId { get; set; }
         public User User { get; set; }

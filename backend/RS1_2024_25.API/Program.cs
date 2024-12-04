@@ -41,6 +41,9 @@ app.UseCors(
 ); //This needs to set everything allowed
 
 
+
+
+
 app.UseAuthorization();
 
 app.MapControllers();

@@ -13,6 +13,24 @@ namespace RS1_2024_25.API.Data
         public DbSet<MyAuthenticationToken> MyAuthenticationTokens { get; set; }
         public DbSet<Journey> Journeys { get; set; }
 
+        public DbSet<Admin> Admins { get; set; }
+        public DbSet<Car> Cars { get; set; }
+        public DbSet<CarEngine> CarEngines { get; set; }
+        public DbSet<Engine> Engines { get; set; }
+        public DbSet<FAQ> FAQs { get; set; }
+        public DbSet<Gender> Genders { get; set; }
+        public DbSet<Manufacturer> Manufacturers { get; set; }
+        public DbSet<Payment> Payments { get; set; }
+        public DbSet<Supplier> Suppliers { get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<UserAccount> UserAccounts { get; set; }
+        public DbSet<Category> Categories { get; set; }
+        public DbSet<Status> Statuses { get; set; }
+        public DbSet<Part> Parts { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderItem> OrderItems { get; set; }
+        public DbSet<Review> Reviews { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -21,6 +39,10 @@ namespace RS1_2024_25.API.Data
             {
                 relationship.DeleteBehavior = DeleteBehavior.NoAction;
             }
+
+            base.OnModelCreating(modelBuilder);
+           var dataSeeder = new DataSeeder();
+            dataSeeder.DataSeed(modelBuilder);
 
             // opcija kod nasljeđivanja
             // modelBuilder.Entity<NekaBaznaKlasa>().UseTpcMappingStrategy();
