@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using RS1_2024_25.API.Data;
+using RS1_2024_25.API.Data.Models;
 using RS1_2024_25.API.Data.Models.Auth;
 using RS1_2024_25.API.Helper;
 
@@ -84,6 +85,11 @@ namespace RS1_2024_25.API.Services
                 IsManager = myAuthToken.MyAppUser.IsManager,
                 IsLoggedIn = true
             };
+        }
+
+        internal async Task<MyAuthenticationToken?> GenerateAuthToken(UserAccount loggedInUser, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
         }
     }
 

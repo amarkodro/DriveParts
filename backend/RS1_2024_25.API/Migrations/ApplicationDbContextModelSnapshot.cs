@@ -1164,7 +1164,7 @@ namespace RS1_2024_25.API.Migrations
                             Description = "High-quality brake pads for Golf",
                             ManufacturerId = 1,
                             Name = "Brake Pads",
-                            Price = 0.0
+                            Price = 85.0
                         },
                         new
                         {
@@ -1174,7 +1174,7 @@ namespace RS1_2024_25.API.Migrations
                             Description = "Durable suspension springs for Q5",
                             ManufacturerId = 2,
                             Name = "Suspension Springs",
-                            Price = 0.0
+                            Price = 220.0
                         },
                         new
                         {
@@ -1184,7 +1184,7 @@ namespace RS1_2024_25.API.Migrations
                             Description = "Oil filter suitable for Clio engines",
                             ManufacturerId = 3,
                             Name = "Engine Oil Filter",
-                            Price = 0.0
+                            Price = 25.0
                         },
                         new
                         {
@@ -1194,7 +1194,7 @@ namespace RS1_2024_25.API.Migrations
                             Description = "Rust-resistant exhaust pipe for 508",
                             ManufacturerId = 4,
                             Name = "Exhaust Pipe",
-                            Price = 0.0
+                            Price = 300.0
                         },
                         new
                         {
@@ -1204,7 +1204,7 @@ namespace RS1_2024_25.API.Migrations
                             Description = "High-performance coolant hose for Panda",
                             ManufacturerId = 5,
                             Name = "Coolant Hose",
-                            Price = 0.0
+                            Price = 40.0
                         },
                         new
                         {
@@ -1214,7 +1214,7 @@ namespace RS1_2024_25.API.Migrations
                             Description = "Improves air intake efficiency for Golf",
                             ManufacturerId = 6,
                             Name = "Air Filter",
-                            Price = 0.0
+                            Price = 35.0
                         },
                         new
                         {
@@ -1224,7 +1224,7 @@ namespace RS1_2024_25.API.Migrations
                             Description = "Enhanced suspension system for Q5",
                             ManufacturerId = 7,
                             Name = "Shock Absorber",
-                            Price = 0.0
+                            Price = 250.0
                         },
                         new
                         {
@@ -1234,7 +1234,7 @@ namespace RS1_2024_25.API.Migrations
                             Description = "High-performance spark plugs for Clio",
                             ManufacturerId = 8,
                             Name = "Spark Plugs",
-                            Price = 0.0
+                            Price = 50.0
                         },
                         new
                         {
@@ -1244,7 +1244,7 @@ namespace RS1_2024_25.API.Migrations
                             Description = "Eco-friendly exhaust component for 508",
                             ManufacturerId = 1,
                             Name = "Catalytic Converter",
-                            Price = 0.0
+                            Price = 450.0
                         },
                         new
                         {
@@ -1254,7 +1254,7 @@ namespace RS1_2024_25.API.Migrations
                             Description = "Premium oil for Panda engines",
                             ManufacturerId = 2,
                             Name = "Engine Oil",
-                            Price = 0.0
+                            Price = 90.0
                         },
                         new
                         {
@@ -1264,7 +1264,7 @@ namespace RS1_2024_25.API.Migrations
                             Description = "Front brake discs for Golf",
                             ManufacturerId = 3,
                             Name = "Brake Discs",
-                            Price = 0.0
+                            Price = 150.0
                         },
                         new
                         {
@@ -1274,7 +1274,7 @@ namespace RS1_2024_25.API.Migrations
                             Description = "Steering system component for Q5",
                             ManufacturerId = 4,
                             Name = "Tie Rod Ends",
-                            Price = 0.0
+                            Price = 180.0
                         },
                         new
                         {
@@ -1284,7 +1284,7 @@ namespace RS1_2024_25.API.Migrations
                             Description = "Efficient fuel pump for Clio",
                             ManufacturerId = 5,
                             Name = "Fuel Pump",
-                            Price = 0.0
+                            Price = 220.0
                         },
                         new
                         {
@@ -1294,7 +1294,7 @@ namespace RS1_2024_25.API.Migrations
                             Description = "Boost engine power for 508",
                             ManufacturerId = 6,
                             Name = "Turbocharger",
-                            Price = 0.0
+                            Price = 1000.0
                         },
                         new
                         {
@@ -1304,7 +1304,7 @@ namespace RS1_2024_25.API.Migrations
                             Description = "All-weather wipers for Panda",
                             ManufacturerId = 7,
                             Name = "Windshield Wipers",
-                            Price = 0.0
+                            Price = 25.0
                         },
                         new
                         {
@@ -1314,7 +1314,7 @@ namespace RS1_2024_25.API.Migrations
                             Description = "High-efficiency radiator for Golf",
                             ManufacturerId = 8,
                             Name = "Radiator",
-                            Price = 0.0
+                            Price = 300.0
                         },
                         new
                         {
@@ -1324,7 +1324,7 @@ namespace RS1_2024_25.API.Migrations
                             Description = "Stable suspension arms for Q5",
                             ManufacturerId = 1,
                             Name = "Control Arms",
-                            Price = 0.0
+                            Price = 350.0
                         },
                         new
                         {
@@ -1334,7 +1334,7 @@ namespace RS1_2024_25.API.Migrations
                             Description = "Reliable ignition coil for Clio",
                             ManufacturerId = 2,
                             Name = "Ignition Coil",
-                            Price = 0.0
+                            Price = 75.0
                         },
                         new
                         {
@@ -1344,7 +1344,7 @@ namespace RS1_2024_25.API.Migrations
                             Description = "Bright and durable headlights for 508",
                             ManufacturerId = 3,
                             Name = "Headlight Assembly",
-                            Price = 0.0
+                            Price = 400.0
                         },
                         new
                         {
@@ -1354,7 +1354,7 @@ namespace RS1_2024_25.API.Migrations
                             Description = "Long-lasting battery for Panda",
                             ManufacturerId = 4,
                             Name = "Battery",
-                            Price = 0.0
+                            Price = 180.0
                         });
                 });
 
@@ -1366,11 +1366,9 @@ namespace RS1_2024_25.API.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PaymentId"));
 
-                    b.Property<bool>("IsCard")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsCash")
-                        .HasColumnType("bit");
+                    b.Property<string>("PaymentMethod")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("PaymentId");
 
@@ -1380,14 +1378,12 @@ namespace RS1_2024_25.API.Migrations
                         new
                         {
                             PaymentId = 1,
-                            IsCard = true,
-                            IsCash = false
+                            PaymentMethod = "Card"
                         },
                         new
                         {
                             PaymentId = 2,
-                            IsCard = false,
-                            IsCash = true
+                            PaymentMethod = "Cash"
                         });
                 });
 
