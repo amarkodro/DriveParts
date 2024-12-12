@@ -1,0 +1,180 @@
+﻿using RS1_2024_25.API.Data;
+using RS1_2024_25.API.Data.Models;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Collections;
+using System.Net;
+
+namespace RS1_2024_25.API.Endpoints
+{
+
+    [Route("api/[controller]")]
+    [ApiController]
+    public class UsersController(ApplicationDbContext _db) : ControllerBase
+    {
+        public class UserRequest
+        {
+            public string Name { get; set; }
+            public string Surname { get; set; }
+            public string Email { get; set; }
+            public string PhoneNumber { get; set; }
+            public string Address { get; set; }
+            public string Username { get; set; }
+            public string Password { get; set; }
+            public bool IsAdmin { get; set; }
+            public bool isUser { get; set; }
+            public bool is2FActive { get; set; }
+            public int GenderId { get; set; }
+            public int CityId { get; set; }
+        }
+
+        public class UserResponse
+        {
+            public int Id { get; set; }
+            public string Name { get; set; }
+            public string Surname { get; set; }
+            public string Email { get; set; }
+            public string PhoneNumber { get; set; }
+            public string Address { get; set; }
+            public string Username { get; set; }
+            public string Password { get; set; }
+            public bool IsAdmin { get; set; }
+            public bool isUser { get; set; }
+            public bool is2FActive { get; set; }
+            public int GenderId { get; set; }
+            public string GenderName { get; set; }
+            public int CityId { get; set; }
+            public string CityName { get; set; }
+        }
+
+        //Get : api/User
+
+        [HttpGet]
+        public ActionResult<UserResponse[]> GetUsers()
+        {
+            var users = _db.Users
+                   .Include(c => c.Gender).Include(c => c.City)
+                   .Select(c => new UserResponse
+                   {
+                       Id = c.Id,
+                       Name = c.Name,
+                       Surname = c.Surname,
+                       Email = c.Email,
+                       PhoneNumber = c.PhoneNumber,
+                       Address = c.Address,
+                       Username = c.Username,
+                       Password = c.Password,
+                       IsAdmin = c.IsAdmin,
+                       isUser = c.isUser,
+                       is2FActive = c.is2FActive,
+                       GenderName = c.Gender != null ? c.Gender.GenderName : "Unknown",
+                       CityName = c.City != null ? c.City.Name : "Unknown"
+                   }).ToArray();
+
+            return users;
+        }
+
+        // GET: api/User/5
+        [HttpGet("{id}")]
+        public ActionResult<UserResponse> GetUser(int id)
+        {
+            var user = _db.Users
+                 .Include(c => c.Gender).Include(c => c.City)
+                 .Where(c => id == c.Id)
+                 .Select(c => new UserResponse
+                 {
+                     Id = c.Id,
+                     Name = c.Name,
+                     Surname = c.Surname,
+                     Email = c.Email,
+                     PhoneNumber = c.PhoneNumber,
+                     Address = c.Address,
+                     Username = c.Username,
+                     Password = c.Password,
+                     IsAdmin = c.IsAdmin,
+                     isUser = c.isUser,
+                     is2FActive = c.is2FActive,
+                     GenderName = c.Gender != null ? c.Gender.GenderName : "Unknown",
+                     CityName = c.City != null ? c.City.Name : "Unknown"
+
+                 }).First();
+
+            return user;
+        }
+
+        //POST: api/User
+        [HttpPost]
+        public ActionResult<UserResponse> PostUser(UserRequest request)
+        {
+            var user = new User
+            {
+                Name = request.Name,
+                Surname = request.Surname,
+                Email = request.Email,
+                PhoneNumber = request.PhoneNumber,
+                Address = request.Address,
+                Username = request.Username,
+                Password = request.Password,
+                IsAdmin = request.IsAdmin,
+                isUser = request.isUser,
+                is2FActive = request.is2FActive,
+                GenderId = request.GenderId,
+                CityId = request.CityId,
+            };
+
+            _db.Users.Add(user);
+            _db.SaveChanges();
+
+            var response = new UserResponse
+            {
+                Name = user.Name,
+                Surname = user.Surname,
+                Email = user.Email,
+                PhoneNumber = user.PhoneNumber,
+                Address = user.Address,
+                Username = user.Username,
+                Password = user.Password,
+                IsAdmin = user.IsAdmin,
+                isUser = user.isUser,
+                is2FActive = user.is2FActive,
+                GenderName = _db.Genders.Find(user.CityId)?.GenderName ?? "Unknown",
+                CityName = _db.Users.Find(user.CityId)?.Name ?? "Unknown"
+            };
+
+            return Ok(response);
+        }
+
+        //PUT: api/User/5
+        [HttpPut("{id}")]
+        public ActionResult<string> PutUser(int id, UserRequest request)
+        {
+            var user = _db.Users.Find(id) ?? throw new KeyNotFoundException("User not found");
+
+            user.Name = request.Name;
+            user.Surname = request.Surname;
+            user.Email = request.Email;
+            user.PhoneNumber = request.PhoneNumber;
+            user.Address = request.Address;
+            user.Username = request.Username;
+            user.Password = request.Password;
+            user.is2FActive = request.is2FActive;
+           
+            _db.SaveChanges();
+
+            return Ok("User updated successfully");
+        }
+
+
+        [HttpDelete("{id}")]
+        public ActionResult<string> DeleteUser(int id)
+        {
+            var user = _db.Users.Find(id) ?? throw new KeyNotFoundException("User not found");
+
+            _db.Users.Remove(user);
+            _db.SaveChanges();
+
+            return Ok("User deleted successfully");
+        }
+    }
+}
