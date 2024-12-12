@@ -7,7 +7,7 @@ namespace RS1_2024_25.API.Endpoints
 {
     [Route("api/controller")]
     [ApiController]
-    public class PartController(ApplicationDbContext _db) : ControllerBase
+    public class PartsController(ApplicationDbContext _db) : ControllerBase
     {
         public class PartRequest
         {
