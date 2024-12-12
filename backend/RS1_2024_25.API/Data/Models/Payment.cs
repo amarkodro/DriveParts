@@ -3,7 +3,8 @@
     public class Payment
     {
         public int PaymentId { get; set; }
-        public bool IsCard { get; set; }
-        public bool IsCash { get; set; }
+
+        public string PaymentMethod { get; set; }
+       
     }
 }
