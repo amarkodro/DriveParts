@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using RS1_2024_25.API.Data;
 using RS1_2024_25.API.Data.Models;
 using System.ComponentModel.DataAnnotations.Schema;
-using static RS1_2024_25.API.Endpoints.UserController;
+using static RS1_2024_25.API.Endpoints.UsersController;
 
 namespace RS1_2024_25.API.Endpoints
 {
