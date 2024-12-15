@@ -15,8 +15,8 @@ namespace RS1_2024_25.API.Endpoints
             public double Price { get; set; }
             public string Description { get; set; }
             public int CategoryId { get; set; }
-            public int CarId { get; set; }
             public int ManufacturerId { get; set; }
+            public IFormFile PartImage { get; set; }
 
         }
 
@@ -26,8 +26,8 @@ namespace RS1_2024_25.API.Endpoints
             public double Price { get; set; }
             public string Description { get; set; }
             public string CategoryName { get; set; }
-            public string CarName { get; set; }
             public string ManufacturerName { get; set; }
+            public string PartImage { get; set; }
         }
 
         [HttpGet]
@@ -36,14 +36,14 @@ namespace RS1_2024_25.API.Endpoints
             var parts = _db.Parts
                           .Include(p => p.Category)
                           .Include(p => p.Manufacturer)
-                          .Include(p => p.Car).Select(x => new PartResponse
+                          .Select(x => new PartResponse
                           {
                               Name = x.Name,
                               Price = x.Price,
                               Description = x.Description,
                               CategoryName = x.Category != null ? x.Category.Name : "Unknown",
-                              CarName = x.Car != null ? x.Car.Brand : "Unknown",
                               ManufacturerName = x.Manufacturer != null ? x.Manufacturer.Name : "Unknown",
+                              PartImage = x.PartImage
                           }).ToArray();
 
             return parts;
@@ -53,7 +53,7 @@ namespace RS1_2024_25.API.Endpoints
         public ActionResult<PartResponse> GetPart(int id)
         {
             var part = _db.Parts
-                          .Include(c => c.Car).Include(c => c.Manufacturer).Include(c => c.Category)
+                          .Include(c => c.Manufacturer).Include(c => c.Category)
                           .Where(c => c.PartId == id)
                           .Select(c => new PartResponse
                           {
@@ -61,8 +61,8 @@ namespace RS1_2024_25.API.Endpoints
                               Price = c.Price,
                               Description = c.Description,
                               CategoryName = c.Category != null ? c.Category.Name : "Unknown",
-                              CarName = c.Car != null ? c.Car.Brand : "Unknown",
                               ManufacturerName = c.Manufacturer != null ? c.Manufacturer.Name : "Unknown",
+                              PartImage = c.PartImage
                           }).First();
 
             return part;
@@ -71,14 +71,24 @@ namespace RS1_2024_25.API.Endpoints
         [HttpPost]
         public ActionResult<PartResponse> PostPart(PartRequest request)
         {
+            string imageUrl = null;
+            if (request.PartImage != null)
+            {
+                var fileName = Path.GetFileNameWithoutExtension(request.PartImage.FileName);
+                var extension = Path.GetExtension(request.PartImage.FileName);
+                var uniqueFileName = $"{fileName}_{Guid.NewGuid()}{extension}";
+                var filePath = Path.Combine("wwwroot/images", uniqueFileName);
+                using (var stream = new FileStream(filePath, FileMode.Create)) { request.PartImage.CopyToAsync(stream); }
+                imageUrl = $"/images/{uniqueFileName}";
+            }
             var part = new Part
             {
                 Name = request.Name,
                 Price = request.Price,
                 Description = request.Description,
                 CategoryId = request.CategoryId,
-                CarId = request.CarId,
                 ManufacturerId = request.ManufacturerId,
+                PartImage = imageUrl
             };
 
             _db.Parts.Add(part);
@@ -90,35 +100,42 @@ namespace RS1_2024_25.API.Endpoints
                 Price = part.Price,
                 Description = part.Description,
                 CategoryName = _db.Categories.Find(part.CategoryId)?.Name ?? "Unknown",
-                CarName = _db.Cars.Find(part.CarId)?.Brand ?? "Unknown",
                 ManufacturerName = _db.Manufacturers.Find(part.ManufacturerId)?.Name ?? "Unknown",
+                PartImage = part.PartImage
             };
 
             return Ok(response);
         }
 
         [HttpPut("{id}")]
-        public ActionResult<string> PutPart(string id,PartRequest request)
+        public ActionResult<string> PutPart(int id, PartRequest request)
         {
-             var part = _db.Parts.Find(id) ?? throw new KeyNotFoundException("Part not found");
-
+            var part = _db.Parts.Find(id) ?? throw new KeyNotFoundException("Part not found");
+            if (request.PartImage != null)
+            {
+                var fileName = Path.GetFileNameWithoutExtension(request.PartImage.FileName);
+                var extension = Path.GetExtension(request.PartImage.FileName);
+                var uniqueFileName = $"{fileName}_{Guid.NewGuid()}{extension}";
+                var filePath = Path.Combine("wwwroot/images", uniqueFileName);
+                using (var stream = new FileStream(filePath, FileMode.Create)) { request.PartImage.CopyTo(stream); }
+                part.PartImage = $"/images/{uniqueFileName}"; // Spremi URL slike kao string }
+            }
             part.Name = request.Name;
             part.Price = request.Price;
             part.Description = request.Description;
             part.CategoryId = request.CategoryId;
-            part.CarId = request.CarId;
             part.ManufacturerId = request.ManufacturerId;
+        
 
             _db.SaveChanges();
 
-            return Ok("User updated successfully");
+            return Ok("Part updated successfully");
         }
 
         [HttpDelete("{id}")]
-        public ActionResult<string> DeletePart(string id)
+        public ActionResult<string> DeletePart(int id)
         {
             var part = _db.Parts.Find(id) ?? throw new KeyNotFoundException("Part not found");
-
             _db.Parts.Remove(part);
             _db.SaveChanges();
 
