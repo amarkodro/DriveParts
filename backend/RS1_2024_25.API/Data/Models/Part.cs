@@ -14,14 +14,12 @@ namespace RS1_2024_25.API.Data.Models
         public int CategoryId { get; set; }
         public Category Category { get; set; }
 
-        [ForeignKey(nameof(Car))]
-
-        public int CarId { get; set; }
-        public Car Car { get; set; }
-
         [ForeignKey(nameof(Manufacturer))]
 
         public int ManufacturerId { get; set; }
         public Manufacturer Manufacturer { get; set; }
+
+       public string? PartImage { get; set; } 
+
     }
 }
