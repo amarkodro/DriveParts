@@ -1125,9 +1125,6 @@ namespace RS1_2024_25.API.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PartId"));
 
-                    b.Property<int>("CarId")
-                        .HasColumnType("int");
-
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
@@ -1142,12 +1139,13 @@ namespace RS1_2024_25.API.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("PartImage")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<double>("Price")
                         .HasColumnType("float");
 
                     b.HasKey("PartId");
-
-                    b.HasIndex("CarId");
 
                     b.HasIndex("CategoryId");
 
@@ -1159,7 +1157,6 @@ namespace RS1_2024_25.API.Migrations
                         new
                         {
                             PartId = 1,
-                            CarId = 1,
                             CategoryId = 1,
                             Description = "High-quality brake pads for Golf",
                             ManufacturerId = 1,
@@ -1169,7 +1166,6 @@ namespace RS1_2024_25.API.Migrations
                         new
                         {
                             PartId = 2,
-                            CarId = 2,
                             CategoryId = 2,
                             Description = "Durable suspension springs for Q5",
                             ManufacturerId = 2,
@@ -1179,7 +1175,6 @@ namespace RS1_2024_25.API.Migrations
                         new
                         {
                             PartId = 3,
-                            CarId = 3,
                             CategoryId = 6,
                             Description = "Oil filter suitable for Clio engines",
                             ManufacturerId = 3,
@@ -1189,7 +1184,6 @@ namespace RS1_2024_25.API.Migrations
                         new
                         {
                             PartId = 4,
-                            CarId = 4,
                             CategoryId = 4,
                             Description = "Rust-resistant exhaust pipe for 508",
                             ManufacturerId = 4,
@@ -1199,7 +1193,6 @@ namespace RS1_2024_25.API.Migrations
                         new
                         {
                             PartId = 5,
-                            CarId = 5,
                             CategoryId = 8,
                             Description = "High-performance coolant hose for Panda",
                             ManufacturerId = 5,
@@ -1209,7 +1202,6 @@ namespace RS1_2024_25.API.Migrations
                         new
                         {
                             PartId = 6,
-                            CarId = 1,
                             CategoryId = 6,
                             Description = "Improves air intake efficiency for Golf",
                             ManufacturerId = 6,
@@ -1219,7 +1211,6 @@ namespace RS1_2024_25.API.Migrations
                         new
                         {
                             PartId = 7,
-                            CarId = 2,
                             CategoryId = 2,
                             Description = "Enhanced suspension system for Q5",
                             ManufacturerId = 7,
@@ -1229,7 +1220,6 @@ namespace RS1_2024_25.API.Migrations
                         new
                         {
                             PartId = 8,
-                            CarId = 3,
                             CategoryId = 7,
                             Description = "High-performance spark plugs for Clio",
                             ManufacturerId = 8,
@@ -1239,7 +1229,6 @@ namespace RS1_2024_25.API.Migrations
                         new
                         {
                             PartId = 9,
-                            CarId = 4,
                             CategoryId = 4,
                             Description = "Eco-friendly exhaust component for 508",
                             ManufacturerId = 1,
@@ -1249,7 +1238,6 @@ namespace RS1_2024_25.API.Migrations
                         new
                         {
                             PartId = 10,
-                            CarId = 5,
                             CategoryId = 5,
                             Description = "Premium oil for Panda engines",
                             ManufacturerId = 2,
@@ -1259,7 +1247,6 @@ namespace RS1_2024_25.API.Migrations
                         new
                         {
                             PartId = 11,
-                            CarId = 1,
                             CategoryId = 1,
                             Description = "Front brake discs for Golf",
                             ManufacturerId = 3,
@@ -1269,7 +1256,6 @@ namespace RS1_2024_25.API.Migrations
                         new
                         {
                             PartId = 12,
-                            CarId = 2,
                             CategoryId = 2,
                             Description = "Steering system component for Q5",
                             ManufacturerId = 4,
@@ -1279,7 +1265,6 @@ namespace RS1_2024_25.API.Migrations
                         new
                         {
                             PartId = 13,
-                            CarId = 3,
                             CategoryId = 3,
                             Description = "Efficient fuel pump for Clio",
                             ManufacturerId = 5,
@@ -1289,7 +1274,6 @@ namespace RS1_2024_25.API.Migrations
                         new
                         {
                             PartId = 14,
-                            CarId = 4,
                             CategoryId = 3,
                             Description = "Boost engine power for 508",
                             ManufacturerId = 6,
@@ -1299,7 +1283,6 @@ namespace RS1_2024_25.API.Migrations
                         new
                         {
                             PartId = 15,
-                            CarId = 5,
                             CategoryId = 9,
                             Description = "All-weather wipers for Panda",
                             ManufacturerId = 7,
@@ -1309,7 +1292,6 @@ namespace RS1_2024_25.API.Migrations
                         new
                         {
                             PartId = 16,
-                            CarId = 1,
                             CategoryId = 8,
                             Description = "High-efficiency radiator for Golf",
                             ManufacturerId = 8,
@@ -1319,7 +1301,6 @@ namespace RS1_2024_25.API.Migrations
                         new
                         {
                             PartId = 17,
-                            CarId = 2,
                             CategoryId = 2,
                             Description = "Stable suspension arms for Q5",
                             ManufacturerId = 1,
@@ -1329,7 +1310,6 @@ namespace RS1_2024_25.API.Migrations
                         new
                         {
                             PartId = 18,
-                            CarId = 3,
                             CategoryId = 7,
                             Description = "Reliable ignition coil for Clio",
                             ManufacturerId = 2,
@@ -1339,7 +1319,6 @@ namespace RS1_2024_25.API.Migrations
                         new
                         {
                             PartId = 19,
-                            CarId = 4,
                             CategoryId = 9,
                             Description = "Bright and durable headlights for 508",
                             ManufacturerId = 3,
@@ -1349,7 +1328,6 @@ namespace RS1_2024_25.API.Migrations
                         new
                         {
                             PartId = 20,
-                            CarId = 5,
                             CategoryId = 7,
                             Description = "Long-lasting battery for Panda",
                             ManufacturerId = 4,
@@ -1909,12 +1887,6 @@ namespace RS1_2024_25.API.Migrations
 
             modelBuilder.Entity("RS1_2024_25.API.Data.Models.Part", b =>
                 {
-                    b.HasOne("RS1_2024_25.API.Data.Models.Car", "Car")
-                        .WithMany()
-                        .HasForeignKey("CarId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
                     b.HasOne("RS1_2024_25.API.Data.Models.Category", "Category")
                         .WithMany()
                         .HasForeignKey("CategoryId")
@@ -1926,8 +1898,6 @@ namespace RS1_2024_25.API.Migrations
                         .HasForeignKey("ManufacturerId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
-
-                    b.Navigation("Car");
 
                     b.Navigation("Category");
 
