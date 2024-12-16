@@ -2,6 +2,12 @@ import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {UnauthorizedComponent} from './modules/shared/unauthorized/unauthorized.component';
 import {AuthGuard} from './auth-guards/auth-guard.service';
+import {HeroSectionComponent} from './hero-section/hero-section.component';
+import {ProductSectionComponent} from './product-section/product-section.component';
+import {NavbarComponent} from './navbar/navbar.component';
+import {LoginComponent} from './login/login.component';
+import {RegisterComponent} from './register/register.component';
+
 
 const routes: Routes = [
   {path: 'unauthorized', component: UnauthorizedComponent},
@@ -23,7 +29,13 @@ const routes: Routes = [
     path: 'auth',
     loadChildren: () => import('./modules/auth/auth.module').then(m => m.AuthModule)  // Lazy load  modula
   },
-  {path: '**', redirectTo: 'public', pathMatch: 'full'}  // Default ruta koja vodi na public
+
+  {path: '', component: HeroSectionComponent}, // Početna ruta
+  {path: 'login', component: LoginComponent},  // Ruta za login
+  {path: 'register', component: RegisterComponent},
+  {path: '**', redirectTo: 'public', pathMatch: 'full'},  // Default ruta koja vodi na public
+
+
 ];
 
 @NgModule({
