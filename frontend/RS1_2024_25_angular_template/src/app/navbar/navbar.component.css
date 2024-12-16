@@ -1,0 +1,89 @@
+header {
+    background-color: #1266f1;
+    padding: 10px 0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.navbar {
+    background-color: #1266f1;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.navbar .container {
+    display: flex;
+
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+}
+
+/* Logo stil */
+.logo img {
+    height: 70px;
+    padding-right: 10px;
+}
+
+/* Stil for search bar */
+.search-container {
+    flex: 1;
+    max-width: 650px;
+}
+
+.input-group {
+    display: flex;
+    align-items: center;
+    background-color: #fff;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.input-group .form-control {
+    border: none;
+    border-radius: 20px 0 0 20px;
+    padding: 10px 15px;
+    flex: 1;
+}
+
+.input-group-text {
+    background-color: #fff;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+/* Nav links stils */
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+    padding-left: 8px;
+}
+
+.nav-links a {
+    color: #fff;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.nav-links a:hover {
+    color: #ffd700;
+}
+
+.icon-links a {
+    color: #fff;
+    font-size: 24px;
+    margin-left: 15px;
+    transition: color 0.3s;
+}
+
+.icon-links a:hover {
+    color: #ffd700;
+}
