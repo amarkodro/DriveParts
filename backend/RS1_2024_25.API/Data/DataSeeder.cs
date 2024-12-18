@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RS1_2024_25.API.Data.Models;
+using System.Security.Cryptography;
+using BCrypt.Net;
 
 namespace RS1_2024_25.API.Data
 {
@@ -7,7 +9,11 @@ namespace RS1_2024_25.API.Data
     {
         public void DataSeed(ModelBuilder modelBuilder)
         {
-            // Cities
+
+            string adminPasswordHash = "$2a$11$T3GVQBvgyTtZ6PFA5..."; 
+            string userPasswordHash = "$2a$11$Aq1jWbAgjeHkWkiAk...";  
+
+
             modelBuilder.Entity<City>().HasData(
                 new City { ID = 1, Name = "Banja Luka", CountryId = 1 },
                 new City { ID = 2, Name = "Bihać", CountryId = 1 },
@@ -62,7 +68,7 @@ namespace RS1_2024_25.API.Data
                 {
                     Id = 1,
                     Username = "amar.kodro",
-                    Password = "driveparts",
+                    Password = adminPasswordHash,
                     IsAdmin = true,
                     isUser = false,
                     is2FActive = true,
@@ -72,7 +78,24 @@ namespace RS1_2024_25.API.Data
                     Surname = "Kodro",
                     PhoneNumber = "0623331233",
                     AdminLevel = "Moderator"
+                },
+
+                new Admin
+                {
+                    Id = 4,
+                    Username = "ammar.puce",
+                    Password = adminPasswordHash,
+                    IsAdmin = true,
+                    isUser = false,
+                    is2FActive = true,
+                    Address = "Masline-Kocine bb",
+                    Email = "ammar.puce@edu.fit.ba",
+                    Name = "Ammar",
+                    Surname = "Puce",
+                    PhoneNumber = "0623331233",
+                    AdminLevel = "Moderator"
                 }
+
             );
 
             // Users
@@ -81,7 +104,7 @@ namespace RS1_2024_25.API.Data
                 {
                     Id = 2,
                     Username = "TestUser1",
-                    Password = "testuser123",
+                    Password = userPasswordHash,
                     IsAdmin = false,
                     isUser = true,
                     is2FActive = false,
@@ -97,7 +120,7 @@ namespace RS1_2024_25.API.Data
                 {
                     Id = 3,
                     Username = "TestUser2",
-                    Password = "testuser2",
+                    Password = userPasswordHash,
                     IsAdmin = false,
                     isUser = true,
                     is2FActive = false,
@@ -286,6 +309,15 @@ namespace RS1_2024_25.API.Data
                 new Review { ReviewId = 6, UserId = 3, PartId = 6, Text = "Zračni filter je povećao efikasnost motora. Zadovoljan kupovinom.", Picture = null, Date = new DateTime(2023, 06, 25) },
                 new Review { ReviewId = 7, UserId = 2, PartId = 7, Text = "Amortizeri su vrhunski. Auto je sada puno stabilniji.", Picture = null, Date = new DateTime(2023, 07, 12) }
 
+            );
+
+            modelBuilder.Entity<CarPart>().HasData(
+
+                new CarPart { CarPartId = 1, CarId = 1, PartId = 1 },
+                new CarPart { CarPartId = 2, CarId = 2, PartId = 2 },
+                new CarPart { CarPartId = 3, CarId = 3, PartId = 3 },
+                new CarPart { CarPartId = 4, CarId = 4, PartId = 4 },
+                new CarPart { CarPartId = 5, CarId = 5, PartId = 5 }
             );
         }
     }

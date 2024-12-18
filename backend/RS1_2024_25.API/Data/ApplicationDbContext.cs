@@ -31,6 +31,8 @@ namespace RS1_2024_25.API.Data
         public DbSet<OrderItem> OrderItems { get; set; }
         public DbSet<Review> Reviews { get; set; }
 
+        public DbSet<CarPart> CarParts { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
