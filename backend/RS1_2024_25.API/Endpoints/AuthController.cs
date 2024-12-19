@@ -84,7 +84,7 @@ namespace RS1_2024_25.API.Endpoints
         public IActionResult Login(LoginRequest request)
         {
          
-            var user = _db.UserAccounts.FirstOrDefault(x => x.Username == request.Username);
+            var user = _db.UserAccounts.FirstOrDefault(x => x.Username == request.Username && x.Password==request.Password);
 
            
             if (user == null)
@@ -92,10 +92,7 @@ namespace RS1_2024_25.API.Endpoints
                 return Unauthorized("Invalid username or password");
             }
 
-            if (request.Password==user.Password)
-            {
-                return Unauthorized("Invalid username or password");
-            }
+          
 
             
             var token = CreateJwt(user);
@@ -113,7 +110,7 @@ namespace RS1_2024_25.API.Endpoints
             var key = Encoding.UTF8.GetBytes("f8d2eV3r5/8nW1qR4xPqL6zM9xD5u2F8xM0a1pZ3wNk=");
             var identity = new ClaimsIdentity(new Claim[] {
 
-                    new Claim(ClaimTypes.Role, role),
+                    new Claim(ClaimTypes.Name, $"{user.Username}"),
                     new Claim(ClaimTypes.Name, $"{user.Name} {user.Surname}"),
 
             });
