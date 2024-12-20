@@ -30,7 +30,8 @@
         </div>
       </div>
 
-      <div class="form-group">
+
+      <div class="form-group email-group">
         <label for="email">Email Address:</label>
         <input type="email" id="email" formControlName="email">
         <div *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched">
@@ -40,22 +41,30 @@
       </div>
 
       <div class="form-group">
-        <label for="city">City:</label>
-        <select id="city" formControlName="city">
-          <option value="">Select a city</option>
-        </select>
-        <div *ngIf="registerForm.get('city')?.invalid && registerForm.get('city')?.touched">
-          <small class="error-text">City is required.</small>
+        <label for="address">Address:</label>
+        <input type="text" id="address" formControlName="address">
+        <div *ngIf="registerForm.get('address')?.invalid && registerForm.get('address')?.touched">
+          <small class="error-text">Address is required.</small>
         </div>
       </div>
 
       <div class="form-group">
-        <label for="country">Country:</label>
-        <select id="country" formControlName="country">
-          <option value="">Select a country</option>
+        <label for="phone">Phone:</label>
+        <input type="tel" id="phone" formControlName="phone">
+        <div *ngIf="registerForm.get('phone')?.invalid && registerForm.get('phone')?.touched">
+          <small class="error-text">Phone is required.</small>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="gender">Gender:</label>
+        <select id="gender" formControlName="gender">
+          <option value="">Select a gender</option>
+          <option value="male">Male</option>
+          <option value="female">Female</option>
+          <option value="other">Other</option>
         </select>
-        <div *ngIf="registerForm.get('country')?.invalid && registerForm.get('country')?.touched">
-          <small class="error-text">Country is required.</small>
+        <div *ngIf="registerForm.get('gender')?.invalid && registerForm.get('gender')?.touched">
+          <small class="error-text">Gender is required.</small>
         </div>
       </div>
 
@@ -63,10 +72,7 @@
         <label for="password">Password:</label>
         <input type="password" id="password" formControlName="password">
         <div *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched">
-          <small class="error-text" *ngIf="registerForm.get('password')?.errors?.['required']">Password is required.</small>
-          <small class="error-text" *ngIf="registerForm.get('password')?.errors?.['pattern']">
-            Password must be at least 6 characters, with one uppercase letter, one lowercase letter, and one number.
-          </small>
+          <small class="error-text">Password is required.</small>
         </div>
       </div>
 
@@ -75,9 +81,6 @@
         <input type="password" id="confirmPassword" formControlName="confirmPassword">
         <div *ngIf="registerForm.get('confirmPassword')?.invalid && registerForm.get('confirmPassword')?.touched">
           <small class="error-text">Confirm Password is required.</small>
-        </div>
-        <div *ngIf="registerForm.hasError('mismatch') && registerForm.get('confirmPassword')?.touched">
-          <small class="error-text">Passwords do not match.</small>
         </div>
       </div>
 
