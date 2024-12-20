@@ -7,6 +7,7 @@ import {ProductSectionComponent} from './product-section/product-section.compone
 import {NavbarComponent} from './navbar/navbar.component';
 import {LoginComponent} from './login/login.component';
 import {RegisterComponent} from './register/register.component';
+import {PartsComponent} from './parts/parts.component';
 
 
 const routes: Routes = [
@@ -30,10 +31,11 @@ const routes: Routes = [
     loadChildren: () => import('./modules/auth/auth.module').then(m => m.AuthModule)  // Lazy load  modula
   },
 
-  {path: '', component: HeroSectionComponent}, // Početna ruta
-  {path: 'login', component: LoginComponent},  // Ruta za login
+  {path: '', component: HeroSectionComponent},
+  {path: 'parts', component: PartsComponent},
+  {path: 'login', component: LoginComponent},
   {path: 'register', component: RegisterComponent},
-  {path: '**', redirectTo: 'public', pathMatch: 'full'},  // Default ruta koja vodi na public
+  {path: '**', redirectTo: 'public', pathMatch: 'full'},
 
 
 ];

@@ -1,89 +1,92 @@
 header {
-    background-color: #1266f1;
-    padding: 10px 0;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
+  background-color: #1266f1;
+  padding: 10px 0;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
 }
 
 .navbar {
-    background-color: #1266f1;
-    padding: 10px 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
+  background-color: #1266f1;
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
 }
 
 .navbar .container {
-    display: flex;
-
-    justify-content: space-around;
-    align-items: center;
-    width: 100%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: 100%;
+  gap: 20px;
 }
 
 /* Logo stil */
 .logo img {
-    height: 70px;
-    padding-right: 10px;
+  height: 70px;
+  padding-right: 10px;
+  margin-right: 50px;
 }
 
 /* Stil for search bar */
 .search-container {
-    flex: 1;
-    max-width: 650px;
+  flex: 1;
+  max-width: 650px;
+  margin-right: 30px;
 }
 
 .input-group {
-    display: flex;
-    align-items: center;
-    background-color: #fff;
-    border-radius: 20px;
-    overflow: hidden;
+  display: flex;
+  align-items: center;
+  background-color: #fff;
+  border-radius: 20px;
+  overflow: hidden;
 }
 
 .input-group .form-control {
-    border: none;
-    border-radius: 20px 0 0 20px;
-    padding: 10px 15px;
-    flex: 1;
+  border: none;
+  border-radius: 20px 0 0 20px;
+  padding: 10px 15px;
+  flex: 1;
 }
 
 .input-group-text {
-    background-color: #fff;
-    border: none;
-    padding: 10px 15px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
+  background-color: #fff;
+  border: none;
+  padding: 10px 15px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
 }
 
 /* Nav links stils */
 .nav-links {
-    list-style: none;
-    display: flex;
-    gap: 20px;
-    padding-left: 8px;
+  list-style: none;
+  display: flex;
+  gap: 20px;
+  padding-left: 8px;
+  margin-left: auto;
 }
 
 .nav-links a {
-    color: #fff;
-    text-decoration: none;
-    transition: color 0.3s;
+  color: #fff;
+  text-decoration: none;
+  transition: color 0.3s;
 }
 
 .nav-links a:hover {
-    color: #ffd700;
+  color: #ffd700;
 }
 
 .icon-links a {
-    color: #fff;
-    font-size: 24px;
-    margin-left: 15px;
-    transition: color 0.3s;
+  color: #fff;
+  font-size: 24px;
+  margin-left: 15px;
+  transition: color 0.3s;
 }
 
 .icon-links a:hover {
-    color: #ffd700;
+  color: #ffd700;
 }

@@ -13,6 +13,7 @@ import { HeroSectionComponent } from './hero-section/hero-section.component';
 import { ProductSectionComponent } from './product-section/product-section.component';
 import { FooterComponent } from './footer/footer.component';
 import {ReactiveFormsModule} from '@angular/forms';
+import { PartsComponent } from './parts/parts.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import {ReactiveFormsModule} from '@angular/forms';
     RegisterComponent,
     HeroSectionComponent,
     ProductSectionComponent,
-    FooterComponent
+    FooterComponent,
+    PartsComponent
   ],
     imports: [
         BrowserModule,

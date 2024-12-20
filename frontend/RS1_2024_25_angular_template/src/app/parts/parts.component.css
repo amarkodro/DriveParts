@@ -1,0 +1,68 @@
+.main-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 130px 20px;
+}
+
+/* Stil for form-box */
+.form-box {
+  background-color: #fff;
+  padding: 30px 40px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  max-width: 600px;
+  width: 100%;
+}
+
+/* Stil for form-group */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Stil for input-pair */
+.input-pair {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+}
+
+/* Stil fort input-item */
+.input-item {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+/* Labela stil */
+label {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+/* Select stil */
+select {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+/* Search btn */
+.search-btn {
+  background-color: #007bff;
+  color: #fff;
+  padding: 12px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 18px;
+  transition: background-color 0.3s;
+}
+
+.search-btn:hover {
+  background-color: #0056b3;
+}
