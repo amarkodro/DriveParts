@@ -563,8 +563,8 @@ namespace RS1_2024_25.API.Migrations
                 columns: new[] { "Id", "Address", "AdminLevel", "Discriminator", "Email", "IsAdmin", "Name", "Password", "PhoneNumber", "Surname", "Username", "is2FActive", "isUser" },
                 values: new object[,]
                 {
-                    { 1, "Masline-Kocine bb", "Moderator", "Admin", "amar.kodro@edu.fit.ba", true, "Amar", "$2a$11$T3GVQBvgyTtZ6PFA5...", "0623331233", "Kodro", "amar.kodro", true, false },
-                    { 4, "Masline-Kocine bb", "Moderator", "Admin", "ammar.puce@edu.fit.ba", true, "Ammar", "$2a$11$T3GVQBvgyTtZ6PFA5...", "0623331233", "Puce", "ammar.puce", true, false }
+                    { 1, "Masline-Kocine bb", "Moderator", "Admin", "amar.kodro@edu.fit.ba", true, "Amar", "driveparts2003", "0623331233", "Kodro", "amar.kodro", true, false },
+                    { 4, "Masline-Kocine bb", "Moderator", "Admin", "ammar.puce@edu.fit.ba", true, "Ammar", "driveparts2003", "0623331233", "Puce", "ammar.puce", true, false }
                 });
 
             migrationBuilder.InsertData(
@@ -664,8 +664,8 @@ namespace RS1_2024_25.API.Migrations
                 columns: new[] { "Id", "Address", "CityId", "Discriminator", "Email", "GenderId", "IsAdmin", "Name", "Password", "PhoneNumber", "Surname", "Username", "is2FActive", "isUser" },
                 values: new object[,]
                 {
-                    { 2, "useraddress", 18, "User", "testuser@example.com", 1, false, "Test", "$2a$11$Aq1jWbAgjeHkWkiAk...", "0602213312", "User", "TestUser1", false, true },
-                    { 3, "useraddress2", 16, "User", "testuser2@example.com", 2, false, "Test2", "$2a$11$Aq1jWbAgjeHkWkiAk...", "0602234312", "User2", "TestUser2", false, true }
+                    { 2, "useraddress", 18, "User", "testuser@example.com", 1, false, "Test", "userpassword123", "0602213312", "User", "TestUser1", false, true },
+                    { 3, "useraddress2", 16, "User", "testuser2@example.com", 2, false, "Test2", "userpassword123", "0602234312", "User2", "TestUser2", false, true }
                 });
 
             migrationBuilder.InsertData(

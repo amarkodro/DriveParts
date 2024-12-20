@@ -12,7 +12,7 @@ using RS1_2024_25.API.Data;
 namespace RS1_2024_25.API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241218232834_Init")]
+    [Migration("20241220213526_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -1757,7 +1757,7 @@ namespace RS1_2024_25.API.Migrations
                             Email = "amar.kodro@edu.fit.ba",
                             IsAdmin = true,
                             Name = "Amar",
-                            Password = "$2a$11$T3GVQBvgyTtZ6PFA5...",
+                            Password = "driveparts2003",
                             PhoneNumber = "0623331233",
                             Surname = "Kodro",
                             Username = "amar.kodro",
@@ -1772,7 +1772,7 @@ namespace RS1_2024_25.API.Migrations
                             Email = "ammar.puce@edu.fit.ba",
                             IsAdmin = true,
                             Name = "Ammar",
-                            Password = "$2a$11$T3GVQBvgyTtZ6PFA5...",
+                            Password = "driveparts2003",
                             PhoneNumber = "0623331233",
                             Surname = "Puce",
                             Username = "ammar.puce",
@@ -1806,7 +1806,7 @@ namespace RS1_2024_25.API.Migrations
                             Email = "testuser@example.com",
                             IsAdmin = false,
                             Name = "Test",
-                            Password = "$2a$11$Aq1jWbAgjeHkWkiAk...",
+                            Password = "userpassword123",
                             PhoneNumber = "0602213312",
                             Surname = "User",
                             Username = "TestUser1",
@@ -1822,7 +1822,7 @@ namespace RS1_2024_25.API.Migrations
                             Email = "testuser2@example.com",
                             IsAdmin = false,
                             Name = "Test2",
-                            Password = "$2a$11$Aq1jWbAgjeHkWkiAk...",
+                            Password = "userpassword123",
                             PhoneNumber = "0602234312",
                             Surname = "User2",
                             Username = "TestUser2",

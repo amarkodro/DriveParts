@@ -10,10 +10,7 @@ namespace RS1_2024_25.API.Data
         public void DataSeed(ModelBuilder modelBuilder)
         {
 
-            string adminPasswordHash = "$2a$11$T3GVQBvgyTtZ6PFA5..."; 
-            string userPasswordHash = "$2a$11$Aq1jWbAgjeHkWkiAk...";  
-
-
+            
             modelBuilder.Entity<City>().HasData(
                 new City { ID = 1, Name = "Banja Luka", CountryId = 1 },
                 new City { ID = 2, Name = "Bihać", CountryId = 1 },
@@ -68,7 +65,7 @@ namespace RS1_2024_25.API.Data
                 {
                     Id = 1,
                     Username = "amar.kodro",
-                    Password = adminPasswordHash,
+                    Password = "driveparts2003",
                     IsAdmin = true,
                     isUser = false,
                     is2FActive = true,
@@ -84,7 +81,7 @@ namespace RS1_2024_25.API.Data
                 {
                     Id = 4,
                     Username = "ammar.puce",
-                    Password = adminPasswordHash,
+                    Password = "driveparts2003",
                     IsAdmin = true,
                     isUser = false,
                     is2FActive = true,
@@ -104,7 +101,7 @@ namespace RS1_2024_25.API.Data
                 {
                     Id = 2,
                     Username = "TestUser1",
-                    Password = userPasswordHash,
+                    Password = "userpassword123",
                     IsAdmin = false,
                     isUser = true,
                     is2FActive = false,
@@ -120,7 +117,7 @@ namespace RS1_2024_25.API.Data
                 {
                     Id = 3,
                     Username = "TestUser2",
-                    Password = userPasswordHash,
+                    Password = "userpassword123",
                     IsAdmin = false,
                     isUser = true,
                     is2FActive = false,
