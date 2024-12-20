@@ -48,7 +48,7 @@ namespace RS1_2024_25.API.Endpoints
             if (city == null)
                 return BadRequest("Invalid CityId");
 
-            var user = new UserAccount
+            var user = new User
             {
                 Name = request.Name,
                 Surname = request.Surname,
@@ -57,16 +57,13 @@ namespace RS1_2024_25.API.Endpoints
                 Password = request.Password,
                 Address = request.Address,
                 PhoneNumber = request.PhoneNumber,
-                IsAdmin = false,
-                is2FActive = true,
-                isUser = true
-
-
+                GenderId = request.GenderId,
+                CityId = request.CityId,
+                IsAdmin = false
             };
 
-            _db.UserAccounts.Add(user);
+            _db.Users.Add(user);
             _db.SaveChanges();
-
 
             var token = CreateJwt(user);
 
@@ -83,20 +80,14 @@ namespace RS1_2024_25.API.Endpoints
         [HttpPost("login")]
         public IActionResult Login(LoginRequest request)
         {
-         
-            var user = _db.UserAccounts.FirstOrDefault(x => x.Username == request.Username && x.Password==request.Password);
+            var user = _db.UserAccounts.FirstOrDefault(x => x.Username == request.Username && x.Password == request.Password);
 
-           
             if (user == null)
             {
                 return Unauthorized("Invalid username or password");
             }
 
-          
-
-            
-            var token = CreateJwt(user);
-
+            var token = CreateJwt(user); // Kreira token za bilo kojeg korisnika
             var role = user.IsAdmin ? "Admin" : "User";
 
             return Ok(new { Token = token, Role = role });
@@ -110,6 +101,7 @@ namespace RS1_2024_25.API.Endpoints
             var key = Encoding.UTF8.GetBytes("f8d2eV3r5/8nW1qR4xPqL6zM9xD5u2F8xM0a1pZ3wNk=");
             var identity = new ClaimsIdentity(new Claim[] {
 
+                    new Claim(ClaimTypes.Role, $"{role}"),
                     new Claim(ClaimTypes.Name, $"{user.Username}"),
                     new Claim(ClaimTypes.Name, $"{user.Name} {user.Surname}"),
 
