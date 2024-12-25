@@ -5,7 +5,7 @@ using RS1_2024_25.API.Data.Models;
 
 namespace RS1_2024_25.API.Endpoints
 {
-    [Route("api/controller")]
+    [Route("api/parts")]
     [ApiController]
     public class PartsController(ApplicationDbContext _db) : ControllerBase
     {
@@ -140,6 +140,63 @@ namespace RS1_2024_25.API.Endpoints
             _db.SaveChanges();
 
             return Ok("Part deleted successfully");
+        }
+
+        [HttpGet("featured")]
+        public ActionResult<PartResponse[]> GetFeaturedParts()
+        {
+            var parts = _db.Parts
+                         .Include(c => c.Manufacturer).Include(c => c.Category)
+                         .Where(c => c.IsFeatured==true)
+                         .Select(c => new PartResponse
+                         {
+                             Name = c.Name,
+                             Price = c.Price,
+                             Description = c.Description,
+                             CategoryName = c.Category != null ? c.Category.Name : "Unknown",
+                             ManufacturerName = c.Manufacturer != null ? c.Manufacturer.Name : "Unknown",
+                             PartImage = c.PartImage
+                         }).ToArray();
+
+            return parts;
+        }
+
+        [HttpGet("newArrival")]
+        public ActionResult<PartResponse[]> GetNewArrivalParts()
+        {
+            var parts = _db.Parts
+                         .Include(c => c.Manufacturer).Include(c => c.Category)
+                         .Where(c => c.IsNewArrival == true)
+                         .Select(c => new PartResponse
+                         {
+                             Name = c.Name,
+                             Price = c.Price,
+                             Description = c.Description,
+                             CategoryName = c.Category != null ? c.Category.Name : "Unknown",
+                             ManufacturerName = c.Manufacturer != null ? c.Manufacturer.Name : "Unknown",
+                             PartImage = c.PartImage
+                         }).ToArray();
+
+            return parts;
+        }
+
+        [HttpGet("onSale")]
+        public ActionResult<PartResponse[]> GetOnSaleParts()
+        {
+            var parts = _db.Parts
+                         .Include(c => c.Manufacturer).Include(c => c.Category)
+                         .Where(c => c.IsOnSale == true)
+                         .Select(c => new PartResponse
+                         {
+                             Name = c.Name,
+                             Price = c.Price,
+                             Description = c.Description,
+                             CategoryName = c.Category != null ? c.Category.Name : "Unknown",
+                             ManufacturerName = c.Manufacturer != null ? c.Manufacturer.Name : "Unknown",
+                             PartImage = c.PartImage
+                         }).ToArray();
+
+            return parts;
         }
     }
 }
