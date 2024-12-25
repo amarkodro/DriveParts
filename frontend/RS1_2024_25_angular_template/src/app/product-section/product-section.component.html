@@ -1,97 +1,42 @@
-<!-- Best-Selling Products -->
 <section class="products">
+  <!-- Featured Parts -->
   <div class="container">
-    <h2>Best-Selling Products</h2>
+    <h2>Parts Featured</h2>
     <div class="product-grid">
-      <div class="product-card">
-        <img src="https://via.placeholder.com/300x200" alt="Shock Absorber">
-        <h3>Shock Absorber</h3>
-        <p>100 KM</p>
-        <a href="#" class="btn">Add to Cart</a>
-      </div>
-      <div class="product-card">
-        <img src="https://via.placeholder.com/300x200" alt="Brake Pads">
-        <h3>Brake Pads</h3>
-        <p>75 KM</p>
-        <a href="#" class="btn">Add to Cart</a>
-      </div>
-      <div class="product-card">
-        <img src="https://via.placeholder.com/300x200" alt="Oil Filter">
-        <h3>Oil Filter</h3>
-        <p>20 KM</p>
-        <a href="#" class="btn">Add to Cart</a>
-      </div>
-      <div class="product-card">
-        <img src="https://via.placeholder.com/300x200" alt="Battery">
-        <h3>Battery</h3>
-        <p>150 KM</p>
-        <a href="#" class="btn">Add to Cart</a>
+      <div *ngFor="let part of featuredParts" class="product-card">
+        <img [src]="'http://localhost:7000' + part.partImage || 'https://via.placeholder.com/300x200'" alt="{{ part.name }}" class="product-image" />
+        <h3>{{ part.name }}</h3>
+        <p>{{ part.price }} KM</p>
+        <p>{{ part.description }}</p>
+        <button class="btn">Add to Cart</button>
       </div>
     </div>
   </div>
-</section>
 
-<!-- Our Products -->
-<section class="products">
+  <!-- New Arrivals -->
   <div class="container">
-    <h2>Our Products</h2>
+    <h2>New Arrivals</h2>
     <div class="product-grid">
-      <div class="product-card">
-        <img src="https://via.placeholder.com/300x200" alt="Air Filter">
-        <h3>Air Filter</h3>
-        <p>30 KM</p>
-        <a href="#" class="btn">Add to Cart</a>
-      </div>
-      <div class="product-card">
-        <img src="https://via.placeholder.com/300x200" alt="Tire Set">
-        <h3>Tire Set</h3>
-        <p>400 KM</p>
-        <a href="#" class="btn">Add to Cart</a>
-      </div>
-      <div class="product-card">
-        <img src="https://via.placeholder.com/300x200" alt="Brake Discs">
-        <h3>Brake Discs</h3>
-        <p>250 KM</p>
-        <a href="#" class="btn">Add to Cart</a>
-      </div>
-      <div class="product-card">
-        <img src="https://via.placeholder.com/300x200" alt="Spark Plugs">
-        <h3>Spark Plugs</h3>
-        <p>50 KM</p>
-        <a href="#" class="btn">Add to Cart</a>
+      <div *ngFor="let part of newArrivalParts" class="product-card">
+        <img [src]="'http://localhost:7000' + part.partImage || 'https://via.placeholder.com/300x200'" alt="{{ part.name }}" class="product-image" />
+        <h3>{{ part.name }}</h3>
+        <p>{{ part.price }} KM</p>
+        <p>{{ part.description }}</p>
+        <button class="btn">Add to Cart</button>
       </div>
     </div>
   </div>
-</section>
 
-<!-- Today's Offer -->
-<section class="products">
+  <!-- On Sale -->
   <div class="container">
-    <h2>Today's Offer</h2>
+    <h2>On Sale</h2>
     <div class="product-grid">
-      <div class="product-card">
-        <img src="https://via.placeholder.com/300x200" alt="Car Tires">
-        <h3>Car Tires</h3>
-        <p>350 KM</p>
-        <a href="#" class="btn">Add to Cart</a>
-      </div>
-      <div class="product-card">
-        <img src="https://via.placeholder.com/300x200" alt="Engine Oil">
-        <h3>Engine Oil</h3>
-        <p>60 KM</p>
-        <a href="#" class="btn">Add to Cart</a>
-      </div>
-      <div class="product-card">
-        <img src="https://via.placeholder.com/300x200" alt="Wipers">
-        <h3>Wipers</h3>
-        <p>25 KM</p>
-        <a href="#" class="btn">Add to Cart</a>
-      </div>
-      <div class="product-card">
-        <img src="https://via.placeholder.com/300x200" alt="Battery">
-        <h3>Battery</h3>
-        <p>180 KM</p>
-        <a href="#" class="btn">Add to Cart</a>
+      <div *ngFor="let part of onSaleParts" class="product-card">
+        <img [src]="'http://localhost:7000' + part.partImage || 'https://via.placeholder.com/300x200'" alt="{{ part.name }}" class="product-image" />
+        <h3>{{ part.name }}</h3>
+        <p>{{ part.price }} KM</p>
+        <p>{{ part.description }}</p>
+        <button class="btn">Add to Cart</button>
       </div>
     </div>
   </div>
