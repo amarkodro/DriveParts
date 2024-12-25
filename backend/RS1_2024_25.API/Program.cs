@@ -7,25 +7,22 @@ using RS1_2024_25.API.Helper.Auth;
 using RS1_2024_25.API.Services;
 using System.Text;
 
-
 var config = new ConfigurationBuilder()
-.AddJsonFile("appsettings.json", false)
-.Build();
+    .AddJsonFile("appsettings.json", false)
+    .Build();
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(config.GetConnectionString("db1")));
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(x => x.OperationFilter<MyAuthorizationSwaggerHeader>());
 builder.Services.AddHttpContextAccessor();
 
-//dodajte vaše servise
+// Add your services
 builder.Services.AddTransient<MyAuthService>();
 builder.Services.AddTransient<MyTokenGenerator>();
 
@@ -46,12 +43,17 @@ builder.Services.AddAuthentication(x =>
     };
 });
 
-
 var app = builder.Build();
 
+// Enable serving static files from wwwroot folder
+app.UseStaticFiles();
+
 // Configure the HTTP request pipeline.
-app.UseSwagger();
-app.UseSwaggerUI();
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 
 app.UseCors(
     options => options
@@ -59,11 +61,7 @@ app.UseCors(
         .AllowAnyMethod()
         .AllowAnyHeader()
         .AllowCredentials()
-); //This needs to set everything allowed
-
-
-
-
+);
 
 app.UseAuthorization();
 

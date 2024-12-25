@@ -212,7 +212,10 @@ namespace RS1_2024_25.API.Migrations
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CategoryId = table.Column<int>(type: "int", nullable: false),
                     ManufacturerId = table.Column<int>(type: "int", nullable: false),
-                    PartImage = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    PartImage = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IsFeatured = table.Column<bool>(type: "bit", nullable: false),
+                    IsOnSale = table.Column<bool>(type: "bit", nullable: false),
+                    IsNewArrival = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -622,29 +625,33 @@ namespace RS1_2024_25.API.Migrations
 
             migrationBuilder.InsertData(
                 table: "Parts",
-                columns: new[] { "PartId", "CategoryId", "Description", "ManufacturerId", "Name", "PartImage", "Price" },
+                columns: new[] { "PartId", "CategoryId", "Description", "IsFeatured", "IsNewArrival", "IsOnSale", "ManufacturerId", "Name", "PartImage", "Price" },
                 values: new object[,]
                 {
-                    { 1, 1, "High-quality brake pads for Golf", 1, "Brake Pads", null, 85.0 },
-                    { 2, 2, "Durable suspension springs for Q5", 2, "Suspension Springs", null, 220.0 },
-                    { 3, 6, "Oil filter suitable for Clio engines", 3, "Engine Oil Filter", null, 25.0 },
-                    { 4, 4, "Rust-resistant exhaust pipe for 508", 4, "Exhaust Pipe", null, 300.0 },
-                    { 5, 8, "High-performance coolant hose for Panda", 5, "Coolant Hose", null, 40.0 },
-                    { 6, 6, "Improves air intake efficiency for Golf", 6, "Air Filter", null, 35.0 },
-                    { 7, 2, "Enhanced suspension system for Q5", 7, "Shock Absorber", null, 250.0 },
-                    { 8, 7, "High-performance spark plugs for Clio", 8, "Spark Plugs", null, 50.0 },
-                    { 9, 4, "Eco-friendly exhaust component for 508", 1, "Catalytic Converter", null, 450.0 },
-                    { 10, 5, "Premium oil for Panda engines", 2, "Engine Oil", null, 90.0 },
-                    { 11, 1, "Front brake discs for Golf", 3, "Brake Discs", null, 150.0 },
-                    { 12, 2, "Steering system component for Q5", 4, "Tie Rod Ends", null, 180.0 },
-                    { 13, 3, "Efficient fuel pump for Clio", 5, "Fuel Pump", null, 220.0 },
-                    { 14, 3, "Boost engine power for 508", 6, "Turbocharger", null, 1000.0 },
-                    { 15, 9, "All-weather wipers for Panda", 7, "Windshield Wipers", null, 25.0 },
-                    { 16, 8, "High-efficiency radiator for Golf", 8, "Radiator", null, 300.0 },
-                    { 17, 2, "Stable suspension arms for Q5", 1, "Control Arms", null, 350.0 },
-                    { 18, 7, "Reliable ignition coil for Clio", 2, "Ignition Coil", null, 75.0 },
-                    { 19, 9, "Bright and durable headlights for 508", 3, "Headlight Assembly", null, 400.0 },
-                    { 20, 7, "Long-lasting battery for Panda", 4, "Battery", null, 180.0 }
+                    { 1, 1, "High-quality brake pads for Golf", true, false, false, 1, "Brake Pads", "/images/BOSCH_brake_pads.jpg", 85.0 },
+                    { 2, 2, "Durable suspension springs for Q5", true, false, false, 2, "Suspension Springs", "/images/Suspension_Springs_q5.jpg", 220.0 },
+                    { 3, 6, "Oil filter suitable for Clio engines", true, false, false, 3, "Engine Oil Filter", "/images/oil_filter_renault_clio.jpg", 25.0 },
+                    { 4, 4, "Rust-resistant exhaust pipe for 508", true, false, false, 4, "Exhaust Pipe", "/images/Exhaust_Pipe peugeot_508.jpg", 300.0 },
+                    { 5, 6, "Durable timing belt for Golf", true, false, false, 5, "Timing Belt", "/images/Timing_Belt_gol_VI.jpg", 120.0 },
+                    { 6, 8, "High-efficiency water pump for Panda", true, false, false, 6, "Water Pump", "/images/Water_Pump_panda.jpg", 200.0 },
+                    { 7, 3, "Precision camshaft for Q5", true, false, false, 7, "Camshaft", "/images/Camshaft_q5.jpg", 500.0 },
+                    { 8, 7, "Reliable starter motor for Clio", true, false, false, 8, "Starter Motor", "/images/Starter_Motor_clio.jpg", 250.0 },
+                    { 9, 8, "High-performance coolant hose for Panda", false, true, false, 5, "Coolant Hose", "/images/Coolant_Hose_panda.jpg", 40.0 },
+                    { 10, 6, "Improves air intake efficiency for Golf", false, true, false, 6, "Air Filter", "/images/Air_Filter_golf_6.jpg", 35.0 },
+                    { 11, 2, "Enhanced suspension system for Q5", false, true, false, 7, "Shock Absorber", "/images/Shock_Absorber_q5.jpg", 250.0 },
+                    { 12, 7, "High-performance spark plugs for Clio", false, true, false, 8, "Spark Plugs", "/images/spark_plugs_clio.jpg", 50.0 },
+                    { 13, 1, "Flexible brake hoses for Panda", false, true, false, 5, "Brake Hoses", "/images/brake_hoses_panda.jpg", 60.0 },
+                    { 14, 8, "Pressure-regulating radiator cap for Golf", false, true, false, 6, "Radiator Cap", "/images/radiator_cap_golVI.jpg", 20.0 },
+                    { 15, 2, "Precision wheel bearings for Q5", false, true, false, 7, "Wheel Bearings", "/images/wheel_bearings_q5.jpg", 100.0 },
+                    { 16, 5, "Complete clutch kit for Clio", false, true, false, 8, "Clutch Kit", "/images/clutch_kit_clio.jpg", 300.0 },
+                    { 17, 4, "Eco-friendly exhaust component for 508", false, false, true, 1, "Catalytic Converter", "/images/catalytic_converter_508.jpg", 450.0 },
+                    { 18, 5, "Premium oil for Panda engines", false, false, true, 2, "Engine Oil", "/images/engine_oil_panda.jpg", 90.0 },
+                    { 19, 1, "Front brake discs for Golf", false, false, true, 3, "Brake Discs", "/images/brake_discs_golfVI.jpg", 150.0 },
+                    { 20, 2, "Steering system component for Q5", false, false, true, 4, "Tie Rod Ends", "/images/tie_rod_ends_q5.jpg", 180.0 },
+                    { 21, 4, "Durable exhaust manifold for Panda", false, false, true, 5, "Exhaust Manifold", "/images/exhaust_manifold_panda.jpg", 400.0 },
+                    { 22, 3, "High-performance fuel injector for Golf", false, false, true, 6, "Fuel Injector", "/images/fuel_injector_golfVI.jpg", 250.0 },
+                    { 23, 8, "Heat-resistant turbo hose for Q5", false, false, true, 7, "Turbo Hose", "/images/turbo_hose_q5.jpg", 80.0 },
+                    { 24, 9, "Efficient AC compressor for Clio", false, false, true, 8, "Air Conditioning Compressor", "/images/air_conditioning_compressor_clio.jpg", 600.0 }
                 });
 
             migrationBuilder.InsertData(

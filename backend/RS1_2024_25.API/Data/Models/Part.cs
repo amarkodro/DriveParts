@@ -19,7 +19,11 @@ namespace RS1_2024_25.API.Data.Models
         public int ManufacturerId { get; set; }
         public Manufacturer Manufacturer { get; set; }
 
-       public string? PartImage { get; set; } 
+       public string? PartImage { get; set; }
+
+        public bool IsFeatured { get; set; } = false;
+        public bool IsOnSale { get; set; } = false;
+        public bool IsNewArrival { get; set; } = false;
 
     }
 }

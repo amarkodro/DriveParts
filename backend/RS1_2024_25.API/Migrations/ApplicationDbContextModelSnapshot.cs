@@ -1187,6 +1187,15 @@ namespace RS1_2024_25.API.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("IsFeatured")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsNewArrival")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsOnSale")
+                        .HasColumnType("bit");
+
                     b.Property<int>("ManufacturerId")
                         .HasColumnType("int");
 
@@ -1214,8 +1223,12 @@ namespace RS1_2024_25.API.Migrations
                             PartId = 1,
                             CategoryId = 1,
                             Description = "High-quality brake pads for Golf",
+                            IsFeatured = true,
+                            IsNewArrival = false,
+                            IsOnSale = false,
                             ManufacturerId = 1,
                             Name = "Brake Pads",
+                            PartImage = "/images/BOSCH_brake_pads.jpg",
                             Price = 85.0
                         },
                         new
@@ -1223,8 +1236,12 @@ namespace RS1_2024_25.API.Migrations
                             PartId = 2,
                             CategoryId = 2,
                             Description = "Durable suspension springs for Q5",
+                            IsFeatured = true,
+                            IsNewArrival = false,
+                            IsOnSale = false,
                             ManufacturerId = 2,
                             Name = "Suspension Springs",
+                            PartImage = "/images/Suspension_Springs_q5.jpg",
                             Price = 220.0
                         },
                         new
@@ -1232,8 +1249,12 @@ namespace RS1_2024_25.API.Migrations
                             PartId = 3,
                             CategoryId = 6,
                             Description = "Oil filter suitable for Clio engines",
+                            IsFeatured = true,
+                            IsNewArrival = false,
+                            IsOnSale = false,
                             ManufacturerId = 3,
                             Name = "Engine Oil Filter",
+                            PartImage = "/images/oil_filter_renault_clio.jpg",
                             Price = 25.0
                         },
                         new
@@ -1241,153 +1262,273 @@ namespace RS1_2024_25.API.Migrations
                             PartId = 4,
                             CategoryId = 4,
                             Description = "Rust-resistant exhaust pipe for 508",
+                            IsFeatured = true,
+                            IsNewArrival = false,
+                            IsOnSale = false,
                             ManufacturerId = 4,
                             Name = "Exhaust Pipe",
+                            PartImage = "/images/Exhaust_Pipe peugeot_508.jpg",
                             Price = 300.0
                         },
                         new
                         {
                             PartId = 5,
-                            CategoryId = 8,
-                            Description = "High-performance coolant hose for Panda",
+                            CategoryId = 6,
+                            Description = "Durable timing belt for Golf",
+                            IsFeatured = true,
+                            IsNewArrival = false,
+                            IsOnSale = false,
                             ManufacturerId = 5,
-                            Name = "Coolant Hose",
-                            Price = 40.0
+                            Name = "Timing Belt",
+                            PartImage = "/images/Timing_Belt_gol_VI.jpg",
+                            Price = 120.0
                         },
                         new
                         {
                             PartId = 6,
-                            CategoryId = 6,
-                            Description = "Improves air intake efficiency for Golf",
+                            CategoryId = 8,
+                            Description = "High-efficiency water pump for Panda",
+                            IsFeatured = true,
+                            IsNewArrival = false,
+                            IsOnSale = false,
                             ManufacturerId = 6,
-                            Name = "Air Filter",
-                            Price = 35.0
+                            Name = "Water Pump",
+                            PartImage = "/images/Water_Pump_panda.jpg",
+                            Price = 200.0
                         },
                         new
                         {
                             PartId = 7,
-                            CategoryId = 2,
-                            Description = "Enhanced suspension system for Q5",
+                            CategoryId = 3,
+                            Description = "Precision camshaft for Q5",
+                            IsFeatured = true,
+                            IsNewArrival = false,
+                            IsOnSale = false,
                             ManufacturerId = 7,
-                            Name = "Shock Absorber",
-                            Price = 250.0
+                            Name = "Camshaft",
+                            PartImage = "/images/Camshaft_q5.jpg",
+                            Price = 500.0
                         },
                         new
                         {
                             PartId = 8,
                             CategoryId = 7,
-                            Description = "High-performance spark plugs for Clio",
+                            Description = "Reliable starter motor for Clio",
+                            IsFeatured = true,
+                            IsNewArrival = false,
+                            IsOnSale = false,
                             ManufacturerId = 8,
-                            Name = "Spark Plugs",
-                            Price = 50.0
+                            Name = "Starter Motor",
+                            PartImage = "/images/Starter_Motor_clio.jpg",
+                            Price = 250.0
                         },
                         new
                         {
                             PartId = 9,
-                            CategoryId = 4,
-                            Description = "Eco-friendly exhaust component for 508",
-                            ManufacturerId = 1,
-                            Name = "Catalytic Converter",
-                            Price = 450.0
+                            CategoryId = 8,
+                            Description = "High-performance coolant hose for Panda",
+                            IsFeatured = false,
+                            IsNewArrival = true,
+                            IsOnSale = false,
+                            ManufacturerId = 5,
+                            Name = "Coolant Hose",
+                            PartImage = "/images/Coolant_Hose_panda.jpg",
+                            Price = 40.0
                         },
                         new
                         {
                             PartId = 10,
-                            CategoryId = 5,
-                            Description = "Premium oil for Panda engines",
-                            ManufacturerId = 2,
-                            Name = "Engine Oil",
-                            Price = 90.0
+                            CategoryId = 6,
+                            Description = "Improves air intake efficiency for Golf",
+                            IsFeatured = false,
+                            IsNewArrival = true,
+                            IsOnSale = false,
+                            ManufacturerId = 6,
+                            Name = "Air Filter",
+                            PartImage = "/images/Air_Filter_golf_6.jpg",
+                            Price = 35.0
                         },
                         new
                         {
                             PartId = 11,
-                            CategoryId = 1,
-                            Description = "Front brake discs for Golf",
-                            ManufacturerId = 3,
-                            Name = "Brake Discs",
-                            Price = 150.0
+                            CategoryId = 2,
+                            Description = "Enhanced suspension system for Q5",
+                            IsFeatured = false,
+                            IsNewArrival = true,
+                            IsOnSale = false,
+                            ManufacturerId = 7,
+                            Name = "Shock Absorber",
+                            PartImage = "/images/Shock_Absorber_q5.jpg",
+                            Price = 250.0
                         },
                         new
                         {
                             PartId = 12,
-                            CategoryId = 2,
-                            Description = "Steering system component for Q5",
-                            ManufacturerId = 4,
-                            Name = "Tie Rod Ends",
-                            Price = 180.0
+                            CategoryId = 7,
+                            Description = "High-performance spark plugs for Clio",
+                            IsFeatured = false,
+                            IsNewArrival = true,
+                            IsOnSale = false,
+                            ManufacturerId = 8,
+                            Name = "Spark Plugs",
+                            PartImage = "/images/spark_plugs_clio.jpg",
+                            Price = 50.0
                         },
                         new
                         {
                             PartId = 13,
-                            CategoryId = 3,
-                            Description = "Efficient fuel pump for Clio",
+                            CategoryId = 1,
+                            Description = "Flexible brake hoses for Panda",
+                            IsFeatured = false,
+                            IsNewArrival = true,
+                            IsOnSale = false,
                             ManufacturerId = 5,
-                            Name = "Fuel Pump",
-                            Price = 220.0
+                            Name = "Brake Hoses",
+                            PartImage = "/images/brake_hoses_panda.jpg",
+                            Price = 60.0
                         },
                         new
                         {
                             PartId = 14,
-                            CategoryId = 3,
-                            Description = "Boost engine power for 508",
+                            CategoryId = 8,
+                            Description = "Pressure-regulating radiator cap for Golf",
+                            IsFeatured = false,
+                            IsNewArrival = true,
+                            IsOnSale = false,
                             ManufacturerId = 6,
-                            Name = "Turbocharger",
-                            Price = 1000.0
+                            Name = "Radiator Cap",
+                            PartImage = "/images/radiator_cap_golVI.jpg",
+                            Price = 20.0
                         },
                         new
                         {
                             PartId = 15,
-                            CategoryId = 9,
-                            Description = "All-weather wipers for Panda",
+                            CategoryId = 2,
+                            Description = "Precision wheel bearings for Q5",
+                            IsFeatured = false,
+                            IsNewArrival = true,
+                            IsOnSale = false,
                             ManufacturerId = 7,
-                            Name = "Windshield Wipers",
-                            Price = 25.0
+                            Name = "Wheel Bearings",
+                            PartImage = "/images/wheel_bearings_q5.jpg",
+                            Price = 100.0
                         },
                         new
                         {
                             PartId = 16,
-                            CategoryId = 8,
-                            Description = "High-efficiency radiator for Golf",
+                            CategoryId = 5,
+                            Description = "Complete clutch kit for Clio",
+                            IsFeatured = false,
+                            IsNewArrival = true,
+                            IsOnSale = false,
                             ManufacturerId = 8,
-                            Name = "Radiator",
+                            Name = "Clutch Kit",
+                            PartImage = "/images/clutch_kit_clio.jpg",
                             Price = 300.0
                         },
                         new
                         {
                             PartId = 17,
-                            CategoryId = 2,
-                            Description = "Stable suspension arms for Q5",
+                            CategoryId = 4,
+                            Description = "Eco-friendly exhaust component for 508",
+                            IsFeatured = false,
+                            IsNewArrival = false,
+                            IsOnSale = true,
                             ManufacturerId = 1,
-                            Name = "Control Arms",
-                            Price = 350.0
+                            Name = "Catalytic Converter",
+                            PartImage = "/images/catalytic_converter_508.jpg",
+                            Price = 450.0
                         },
                         new
                         {
                             PartId = 18,
-                            CategoryId = 7,
-                            Description = "Reliable ignition coil for Clio",
+                            CategoryId = 5,
+                            Description = "Premium oil for Panda engines",
+                            IsFeatured = false,
+                            IsNewArrival = false,
+                            IsOnSale = true,
                             ManufacturerId = 2,
-                            Name = "Ignition Coil",
-                            Price = 75.0
+                            Name = "Engine Oil",
+                            PartImage = "/images/engine_oil_panda.jpg",
+                            Price = 90.0
                         },
                         new
                         {
                             PartId = 19,
-                            CategoryId = 9,
-                            Description = "Bright and durable headlights for 508",
+                            CategoryId = 1,
+                            Description = "Front brake discs for Golf",
+                            IsFeatured = false,
+                            IsNewArrival = false,
+                            IsOnSale = true,
                             ManufacturerId = 3,
-                            Name = "Headlight Assembly",
-                            Price = 400.0
+                            Name = "Brake Discs",
+                            PartImage = "/images/brake_discs_golfVI.jpg",
+                            Price = 150.0
                         },
                         new
                         {
                             PartId = 20,
-                            CategoryId = 7,
-                            Description = "Long-lasting battery for Panda",
+                            CategoryId = 2,
+                            Description = "Steering system component for Q5",
+                            IsFeatured = false,
+                            IsNewArrival = false,
+                            IsOnSale = true,
                             ManufacturerId = 4,
-                            Name = "Battery",
+                            Name = "Tie Rod Ends",
+                            PartImage = "/images/tie_rod_ends_q5.jpg",
                             Price = 180.0
+                        },
+                        new
+                        {
+                            PartId = 21,
+                            CategoryId = 4,
+                            Description = "Durable exhaust manifold for Panda",
+                            IsFeatured = false,
+                            IsNewArrival = false,
+                            IsOnSale = true,
+                            ManufacturerId = 5,
+                            Name = "Exhaust Manifold",
+                            PartImage = "/images/exhaust_manifold_panda.jpg",
+                            Price = 400.0
+                        },
+                        new
+                        {
+                            PartId = 22,
+                            CategoryId = 3,
+                            Description = "High-performance fuel injector for Golf",
+                            IsFeatured = false,
+                            IsNewArrival = false,
+                            IsOnSale = true,
+                            ManufacturerId = 6,
+                            Name = "Fuel Injector",
+                            PartImage = "/images/fuel_injector_golfVI.jpg",
+                            Price = 250.0
+                        },
+                        new
+                        {
+                            PartId = 23,
+                            CategoryId = 8,
+                            Description = "Heat-resistant turbo hose for Q5",
+                            IsFeatured = false,
+                            IsNewArrival = false,
+                            IsOnSale = true,
+                            ManufacturerId = 7,
+                            Name = "Turbo Hose",
+                            PartImage = "/images/turbo_hose_q5.jpg",
+                            Price = 80.0
+                        },
+                        new
+                        {
+                            PartId = 24,
+                            CategoryId = 9,
+                            Description = "Efficient AC compressor for Clio",
+                            IsFeatured = false,
+                            IsNewArrival = false,
+                            IsOnSale = true,
+                            ManufacturerId = 8,
+                            Name = "Air Conditioning Compressor",
+                            PartImage = "/images/air_conditioning_compressor_clio.jpg",
+                            Price = 600.0
                         });
                 });
 

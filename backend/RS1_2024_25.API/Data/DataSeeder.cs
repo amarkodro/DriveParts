@@ -10,7 +10,7 @@ namespace RS1_2024_25.API.Data
         public void DataSeed(ModelBuilder modelBuilder)
         {
 
-            
+
             modelBuilder.Entity<City>().HasData(
                 new City { ID = 1, Name = "Banja Luka", CountryId = 1 },
                 new City { ID = 2, Name = "Bihać", CountryId = 1 },
@@ -200,32 +200,37 @@ namespace RS1_2024_25.API.Data
 
             modelBuilder.Entity<Part>().HasData(
 
-                new Part { PartId = 1, Name = "Brake Pads", Description = "High-quality brake pads for Golf", CategoryId = 1, ManufacturerId = 1, Price = 85},
-                new Part { PartId = 2, Name = "Suspension Springs", Description = "Durable suspension springs for Q5", CategoryId = 2, ManufacturerId = 2, Price = 220 },
-                new Part { PartId = 3, Name = "Engine Oil Filter", Description = "Oil filter suitable for Clio engines", CategoryId = 6,  ManufacturerId = 3, Price = 25 },
-                new Part { PartId = 4, Name = "Exhaust Pipe", Description = "Rust-resistant exhaust pipe for 508", CategoryId = 4,  ManufacturerId = 4, Price = 300 },
-                new Part { PartId = 5, Name = "Coolant Hose", Description = "High-performance coolant hose for Panda", CategoryId = 8,  ManufacturerId = 5, Price = 40 },
-                new Part { PartId = 6, Name = "Air Filter", Description = "Improves air intake efficiency for Golf", CategoryId = 6,  ManufacturerId = 6, Price = 35 },
-                new Part { PartId = 7, Name = "Shock Absorber", Description = "Enhanced suspension system for Q5", CategoryId = 2,  ManufacturerId = 7, Price = 250 },
-                new Part { PartId = 8, Name = "Spark Plugs", Description = "High-performance spark plugs for Clio", CategoryId = 7,  ManufacturerId = 8, Price = 50 },
-                new Part { PartId = 9, Name = "Catalytic Converter", Description = "Eco-friendly exhaust component for 508", CategoryId = 4, ManufacturerId = 1, Price = 450 },
-                new Part { PartId = 10, Name = "Engine Oil", Description = "Premium oil for Panda engines", CategoryId = 5,  ManufacturerId = 2, Price = 90 },
-                new Part { PartId = 11, Name = "Brake Discs", Description = "Front brake discs for Golf", CategoryId = 1,  ManufacturerId = 3, Price = 150 },
-                new Part { PartId = 12, Name = "Tie Rod Ends", Description = "Steering system component for Q5", CategoryId = 2,  ManufacturerId = 4, Price = 180 },
-                new Part { PartId = 13, Name = "Fuel Pump", Description = "Efficient fuel pump for Clio", CategoryId = 3,  ManufacturerId = 5, Price = 220 },
-                new Part { PartId = 14, Name = "Turbocharger", Description = "Boost engine power for 508", CategoryId = 3,  ManufacturerId = 6, Price = 1000 },
-                new Part { PartId = 15, Name = "Windshield Wipers", Description = "All-weather wipers for Panda", CategoryId = 9, ManufacturerId = 7, Price = 25 },
-                new Part { PartId = 16, Name = "Radiator", Description = "High-efficiency radiator for Golf", CategoryId = 8,  ManufacturerId = 8, Price = 300 },
-                new Part { PartId = 17, Name = "Control Arms", Description = "Stable suspension arms for Q5", CategoryId = 2,  ManufacturerId = 1, Price = 350 },
-                new Part { PartId = 18, Name = "Ignition Coil", Description = "Reliable ignition coil for Clio", CategoryId = 7,  ManufacturerId = 2, Price = 75 },
-                new Part { PartId = 19, Name = "Headlight Assembly", Description = "Bright and durable headlights for 508", CategoryId = 9, ManufacturerId = 3, Price = 400 },
-                new Part { PartId = 20, Name = "Battery", Description = "Long-lasting battery for Panda", CategoryId = 7,  ManufacturerId = 4, Price = 180 }
- );
+                new Part { PartId = 1, Name = "Brake Pads", Description = "High-quality brake pads for Golf", CategoryId = 1, ManufacturerId = 1, Price = 85, IsFeatured = true, IsNewArrival = false, IsOnSale = false, PartImage = "/images/BOSCH_brake_pads.jpg" },
+                new Part { PartId = 2, Name = "Suspension Springs", Description = "Durable suspension springs for Q5", CategoryId = 2, ManufacturerId = 2, Price = 220, IsFeatured = true, IsNewArrival = false, IsOnSale = false, PartImage = "/images/Suspension_Springs_q5.jpg" },
+                new Part { PartId = 3, Name = "Engine Oil Filter", Description = "Oil filter suitable for Clio engines", CategoryId = 6, ManufacturerId = 3, Price = 25, IsFeatured = true, IsNewArrival = false, IsOnSale = false, PartImage = "/images/oil_filter_renault_clio.jpg" },
+                new Part { PartId = 4, Name = "Exhaust Pipe", Description = "Rust-resistant exhaust pipe for 508", CategoryId = 4, ManufacturerId = 4, Price = 300, IsFeatured = true, IsNewArrival = false, IsOnSale = false, PartImage = "/images/Exhaust_Pipe peugeot_508.jpg" },
+                new Part { PartId = 5, Name = "Timing Belt", Description = "Durable timing belt for Golf", CategoryId = 6, ManufacturerId = 5, Price = 120, IsFeatured = true, IsNewArrival = false, IsOnSale = false, PartImage = "/images/Timing_Belt_gol_VI.jpg" },
+                new Part { PartId = 6, Name = "Water Pump", Description = "High-efficiency water pump for Panda", CategoryId = 8, ManufacturerId = 6, Price = 200, IsFeatured = true, IsNewArrival = false, IsOnSale = false, PartImage = "/images/Water_Pump_panda.jpg" },
+                new Part { PartId = 7, Name = "Camshaft", Description = "Precision camshaft for Q5", CategoryId = 3, ManufacturerId = 7, Price = 500, IsFeatured = true, IsNewArrival = false, IsOnSale = false, PartImage = "/images/Camshaft_q5.jpg" },
+                new Part { PartId = 8, Name = "Starter Motor", Description = "Reliable starter motor for Clio", CategoryId = 7, ManufacturerId = 8, Price = 250, IsFeatured = true, IsNewArrival = false, IsOnSale = false, PartImage = "/images/Starter_Motor_clio.jpg" },
+                new Part { PartId = 9, Name = "Coolant Hose", Description = "High-performance coolant hose for Panda", CategoryId = 8, ManufacturerId = 5, Price = 40, IsFeatured = false, IsNewArrival = true, IsOnSale = false, PartImage = "/images/Coolant_Hose_panda.jpg" },
+                new Part { PartId = 10, Name = "Air Filter", Description = "Improves air intake efficiency for Golf", CategoryId = 6, ManufacturerId = 6, Price = 35, IsFeatured = false, IsNewArrival = true, IsOnSale = false, PartImage = "/images/Air_Filter_golf_6.jpg" },
+                new Part { PartId = 11, Name = "Shock Absorber", Description = "Enhanced suspension system for Q5", CategoryId = 2, ManufacturerId = 7, Price = 250, IsFeatured = false, IsNewArrival = true, IsOnSale = false, PartImage = "/images/Shock_Absorber_q5.jpg" },
+                new Part { PartId = 12, Name = "Spark Plugs", Description = "High-performance spark plugs for Clio", CategoryId = 7, ManufacturerId = 8, Price = 50, IsFeatured = false, IsNewArrival = true, IsOnSale = false, PartImage = "/images/spark_plugs_clio.jpg" },
+                new Part { PartId = 13, Name = "Brake Hoses", Description = "Flexible brake hoses for Panda", CategoryId = 1, ManufacturerId = 5, Price = 60, IsFeatured = false, IsNewArrival = true, IsOnSale = false, PartImage = "/images/brake_hoses_panda.jpg" },
+                new Part { PartId = 14, Name = "Radiator Cap", Description = "Pressure-regulating radiator cap for Golf", CategoryId = 8, ManufacturerId = 6, Price = 20, IsFeatured = false, IsNewArrival = true, IsOnSale = false, PartImage = "/images/radiator_cap_golVI.jpg" },
+                new Part { PartId = 15, Name = "Wheel Bearings", Description = "Precision wheel bearings for Q5", CategoryId = 2, ManufacturerId = 7, Price = 100, IsFeatured = false, IsNewArrival = true, IsOnSale = false, PartImage = "/images/wheel_bearings_q5.jpg" },
+                new Part { PartId = 16, Name = "Clutch Kit", Description = "Complete clutch kit for Clio", CategoryId = 5, ManufacturerId = 8, Price = 300, IsFeatured = false, IsNewArrival = true, IsOnSale = false, PartImage = "/images/clutch_kit_clio.jpg" },
+                new Part { PartId = 17, Name = "Catalytic Converter", Description = "Eco-friendly exhaust component for 508", CategoryId = 4, ManufacturerId = 1, Price = 450, IsFeatured = false, IsNewArrival = false, IsOnSale = true, PartImage = "/images/catalytic_converter_508.jpg" },
+                new Part { PartId = 18, Name = "Engine Oil", Description = "Premium oil for Panda engines", CategoryId = 5, ManufacturerId = 2, Price = 90, IsFeatured = false, IsNewArrival = false, IsOnSale = true, PartImage = "/images/engine_oil_panda.jpg" },
+                new Part { PartId = 19, Name = "Brake Discs", Description = "Front brake discs for Golf", CategoryId = 1, ManufacturerId = 3, Price = 150, IsFeatured = false, IsNewArrival = false, IsOnSale = true, PartImage = "/images/brake_discs_golfVI.jpg" },
+                new Part { PartId = 20, Name = "Tie Rod Ends", Description = "Steering system component for Q5", CategoryId = 2, ManufacturerId = 4, Price = 180, IsFeatured = false, IsNewArrival = false, IsOnSale = true, PartImage = "/images/tie_rod_ends_q5.jpg" },
+                new Part { PartId = 21, Name = "Exhaust Manifold", Description = "Durable exhaust manifold for Panda", CategoryId = 4, ManufacturerId = 5, Price = 400, IsFeatured = false, IsNewArrival = false, IsOnSale = true, PartImage = "/images/exhaust_manifold_panda.jpg" },
+                new Part { PartId = 22, Name = "Fuel Injector", Description = "High-performance fuel injector for Golf", CategoryId = 3, ManufacturerId = 6, Price = 250, IsFeatured = false, IsNewArrival = false, IsOnSale = true, PartImage = "/images/fuel_injector_golfVI.jpg" },
+                new Part { PartId = 23, Name = "Turbo Hose", Description = "Heat-resistant turbo hose for Q5", CategoryId = 8, ManufacturerId = 7, Price = 80, IsFeatured = false, IsNewArrival = false, IsOnSale = true, PartImage = "/images/turbo_hose_q5.jpg" },
+                new Part { PartId = 24, Name = "Air Conditioning Compressor", Description = "Efficient AC compressor for Clio", CategoryId = 9, ManufacturerId = 8, Price = 600, IsFeatured = false, IsNewArrival = false, IsOnSale = true, PartImage = "/images/air_conditioning_compressor_clio.jpg" }
+
+             );
 
             modelBuilder.Entity<Payment>().HasData(
 
-                new Payment { PaymentId = 1, PaymentMethod="Card" },
-                new Payment { PaymentId = 2, PaymentMethod="Cash" }
+                new Payment { PaymentId = 1, PaymentMethod = "Card" },
+                new Payment { PaymentId = 2, PaymentMethod = "Cash" }
 
             );
 
