@@ -52,18 +52,18 @@
   background-color: #1266f1;
   color: #fff;
   padding: 10px 20px;
-  border: 2px solid #1266f1; /* Dodato 'solid' za stil ivice */
+  border: 2px solid #1266f1;
   border-radius: 5px;
-  transition: background-color 0.3s, border 0.3s; /* Dodato za glatku tranziciju */
+  transition: background-color 0.3s, border 0.3s;
 }
 
 .btn:hover {
   background-color: #fff;
   color: #1266f1;
   padding: 10px 20px;
-  border: 2px solid #1266f1; /* Dodato 'solid' za stil ivice */
+  border: 2px solid #1266f1;
   border-radius: 5px;
-  transition: background-color 0.3s, border 0.3s; /* Dodato za glatku tranziciju */
+  transition: background-color 0.3s, border 0.3s;
 }
 
 .product-image {
