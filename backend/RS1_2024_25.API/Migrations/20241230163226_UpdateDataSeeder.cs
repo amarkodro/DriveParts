@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace RS1_2024_25.API.Migrations
 {
     /// <inheritdoc />
-    public partial class Init : Migration
+    public partial class UpdateDataSeeder : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -457,7 +457,27 @@ namespace RS1_2024_25.API.Migrations
                     { 2, "Audi", "Q5", "SUV", 2021 },
                     { 3, "Renault", "Clio", "Hatchback", 2023 },
                     { 4, "Peugeot", "508", "Sedan", 2020 },
-                    { 5, "Fiat", "Panda", "Compact", 2019 }
+                    { 5, "Fiat", "Panda", "Compact", 2019 },
+                    { 6, "Volkswagen", "Tiguan", "SUV", 2022 },
+                    { 7, "Volkswagen", "Passat", "Sedan", 2021 },
+                    { 8, "Volkswagen", "Golf 8", "Hatchback", 2023 },
+                    { 9, "Volkswagen", "Golf 7", "Hatchback", 2020 },
+                    { 10, "BMW", "X5", "SUV", 2022 },
+                    { 11, "BMW", "3 Series", "Sedan", 2021 },
+                    { 12, "Mercedes", "C-Class", "Sedan", 2023 },
+                    { 13, "Mercedes", "GLE", "SUV", 2022 },
+                    { 14, "Tesla", "Model S", "Sedan", 2023 },
+                    { 15, "Ford", "Focus", "Hatchback", 2021 },
+                    { 16, "Toyota", "Corolla", "Sedan", 2020 },
+                    { 17, "Honda", "Civic", "Hatchback", 2022 },
+                    { 18, "Nissan", "Altima", "Sedan", 2021 },
+                    { 19, "Mazda", "CX-5", "SUV", 2023 },
+                    { 20, "Kia", "Sportage", "SUV", 2020 },
+                    { 21, "Hyundai", "Tucson", "SUV", 2023 },
+                    { 22, "Chevrolet", "Malibu", "Sedan", 2022 },
+                    { 23, "Subaru", "Outback", "SUV", 2021 },
+                    { 24, "Jeep", "Wrangler", "SUV", 2020 },
+                    { 25, "Volvo", "XC90", "SUV", 2023 }
                 });
 
             migrationBuilder.InsertData(
@@ -491,7 +511,17 @@ namespace RS1_2024_25.API.Migrations
                     { 2, 1500.0, "Petrol", "TSI 1.5", 130 },
                     { 3, 0.0, "Electric", "Electric R100", 100 },
                     { 4, 1600.0, "Hybrid", "HY 1.6", 180 },
-                    { 5, 1200.0, "Petrol", "FIAT Petrol 1.2", 90 }
+                    { 5, 1200.0, "Petrol", "FIAT Petrol 1.2", 90 },
+                    { 6, 1600.0, "Diesel", "TDI 1.6", 120 },
+                    { 7, 2000.0, "Petrol", "TSI 2.0", 200 },
+                    { 8, 2000.0, "Hybrid", "Hybrid E-Drive", 250 },
+                    { 9, 0.0, "Electric", "Electric P150", 150 },
+                    { 10, 1000.0, "Petrol", "EcoBoost 1.0", 125 },
+                    { 11, 1500.0, "Petrol", "VTEC 1.5", 180 },
+                    { 12, 2500.0, "Petrol", "Skyactiv 2.5", 187 },
+                    { 13, 1600.0, "Petrol", "GDi 1.6", 177 },
+                    { 14, 5700.0, "Petrol", "Hemi 5.7", 395 },
+                    { 15, 2000.0, "Petrol", "T6 2.0", 316 }
                 });
 
             migrationBuilder.InsertData(
@@ -579,7 +609,27 @@ namespace RS1_2024_25.API.Migrations
                     { 2, 2, 2 },
                     { 3, 3, 3 },
                     { 4, 4, 4 },
-                    { 5, 5, 5 }
+                    { 5, 5, 5 },
+                    { 6, 6, 6 },
+                    { 7, 7, 7 },
+                    { 8, 8, 1 },
+                    { 9, 9, 2 },
+                    { 10, 10, 7 },
+                    { 11, 11, 2 },
+                    { 12, 12, 8 },
+                    { 13, 13, 8 },
+                    { 14, 14, 9 },
+                    { 15, 15, 10 },
+                    { 16, 16, 11 },
+                    { 17, 17, 11 },
+                    { 18, 18, 12 },
+                    { 19, 19, 12 },
+                    { 20, 20, 13 },
+                    { 21, 21, 13 },
+                    { 22, 22, 14 },
+                    { 23, 23, 7 },
+                    { 24, 24, 14 },
+                    { 25, 25, 15 }
                 });
 
             migrationBuilder.InsertData(
@@ -660,10 +710,14 @@ namespace RS1_2024_25.API.Migrations
                 values: new object[,]
                 {
                     { 1, 1, 1 },
-                    { 2, 2, 2 },
-                    { 3, 3, 3 },
-                    { 4, 4, 4 },
-                    { 5, 5, 5 }
+                    { 2, 1, 2 },
+                    { 3, 1, 5 },
+                    { 4, 2, 3 },
+                    { 5, 2, 6 },
+                    { 6, 3, 4 },
+                    { 7, 3, 5 },
+                    { 8, 4, 2 },
+                    { 9, 5, 6 }
                 });
 
             migrationBuilder.InsertData(

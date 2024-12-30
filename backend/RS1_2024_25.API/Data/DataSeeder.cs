@@ -137,7 +137,27 @@ namespace RS1_2024_25.API.Data
                 new Car { CarId = 2, Brand = "Audi", Model = "Q5", Type = "SUV", Year = 2021 },
                 new Car { CarId = 3, Brand = "Renault", Model = "Clio", Type = "Hatchback", Year = 2023 },
                 new Car { CarId = 4, Brand = "Peugeot", Model = "508", Type = "Sedan", Year = 2020 },
-                new Car { CarId = 5, Brand = "Fiat", Model = "Panda", Type = "Compact", Year = 2019 }
+                new Car { CarId = 5, Brand = "Fiat", Model = "Panda", Type = "Compact", Year = 2019 },
+                new Car { CarId = 6, Brand = "Volkswagen", Model = "Tiguan", Type = "SUV", Year = 2022 },
+                new Car { CarId = 7, Brand = "Volkswagen", Model = "Passat", Type = "Sedan", Year = 2021 },
+                new Car { CarId = 8, Brand = "Volkswagen", Model = "Golf 8", Type = "Hatchback", Year = 2023 },
+                new Car { CarId = 9, Brand = "Volkswagen", Model = "Golf 7", Type = "Hatchback", Year = 2020 },
+                new Car { CarId = 10, Brand = "BMW", Model = "X5", Type = "SUV", Year = 2022 },
+                new Car { CarId = 11, Brand = "BMW", Model = "3 Series", Type = "Sedan", Year = 2021 },
+                new Car { CarId = 12, Brand = "Mercedes", Model = "C-Class", Type = "Sedan", Year = 2023 },
+                new Car { CarId = 13, Brand = "Mercedes", Model = "GLE", Type = "SUV", Year = 2022 },
+                new Car { CarId = 14, Brand = "Tesla", Model = "Model S", Type = "Sedan", Year = 2023 },
+                new Car { CarId = 15, Brand = "Ford", Model = "Focus", Type = "Hatchback", Year = 2021 },
+                new Car { CarId = 16, Brand = "Toyota", Model = "Corolla", Type = "Sedan", Year = 2020 },
+                new Car { CarId = 17, Brand = "Honda", Model = "Civic", Type = "Hatchback", Year = 2022 },
+                new Car { CarId = 18, Brand = "Nissan", Model = "Altima", Type = "Sedan", Year = 2021 },
+                new Car { CarId = 19, Brand = "Mazda", Model = "CX-5", Type = "SUV", Year = 2023 },
+                new Car { CarId = 20, Brand = "Kia", Model = "Sportage", Type = "SUV", Year = 2020 },
+                new Car { CarId = 21, Brand = "Hyundai", Model = "Tucson", Type = "SUV", Year = 2023 },
+                new Car { CarId = 22, Brand = "Chevrolet", Model = "Malibu", Type = "Sedan", Year = 2022 },
+                new Car { CarId = 23, Brand = "Subaru", Model = "Outback", Type = "SUV", Year = 2021 },
+                new Car { CarId = 24, Brand = "Jeep", Model = "Wrangler", Type = "SUV", Year = 2020 },
+                new Car { CarId = 25, Brand = "Volvo", Model = "XC90", Type = "SUV", Year = 2023 }
             );
 
             // Engines
@@ -146,7 +166,17 @@ namespace RS1_2024_25.API.Data
                 new Engine { EngineId = 2, Name = "TSI 1.5", Power = 130, Displacement = 1500, FuelType = "Petrol" },
                 new Engine { EngineId = 3, Name = "Electric R100", Power = 100, Displacement = 0, FuelType = "Electric" },
                 new Engine { EngineId = 4, Name = "HY 1.6", Power = 180, Displacement = 1600, FuelType = "Hybrid" },
-                new Engine { EngineId = 5, Name = "FIAT Petrol 1.2", Power = 90, Displacement = 1200, FuelType = "Petrol" }
+                new Engine { EngineId = 5, Name = "FIAT Petrol 1.2", Power = 90, Displacement = 1200, FuelType = "Petrol" },
+                new Engine { EngineId = 6, Name = "TDI 1.6", Power = 120, Displacement = 1600, FuelType = "Diesel" },
+                new Engine { EngineId = 7, Name = "TSI 2.0", Power = 200, Displacement = 2000, FuelType = "Petrol" },
+                new Engine { EngineId = 8, Name = "Hybrid E-Drive", Power = 250, Displacement = 2000, FuelType = "Hybrid" },
+                new Engine { EngineId = 9, Name = "Electric P150", Power = 150, Displacement = 0, FuelType = "Electric" },
+                new Engine { EngineId = 10, Name = "EcoBoost 1.0", Power = 125, Displacement = 1000, FuelType = "Petrol" },
+                new Engine { EngineId = 11, Name = "VTEC 1.5", Power = 180, Displacement = 1500, FuelType = "Petrol" },
+                new Engine { EngineId = 12, Name = "Skyactiv 2.5", Power = 187, Displacement = 2500, FuelType = "Petrol" },
+                new Engine { EngineId = 13, Name = "GDi 1.6", Power = 177, Displacement = 1600, FuelType = "Petrol" },
+                new Engine { EngineId = 14, Name = "Hemi 5.7", Power = 395, Displacement = 5700, FuelType = "Petrol" },
+                new Engine { EngineId = 15, Name = "T6 2.0", Power = 316, Displacement = 2000, FuelType = "Petrol" }
             );
 
             // Car Engines
@@ -155,7 +185,27 @@ namespace RS1_2024_25.API.Data
                 new CarEngine { CarEngineId = 2, CarId = 2, EngineId = 2 },
                 new CarEngine { CarEngineId = 3, CarId = 3, EngineId = 3 },
                 new CarEngine { CarEngineId = 4, CarId = 4, EngineId = 4 },
-                new CarEngine { CarEngineId = 5, CarId = 5, EngineId = 5 }
+                new CarEngine { CarEngineId = 5, CarId = 5, EngineId = 5 },
+                new CarEngine { CarEngineId = 6, CarId = 6, EngineId = 6 },
+                new CarEngine { CarEngineId = 7, CarId = 7, EngineId = 7 },
+                new CarEngine { CarEngineId = 8, CarId = 8, EngineId = 1 },
+                new CarEngine { CarEngineId = 9, CarId = 9, EngineId = 2 },
+                new CarEngine { CarEngineId = 10, CarId = 10, EngineId = 7 },
+                new CarEngine { CarEngineId = 11, CarId = 11, EngineId = 2 },
+                new CarEngine { CarEngineId = 12, CarId = 12, EngineId = 8 },
+                new CarEngine { CarEngineId = 13, CarId = 13, EngineId = 8 },
+                new CarEngine { CarEngineId = 14, CarId = 14, EngineId = 9 },
+                new CarEngine { CarEngineId = 15, CarId = 15, EngineId = 10 },
+                new CarEngine { CarEngineId = 16, CarId = 16, EngineId = 11 },
+                new CarEngine { CarEngineId = 17, CarId = 17, EngineId = 11 },
+                new CarEngine { CarEngineId = 18, CarId = 18, EngineId = 12 },
+                new CarEngine { CarEngineId = 19, CarId = 19, EngineId = 12 },
+                new CarEngine { CarEngineId = 20, CarId = 20, EngineId = 13 },
+                new CarEngine { CarEngineId = 21, CarId = 21, EngineId = 13 },
+                new CarEngine { CarEngineId = 22, CarId = 22, EngineId = 14 },
+                new CarEngine { CarEngineId = 23, CarId = 23, EngineId = 7 },
+                new CarEngine { CarEngineId = 24, CarId = 24, EngineId = 14 },
+                new CarEngine { CarEngineId = 25, CarId = 25, EngineId = 15 }
             );
 
             // Manufacturers
@@ -315,11 +365,22 @@ namespace RS1_2024_25.API.Data
 
             modelBuilder.Entity<CarPart>().HasData(
 
-                new CarPart { CarPartId = 1, CarId = 1, PartId = 1 },
-                new CarPart { CarPartId = 2, CarId = 2, PartId = 2 },
-                new CarPart { CarPartId = 3, CarId = 3, PartId = 3 },
-                new CarPart { CarPartId = 4, CarId = 4, PartId = 4 },
-                new CarPart { CarPartId = 5, CarId = 5, PartId = 5 }
+                    // Parts for CarId = 1 (Golf 6)
+                    new CarPart { CarPartId = 1, CarId = 1, PartId = 1 }, // Air Filter
+                    new CarPart { CarPartId = 2, CarId = 1, PartId = 2 }, // Brake Pads
+                    new CarPart { CarPartId = 3, CarId = 1, PartId = 5 }, // Timing Belt
+
+                    // Parts for CarId = 2 (Clio)
+                    new CarPart { CarPartId = 4, CarId = 2, PartId = 3 }, // Engine Oil Filter
+                    new CarPart { CarPartId = 5, CarId = 2, PartId = 6 }, // Water Pump
+
+                    // Parts for CarId = 3 (Peugeot 508)
+                    new CarPart { CarPartId = 6, CarId = 3, PartId = 4 }, // Exhaust Pipe
+                    new CarPart { CarPartId = 7, CarId = 3, PartId = 5 }, // Timing Belt
+
+                    // Additional combinations (example for more Cars and Parts)
+                    new CarPart { CarPartId = 8, CarId = 4, PartId = 2 }, // Brake Pads for another Car
+                    new CarPart { CarPartId = 9, CarId = 5, PartId = 6 }  // Water Pump for another Car
             );
         }
     }

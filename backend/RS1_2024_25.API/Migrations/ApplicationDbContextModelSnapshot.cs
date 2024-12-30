@@ -153,6 +153,166 @@ namespace RS1_2024_25.API.Migrations
                             Model = "Panda",
                             Type = "Compact",
                             Year = 2019
+                        },
+                        new
+                        {
+                            CarId = 6,
+                            Brand = "Volkswagen",
+                            Model = "Tiguan",
+                            Type = "SUV",
+                            Year = 2022
+                        },
+                        new
+                        {
+                            CarId = 7,
+                            Brand = "Volkswagen",
+                            Model = "Passat",
+                            Type = "Sedan",
+                            Year = 2021
+                        },
+                        new
+                        {
+                            CarId = 8,
+                            Brand = "Volkswagen",
+                            Model = "Golf 8",
+                            Type = "Hatchback",
+                            Year = 2023
+                        },
+                        new
+                        {
+                            CarId = 9,
+                            Brand = "Volkswagen",
+                            Model = "Golf 7",
+                            Type = "Hatchback",
+                            Year = 2020
+                        },
+                        new
+                        {
+                            CarId = 10,
+                            Brand = "BMW",
+                            Model = "X5",
+                            Type = "SUV",
+                            Year = 2022
+                        },
+                        new
+                        {
+                            CarId = 11,
+                            Brand = "BMW",
+                            Model = "3 Series",
+                            Type = "Sedan",
+                            Year = 2021
+                        },
+                        new
+                        {
+                            CarId = 12,
+                            Brand = "Mercedes",
+                            Model = "C-Class",
+                            Type = "Sedan",
+                            Year = 2023
+                        },
+                        new
+                        {
+                            CarId = 13,
+                            Brand = "Mercedes",
+                            Model = "GLE",
+                            Type = "SUV",
+                            Year = 2022
+                        },
+                        new
+                        {
+                            CarId = 14,
+                            Brand = "Tesla",
+                            Model = "Model S",
+                            Type = "Sedan",
+                            Year = 2023
+                        },
+                        new
+                        {
+                            CarId = 15,
+                            Brand = "Ford",
+                            Model = "Focus",
+                            Type = "Hatchback",
+                            Year = 2021
+                        },
+                        new
+                        {
+                            CarId = 16,
+                            Brand = "Toyota",
+                            Model = "Corolla",
+                            Type = "Sedan",
+                            Year = 2020
+                        },
+                        new
+                        {
+                            CarId = 17,
+                            Brand = "Honda",
+                            Model = "Civic",
+                            Type = "Hatchback",
+                            Year = 2022
+                        },
+                        new
+                        {
+                            CarId = 18,
+                            Brand = "Nissan",
+                            Model = "Altima",
+                            Type = "Sedan",
+                            Year = 2021
+                        },
+                        new
+                        {
+                            CarId = 19,
+                            Brand = "Mazda",
+                            Model = "CX-5",
+                            Type = "SUV",
+                            Year = 2023
+                        },
+                        new
+                        {
+                            CarId = 20,
+                            Brand = "Kia",
+                            Model = "Sportage",
+                            Type = "SUV",
+                            Year = 2020
+                        },
+                        new
+                        {
+                            CarId = 21,
+                            Brand = "Hyundai",
+                            Model = "Tucson",
+                            Type = "SUV",
+                            Year = 2023
+                        },
+                        new
+                        {
+                            CarId = 22,
+                            Brand = "Chevrolet",
+                            Model = "Malibu",
+                            Type = "Sedan",
+                            Year = 2022
+                        },
+                        new
+                        {
+                            CarId = 23,
+                            Brand = "Subaru",
+                            Model = "Outback",
+                            Type = "SUV",
+                            Year = 2021
+                        },
+                        new
+                        {
+                            CarId = 24,
+                            Brand = "Jeep",
+                            Model = "Wrangler",
+                            Type = "SUV",
+                            Year = 2020
+                        },
+                        new
+                        {
+                            CarId = 25,
+                            Brand = "Volvo",
+                            Model = "XC90",
+                            Type = "SUV",
+                            Year = 2023
                         });
                 });
 
@@ -208,6 +368,126 @@ namespace RS1_2024_25.API.Migrations
                             CarEngineId = 5,
                             CarId = 5,
                             EngineId = 5
+                        },
+                        new
+                        {
+                            CarEngineId = 6,
+                            CarId = 6,
+                            EngineId = 6
+                        },
+                        new
+                        {
+                            CarEngineId = 7,
+                            CarId = 7,
+                            EngineId = 7
+                        },
+                        new
+                        {
+                            CarEngineId = 8,
+                            CarId = 8,
+                            EngineId = 1
+                        },
+                        new
+                        {
+                            CarEngineId = 9,
+                            CarId = 9,
+                            EngineId = 2
+                        },
+                        new
+                        {
+                            CarEngineId = 10,
+                            CarId = 10,
+                            EngineId = 7
+                        },
+                        new
+                        {
+                            CarEngineId = 11,
+                            CarId = 11,
+                            EngineId = 2
+                        },
+                        new
+                        {
+                            CarEngineId = 12,
+                            CarId = 12,
+                            EngineId = 8
+                        },
+                        new
+                        {
+                            CarEngineId = 13,
+                            CarId = 13,
+                            EngineId = 8
+                        },
+                        new
+                        {
+                            CarEngineId = 14,
+                            CarId = 14,
+                            EngineId = 9
+                        },
+                        new
+                        {
+                            CarEngineId = 15,
+                            CarId = 15,
+                            EngineId = 10
+                        },
+                        new
+                        {
+                            CarEngineId = 16,
+                            CarId = 16,
+                            EngineId = 11
+                        },
+                        new
+                        {
+                            CarEngineId = 17,
+                            CarId = 17,
+                            EngineId = 11
+                        },
+                        new
+                        {
+                            CarEngineId = 18,
+                            CarId = 18,
+                            EngineId = 12
+                        },
+                        new
+                        {
+                            CarEngineId = 19,
+                            CarId = 19,
+                            EngineId = 12
+                        },
+                        new
+                        {
+                            CarEngineId = 20,
+                            CarId = 20,
+                            EngineId = 13
+                        },
+                        new
+                        {
+                            CarEngineId = 21,
+                            CarId = 21,
+                            EngineId = 13
+                        },
+                        new
+                        {
+                            CarEngineId = 22,
+                            CarId = 22,
+                            EngineId = 14
+                        },
+                        new
+                        {
+                            CarEngineId = 23,
+                            CarId = 23,
+                            EngineId = 7
+                        },
+                        new
+                        {
+                            CarEngineId = 24,
+                            CarId = 24,
+                            EngineId = 14
+                        },
+                        new
+                        {
+                            CarEngineId = 25,
+                            CarId = 25,
+                            EngineId = 15
                         });
                 });
 
@@ -243,26 +523,50 @@ namespace RS1_2024_25.API.Migrations
                         new
                         {
                             CarPartId = 2,
-                            CarId = 2,
+                            CarId = 1,
                             PartId = 2
                         },
                         new
                         {
                             CarPartId = 3,
-                            CarId = 3,
-                            PartId = 3
+                            CarId = 1,
+                            PartId = 5
                         },
                         new
                         {
                             CarPartId = 4,
-                            CarId = 4,
-                            PartId = 4
+                            CarId = 2,
+                            PartId = 3
                         },
                         new
                         {
                             CarPartId = 5,
-                            CarId = 5,
+                            CarId = 2,
+                            PartId = 6
+                        },
+                        new
+                        {
+                            CarPartId = 6,
+                            CarId = 3,
+                            PartId = 4
+                        },
+                        new
+                        {
+                            CarPartId = 7,
+                            CarId = 3,
                             PartId = 5
+                        },
+                        new
+                        {
+                            CarPartId = 8,
+                            CarId = 4,
+                            PartId = 2
+                        },
+                        new
+                        {
+                            CarPartId = 9,
+                            CarId = 5,
+                            PartId = 6
                         });
                 });
 
@@ -653,6 +957,86 @@ namespace RS1_2024_25.API.Migrations
                             FuelType = "Petrol",
                             Name = "FIAT Petrol 1.2",
                             Power = 90
+                        },
+                        new
+                        {
+                            EngineId = 6,
+                            Displacement = 1600.0,
+                            FuelType = "Diesel",
+                            Name = "TDI 1.6",
+                            Power = 120
+                        },
+                        new
+                        {
+                            EngineId = 7,
+                            Displacement = 2000.0,
+                            FuelType = "Petrol",
+                            Name = "TSI 2.0",
+                            Power = 200
+                        },
+                        new
+                        {
+                            EngineId = 8,
+                            Displacement = 2000.0,
+                            FuelType = "Hybrid",
+                            Name = "Hybrid E-Drive",
+                            Power = 250
+                        },
+                        new
+                        {
+                            EngineId = 9,
+                            Displacement = 0.0,
+                            FuelType = "Electric",
+                            Name = "Electric P150",
+                            Power = 150
+                        },
+                        new
+                        {
+                            EngineId = 10,
+                            Displacement = 1000.0,
+                            FuelType = "Petrol",
+                            Name = "EcoBoost 1.0",
+                            Power = 125
+                        },
+                        new
+                        {
+                            EngineId = 11,
+                            Displacement = 1500.0,
+                            FuelType = "Petrol",
+                            Name = "VTEC 1.5",
+                            Power = 180
+                        },
+                        new
+                        {
+                            EngineId = 12,
+                            Displacement = 2500.0,
+                            FuelType = "Petrol",
+                            Name = "Skyactiv 2.5",
+                            Power = 187
+                        },
+                        new
+                        {
+                            EngineId = 13,
+                            Displacement = 1600.0,
+                            FuelType = "Petrol",
+                            Name = "GDi 1.6",
+                            Power = 177
+                        },
+                        new
+                        {
+                            EngineId = 14,
+                            Displacement = 5700.0,
+                            FuelType = "Petrol",
+                            Name = "Hemi 5.7",
+                            Power = 395
+                        },
+                        new
+                        {
+                            EngineId = 15,
+                            Displacement = 2000.0,
+                            FuelType = "Petrol",
+                            Name = "T6 2.0",
+                            Power = 316
                         });
                 });
 
