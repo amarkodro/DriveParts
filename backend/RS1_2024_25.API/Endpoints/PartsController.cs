@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using RS1_2024_25.API.Data;
 using RS1_2024_25.API.Data.Models;
+using static RS1_2024_25.API.Endpoints.PartsController;
 
 namespace RS1_2024_25.API.Endpoints
 {
@@ -22,6 +23,7 @@ namespace RS1_2024_25.API.Endpoints
 
         public class PartResponse
         {
+            public int PartId { get; set; }
             public string Name { get; set; }
             public double Price { get; set; }
             public string Description { get; set; }
@@ -125,7 +127,7 @@ namespace RS1_2024_25.API.Endpoints
             part.Description = request.Description;
             part.CategoryId = request.CategoryId;
             part.ManufacturerId = request.ManufacturerId;
-        
+
 
             _db.SaveChanges();
 
@@ -147,7 +149,7 @@ namespace RS1_2024_25.API.Endpoints
         {
             var parts = _db.Parts
                          .Include(c => c.Manufacturer).Include(c => c.Category)
-                         .Where(c => c.IsFeatured==true)
+                         .Where(c => c.IsFeatured == true)
                          .Select(c => new PartResponse
                          {
                              Name = c.Name,
@@ -198,5 +200,6 @@ namespace RS1_2024_25.API.Endpoints
 
             return parts;
         }
+
     }
 }
