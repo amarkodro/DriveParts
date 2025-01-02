@@ -1,0 +1,1053 @@
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
+
+#nullable disable
+
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
+namespace RS1_2024_25.API.Migrations
+{
+    /// <inheritdoc />
+    public partial class Init : Migration
+    {
+        /// <inheritdoc />
+        protected override void Up(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.CreateTable(
+                name: "Cars",
+                columns: table => new
+                {
+                    CarId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Brand = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Cars", x => x.CarId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Categories",
+                columns: table => new
+                {
+                    CategoryId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Categories", x => x.CategoryId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Countries",
+                columns: table => new
+                {
+                    ID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Countries", x => x.ID);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Engines",
+                columns: table => new
+                {
+                    EngineId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Power = table.Column<int>(type: "int", nullable: false),
+                    Displacement = table.Column<double>(type: "float", nullable: false),
+                    FuelType = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Engines", x => x.EngineId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Genders",
+                columns: table => new
+                {
+                    GenderId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    GenderName = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Genders", x => x.GenderId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Manufacturers",
+                columns: table => new
+                {
+                    ManufacturerId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Contact = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Address = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Manufacturers", x => x.ManufacturerId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MyAppUsers",
+                columns: table => new
+                {
+                    ID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Username = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IsAdmin = table.Column<bool>(type: "bit", nullable: false),
+                    IsManager = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MyAppUsers", x => x.ID);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Payments",
+                columns: table => new
+                {
+                    PaymentId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    PaymentMethod = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Payments", x => x.PaymentId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Statuses",
+                columns: table => new
+                {
+                    StatusId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Statuses", x => x.StatusId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Suppliers",
+                columns: table => new
+                {
+                    SupplierId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Contact = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Address = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Suppliers", x => x.SupplierId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Types",
+                columns: table => new
+                {
+                    TypeId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Types", x => x.TypeId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Cities",
+                columns: table => new
+                {
+                    ID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CountryId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Cities", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_Cities_Countries_CountryId",
+                        column: x => x.CountryId,
+                        principalTable: "Countries",
+                        principalColumn: "ID");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Parts",
+                columns: table => new
+                {
+                    PartId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Price = table.Column<double>(type: "float", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CategoryId = table.Column<int>(type: "int", nullable: false),
+                    ManufacturerId = table.Column<int>(type: "int", nullable: false),
+                    PartImage = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IsFeatured = table.Column<bool>(type: "bit", nullable: false),
+                    IsOnSale = table.Column<bool>(type: "bit", nullable: false),
+                    IsNewArrival = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Parts", x => x.PartId);
+                    table.ForeignKey(
+                        name: "FK_Parts_Categories_CategoryId",
+                        column: x => x.CategoryId,
+                        principalTable: "Categories",
+                        principalColumn: "CategoryId");
+                    table.ForeignKey(
+                        name: "FK_Parts_Manufacturers_ManufacturerId",
+                        column: x => x.ManufacturerId,
+                        principalTable: "Manufacturers",
+                        principalColumn: "ManufacturerId");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MyAuthenticationTokens",
+                columns: table => new
+                {
+                    ID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Value = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IpAddress = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    RecordedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    MyAppUserId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MyAuthenticationTokens", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_MyAuthenticationTokens_MyAppUsers_MyAppUserId",
+                        column: x => x.MyAppUserId,
+                        principalTable: "MyAppUsers",
+                        principalColumn: "ID");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Models",
+                columns: table => new
+                {
+                    ModelId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Year = table.Column<int>(type: "int", nullable: false),
+                    CarId = table.Column<int>(type: "int", nullable: false),
+                    TypeId = table.Column<int>(type: "int", nullable: false),
+                    EngineId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Models", x => x.ModelId);
+                    table.ForeignKey(
+                        name: "FK_Models_Cars_CarId",
+                        column: x => x.CarId,
+                        principalTable: "Cars",
+                        principalColumn: "CarId");
+                    table.ForeignKey(
+                        name: "FK_Models_Engines_EngineId",
+                        column: x => x.EngineId,
+                        principalTable: "Engines",
+                        principalColumn: "EngineId");
+                    table.ForeignKey(
+                        name: "FK_Models_Types_TypeId",
+                        column: x => x.TypeId,
+                        principalTable: "Types",
+                        principalColumn: "TypeId");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Journeys",
+                columns: table => new
+                {
+                    ID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    StartCityId = table.Column<int>(type: "int", nullable: false),
+                    EndCityId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Journeys", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_Journeys_Cities_EndCityId",
+                        column: x => x.EndCityId,
+                        principalTable: "Cities",
+                        principalColumn: "ID");
+                    table.ForeignKey(
+                        name: "FK_Journeys_Cities_StartCityId",
+                        column: x => x.StartCityId,
+                        principalTable: "Cities",
+                        principalColumn: "ID");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserAccounts",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Surname = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Username = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IsAdmin = table.Column<bool>(type: "bit", nullable: false),
+                    isUser = table.Column<bool>(type: "bit", nullable: false),
+                    is2FActive = table.Column<bool>(type: "bit", nullable: false),
+                    Discriminator = table.Column<string>(type: "nvarchar(13)", maxLength: 13, nullable: false),
+                    AdminLevel = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    GenderId = table.Column<int>(type: "int", nullable: true),
+                    CityId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserAccounts", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UserAccounts_Cities_CityId",
+                        column: x => x.CityId,
+                        principalTable: "Cities",
+                        principalColumn: "ID");
+                    table.ForeignKey(
+                        name: "FK_UserAccounts_Genders_GenderId",
+                        column: x => x.GenderId,
+                        principalTable: "Genders",
+                        principalColumn: "GenderId");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PartEngines",
+                columns: table => new
+                {
+                    PartEngineId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    PartId = table.Column<int>(type: "int", nullable: false),
+                    EngineId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PartEngines", x => x.PartEngineId);
+                    table.ForeignKey(
+                        name: "FK_PartEngines_Engines_EngineId",
+                        column: x => x.EngineId,
+                        principalTable: "Engines",
+                        principalColumn: "EngineId");
+                    table.ForeignKey(
+                        name: "FK_PartEngines_Parts_PartId",
+                        column: x => x.PartId,
+                        principalTable: "Parts",
+                        principalColumn: "PartId");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ModelParts",
+                columns: table => new
+                {
+                    ModelPartId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ModelId = table.Column<int>(type: "int", nullable: false),
+                    PartId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ModelParts", x => x.ModelPartId);
+                    table.ForeignKey(
+                        name: "FK_ModelParts_Models_ModelId",
+                        column: x => x.ModelId,
+                        principalTable: "Models",
+                        principalColumn: "ModelId");
+                    table.ForeignKey(
+                        name: "FK_ModelParts_Parts_PartId",
+                        column: x => x.PartId,
+                        principalTable: "Parts",
+                        principalColumn: "PartId");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "FAQs",
+                columns: table => new
+                {
+                    FAQId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Question = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Answer = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FAQs", x => x.FAQId);
+                    table.ForeignKey(
+                        name: "FK_FAQs_UserAccounts_UserId",
+                        column: x => x.UserId,
+                        principalTable: "UserAccounts",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Orders",
+                columns: table => new
+                {
+                    OrderId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    StatusId = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    SupplierId = table.Column<int>(type: "int", nullable: false),
+                    PaymentId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Orders", x => x.OrderId);
+                    table.ForeignKey(
+                        name: "FK_Orders_Payments_PaymentId",
+                        column: x => x.PaymentId,
+                        principalTable: "Payments",
+                        principalColumn: "PaymentId");
+                    table.ForeignKey(
+                        name: "FK_Orders_Statuses_StatusId",
+                        column: x => x.StatusId,
+                        principalTable: "Statuses",
+                        principalColumn: "StatusId");
+                    table.ForeignKey(
+                        name: "FK_Orders_Suppliers_SupplierId",
+                        column: x => x.SupplierId,
+                        principalTable: "Suppliers",
+                        principalColumn: "SupplierId");
+                    table.ForeignKey(
+                        name: "FK_Orders_UserAccounts_UserId",
+                        column: x => x.UserId,
+                        principalTable: "UserAccounts",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Reviews",
+                columns: table => new
+                {
+                    ReviewId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    PartId = table.Column<int>(type: "int", nullable: false),
+                    Text = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Picture = table.Column<byte[]>(type: "varbinary(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Reviews", x => x.ReviewId);
+                    table.ForeignKey(
+                        name: "FK_Reviews_Parts_PartId",
+                        column: x => x.PartId,
+                        principalTable: "Parts",
+                        principalColumn: "PartId");
+                    table.ForeignKey(
+                        name: "FK_Reviews_UserAccounts_UserId",
+                        column: x => x.UserId,
+                        principalTable: "UserAccounts",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "OrderItems",
+                columns: table => new
+                {
+                    OrderItemId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    OrderId = table.Column<int>(type: "int", nullable: false),
+                    PartId = table.Column<int>(type: "int", nullable: false),
+                    Quantity = table.Column<int>(type: "int", nullable: false),
+                    Price = table.Column<double>(type: "float", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OrderItems", x => x.OrderItemId);
+                    table.ForeignKey(
+                        name: "FK_OrderItems_Orders_OrderId",
+                        column: x => x.OrderId,
+                        principalTable: "Orders",
+                        principalColumn: "OrderId");
+                    table.ForeignKey(
+                        name: "FK_OrderItems_Parts_PartId",
+                        column: x => x.PartId,
+                        principalTable: "Parts",
+                        principalColumn: "PartId");
+                });
+
+            migrationBuilder.InsertData(
+                table: "Cars",
+                columns: new[] { "CarId", "Brand" },
+                values: new object[,]
+                {
+                    { 1, "Volkswagen" },
+                    { 2, "Audi" },
+                    { 3, "Renault" },
+                    { 4, "Peugeot" },
+                    { 5, "Fiat" },
+                    { 6, "BMW" },
+                    { 7, "Mercedes" },
+                    { 8, "Tesla" },
+                    { 9, "Ford" },
+                    { 10, "Toyota" },
+                    { 11, "Honda" },
+                    { 12, "Nissan" },
+                    { 13, "Mazda" },
+                    { 14, "Kia" },
+                    { 15, "Hyundai" },
+                    { 16, "Chevrolet" },
+                    { 17, "Subaru" },
+                    { 18, "Jeep" },
+                    { 19, "Volvo" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Categories",
+                columns: new[] { "CategoryId", "Name" },
+                values: new object[,]
+                {
+                    { 1, "Brakes" },
+                    { 2, "Suspension" },
+                    { 3, "Engine Parts" },
+                    { 4, "Exhaust Systems" },
+                    { 5, "Oil and Fluids" },
+                    { 6, "Filters" },
+                    { 7, "Electrical Components" },
+                    { 8, "Cooling Systems" },
+                    { 9, "Interior Accessories" },
+                    { 10, "Tires and Wheels" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Countries",
+                columns: new[] { "ID", "Name" },
+                values: new object[] { 1, "Bosna i Hercegovina" });
+
+            migrationBuilder.InsertData(
+                table: "Engines",
+                columns: new[] { "EngineId", "Displacement", "FuelType", "Name", "Power" },
+                values: new object[,]
+                {
+                    { 1, 2000.0, "Diesel", "TDI 2.0", 150 },
+                    { 2, 1500.0, "Petrol", "TSI 1.5", 130 },
+                    { 3, 0.0, "Electric", "Electric R100", 100 },
+                    { 4, 1600.0, "Hybrid", "HY 1.6", 180 },
+                    { 5, 1200.0, "Petrol", "FIAT Petrol 1.2", 90 },
+                    { 6, 1600.0, "Diesel", "TDI 1.6", 120 },
+                    { 7, 2000.0, "Petrol", "TSI 2.0", 200 },
+                    { 8, 2000.0, "Hybrid", "Hybrid E-Drive", 250 },
+                    { 9, 0.0, "Electric", "Electric P150", 150 },
+                    { 10, 1000.0, "Petrol", "EcoBoost 1.0", 125 },
+                    { 11, 1500.0, "Petrol", "VTEC 1.5", 180 },
+                    { 12, 2500.0, "Petrol", "Skyactiv 2.5", 187 },
+                    { 13, 1600.0, "Petrol", "GDi 1.6", 177 },
+                    { 14, 5700.0, "Petrol", "Hemi 5.7", 395 },
+                    { 15, 2000.0, "Petrol", "T6 2.0", 316 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Genders",
+                columns: new[] { "GenderId", "GenderName" },
+                values: new object[,]
+                {
+                    { 1, "Male" },
+                    { 2, "Female" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Manufacturers",
+                columns: new[] { "ManufacturerId", "Address", "Contact", "Name" },
+                values: new object[,]
+                {
+                    { 1, "Džemala Bijedića 185, Sarajevo, Bosna i Hercegovina", "+387 33 770 100", "Bosch" },
+                    { 2, "Karađorđeva 120, Banja Luka, Bosna i Hercegovina", "+387 51 210 990", "Valeo" },
+                    { 3, "Rudarska 33, Tuzla, Bosna i Hercegovina", "+387 35 320 870", "Delphi Technologies" },
+                    { 4, "Bišće polje bb, Mostar, Bosna i Hercegovina", "+387 36 576 600", "Continental" },
+                    { 5, "Industrijska zona bb, Zenica, Bosna i Hercegovina", "+387 32 450 110", "Magneti Marelli" },
+                    { 6, "Pofalići bb, Sarajevo, Bosna i Hercegovina", "+387 33 210 320", "Brembo" },
+                    { 7, "Aleja Svetog Save 15, Banja Luka, Bosna i Hercegovina", "+387 51 321 480", "TRW Automotive" },
+                    { 8, "Zmaja od Bosne bb, Sarajevo, Bosna i Hercegovina", "+387 33 234 567", "ATE" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Payments",
+                columns: new[] { "PaymentId", "PaymentMethod" },
+                values: new object[,]
+                {
+                    { 1, "Card" },
+                    { 2, "Cash" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Statuses",
+                columns: new[] { "StatusId", "Name" },
+                values: new object[,]
+                {
+                    { 1, "Pending" },
+                    { 2, "Approved" },
+                    { 3, "Rejected" },
+                    { 4, "In Progress" },
+                    { 5, "Completed" },
+                    { 6, "Cancelled" },
+                    { 7, "On Hold" },
+                    { 8, "Failed" },
+                    { 9, "Draft" },
+                    { 10, "Submitted" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Suppliers",
+                columns: new[] { "SupplierId", "Address", "Contact", "Name" },
+                values: new object[,]
+                {
+                    { 1, "Maršala Tita 45, Sarajevo, BiH", "+387 33 123 456", "A2B Delivery" },
+                    { 2, "Kralja Petra I Karađorđevića 102, Banja Luka, BiH", "+387 51 789 123", "EuroExpress" },
+                    { 3, "Hamdije Kreševljakovića 50, Mostar, BiH", "+387 61 987 654", "BH Brza Pošta" },
+                    { 4, "Zagrebačka 10, Tuzla, BiH", "+387 36 456 789", "Sky Express" },
+                    { 5, "Bosanska 25, Zenica, BiH", "+387 32 555 888", "Express One" },
+                    { 6, "Srebrenička 7, Brčko, BiH", "+387 35 222 333", "FastTrack Logistics" },
+                    { 7, "Zmaja od Bosne 12, Sarajevo, BiH", "+387 33 445 666", "DHL Bosnia" },
+                    { 8, "Goranska 15, Bihać, BiH", "+387 37 777 888", "GLS BiH" },
+                    { 9, "Savska 4, Bijeljina, BiH", "+387 66 123 321", "UPS Delivery" },
+                    { 10, "Prijedorska 22, Prijedor, BiH", "+387 65 999 000", "PostExpress BiH" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Types",
+                columns: new[] { "TypeId", "Name" },
+                values: new object[,]
+                {
+                    { 1, "Sedan" },
+                    { 2, "Compact" },
+                    { 3, "SUV" },
+                    { 4, "Hatchback" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "UserAccounts",
+                columns: new[] { "Id", "Address", "AdminLevel", "Discriminator", "Email", "IsAdmin", "Name", "Password", "PhoneNumber", "Surname", "Username", "is2FActive", "isUser" },
+                values: new object[,]
+                {
+                    { 1, "Masline-Kocine bb", "Moderator", "Admin", "amar.kodro@edu.fit.ba", true, "Amar", "driveparts2003", "0623331233", "Kodro", "amar.kodro", true, false },
+                    { 4, "Masline-Kocine bb", "Moderator", "Admin", "ammar.puce@edu.fit.ba", true, "Ammar", "driveparts2003", "0623331233", "Puce", "ammar.puce", true, false }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Cities",
+                columns: new[] { "ID", "CountryId", "Name" },
+                values: new object[,]
+                {
+                    { 1, 1, "Banja Luka" },
+                    { 2, 1, "Bihać" },
+                    { 3, 1, "Bijeljina" },
+                    { 4, 1, "Bosanska Krupa" },
+                    { 5, 1, "Cazin" },
+                    { 6, 1, "Čapljina" },
+                    { 7, 1, "Drventa" },
+                    { 8, 1, "Doboj" },
+                    { 9, 1, "Goražde" },
+                    { 10, 1, "Gračanica" },
+                    { 11, 1, "Cityačac" },
+                    { 12, 1, "Cityiška" },
+                    { 13, 1, "Konjic" },
+                    { 14, 1, "Laktaši" },
+                    { 15, 1, "Livno" },
+                    { 16, 1, "Lukavac" },
+                    { 17, 1, "Ljubuški" },
+                    { 18, 1, "Mostar" },
+                    { 19, 1, "Orašje" },
+                    { 20, 1, "Prijedor" },
+                    { 21, 1, "Prnjavor" },
+                    { 22, 1, "Sarajevo" },
+                    { 23, 1, "Srebrenik" },
+                    { 24, 1, "Stolac" },
+                    { 25, 1, "Široki Brijeg" },
+                    { 26, 1, "Travnik" },
+                    { 27, 1, "Tuzla" },
+                    { 28, 1, "Visoko" },
+                    { 29, 1, "Zavidovići" },
+                    { 30, 1, "Zenica" },
+                    { 31, 1, "Zvornik" },
+                    { 32, 1, "Živinice" },
+                    { 33, 1, "Donji Vakuf" },
+                    { 34, 1, "Zavidovići" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Models",
+                columns: new[] { "ModelId", "CarId", "EngineId", "Name", "TypeId", "Year" },
+                values: new object[,]
+                {
+                    { 1, 4, 1, "508", 1, 2020 },
+                    { 2, 5, 2, "Panda", 2, 2019 },
+                    { 3, 1, 3, "Tiguan", 3, 2022 },
+                    { 4, 1, 4, "Passat", 1, 2021 },
+                    { 5, 1, 5, "Golf 8", 4, 2023 },
+                    { 6, 1, 6, "Golf 7", 4, 2020 },
+                    { 7, 6, 7, "X5", 3, 2022 },
+                    { 8, 6, 8, "3 Series", 1, 2021 },
+                    { 9, 7, 9, "C-Class", 1, 2023 },
+                    { 10, 7, 10, "GLE", 3, 2022 },
+                    { 11, 8, 11, "Model S", 1, 2023 },
+                    { 12, 9, 12, "Focus", 4, 2021 },
+                    { 13, 10, 13, "Corolla", 1, 2020 },
+                    { 14, 11, 14, "Civic", 4, 2022 },
+                    { 15, 12, 15, "Altima", 1, 2021 },
+                    { 16, 13, 10, "CX-5", 3, 2023 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Parts",
+                columns: new[] { "PartId", "CategoryId", "Description", "IsFeatured", "IsNewArrival", "IsOnSale", "ManufacturerId", "Name", "PartImage", "Price" },
+                values: new object[,]
+                {
+                    { 1, 1, "High-quality brake pads for Golf", true, false, false, 1, "Brake Pads", "/images/BOSCH_brake_pads.jpg", 85.0 },
+                    { 2, 2, "Durable suspension springs for Q5", true, false, false, 2, "Suspension Springs", "/images/Suspension_Springs_q5.jpg", 220.0 },
+                    { 3, 6, "Oil filter suitable for Clio engines", true, false, false, 3, "Engine Oil Filter", "/images/oil_filter_renault_clio.jpg", 25.0 },
+                    { 4, 4, "Rust-resistant exhaust pipe for 508", true, false, false, 4, "Exhaust Pipe", "/images/Exhaust_Pipe peugeot_508.jpg", 300.0 },
+                    { 5, 6, "Durable timing belt for Golf", true, false, false, 5, "Timing Belt", "/images/Timing_Belt_gol_VI.jpg", 120.0 },
+                    { 6, 8, "High-efficiency water pump for Panda", true, false, false, 6, "Water Pump", "/images/Water_Pump_panda.jpg", 200.0 },
+                    { 7, 3, "Precision camshaft for Q5", true, false, false, 7, "Camshaft", "/images/Camshaft_q5.jpg", 500.0 },
+                    { 8, 7, "Reliable starter motor for Clio", true, false, false, 8, "Starter Motor", "/images/Starter_Motor_clio.jpg", 250.0 },
+                    { 9, 8, "High-performance coolant hose for Panda", false, true, false, 5, "Coolant Hose", "/images/Coolant_Hose_panda.jpg", 40.0 },
+                    { 10, 6, "Improves air intake efficiency for Golf", false, true, false, 6, "Air Filter", "/images/Air_Filter_golf_6.jpg", 35.0 },
+                    { 11, 2, "Enhanced suspension system for Q5", false, true, false, 7, "Shock Absorber", "/images/Shock_Absorber_q5.jpg", 250.0 },
+                    { 12, 7, "High-performance spark plugs for Clio", false, true, false, 8, "Spark Plugs", "/images/spark_plugs_clio.jpg", 50.0 },
+                    { 13, 1, "Flexible brake hoses for Panda", false, true, false, 5, "Brake Hoses", "/images/brake_hoses_panda.jpg", 60.0 },
+                    { 14, 8, "Pressure-regulating radiator cap for Golf", false, true, false, 6, "Radiator Cap", "/images/radiator_cap_golVI.jpg", 20.0 },
+                    { 15, 2, "Precision wheel bearings for Q5", false, true, false, 7, "Wheel Bearings", "/images/wheel_bearings_q5.jpg", 100.0 },
+                    { 16, 5, "Complete clutch kit for Clio", false, true, false, 8, "Clutch Kit", "/images/clutch_kit_clio.jpg", 300.0 },
+                    { 17, 4, "Eco-friendly exhaust component for 508", false, false, true, 1, "Catalytic Converter", "/images/catalytic_converter_508.jpg", 450.0 },
+                    { 18, 5, "Premium oil for Panda engines", false, false, true, 2, "Engine Oil", "/images/engine_oil_panda.jpg", 90.0 },
+                    { 19, 1, "Front brake discs for Golf", false, false, true, 3, "Brake Discs", "/images/brake_discs_golfVI.jpg", 150.0 },
+                    { 20, 2, "Steering system component for Q5", false, false, true, 4, "Tie Rod Ends", "/images/tie_rod_ends_q5.jpg", 180.0 },
+                    { 21, 4, "Durable exhaust manifold for Panda", false, false, true, 5, "Exhaust Manifold", "/images/exhaust_manifold_panda.jpg", 400.0 },
+                    { 22, 3, "High-performance fuel injector for Golf", false, false, true, 6, "Fuel Injector", "/images/fuel_injector_golfVI.jpg", 250.0 },
+                    { 23, 8, "Heat-resistant turbo hose for Q5", false, false, true, 7, "Turbo Hose", "/images/turbo_hose_q5.jpg", 80.0 },
+                    { 24, 9, "Efficient AC compressor for Clio", false, false, true, 8, "Air Conditioning Compressor", "/images/air_conditioning_compressor_clio.jpg", 600.0 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "ModelParts",
+                columns: new[] { "ModelPartId", "ModelId", "PartId" },
+                values: new object[,]
+                {
+                    { 1, 1, 4 },
+                    { 2, 1, 17 },
+                    { 3, 2, 3 },
+                    { 4, 2, 6 },
+                    { 5, 3, 23 },
+                    { 6, 4, 5 },
+                    { 7, 5, 19 },
+                    { 8, 6, 19 },
+                    { 9, 7, 15 },
+                    { 10, 9, 12 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "PartEngines",
+                columns: new[] { "PartEngineId", "EngineId", "PartId" },
+                values: new object[,]
+                {
+                    { 1, 4, 3 },
+                    { 2, 12, 4 },
+                    { 3, 6, 5 },
+                    { 4, 5, 6 },
+                    { 5, 13, 7 },
+                    { 6, 9, 8 },
+                    { 7, 5, 9 },
+                    { 8, 1, 10 },
+                    { 9, 6, 22 },
+                    { 10, 7, 23 },
+                    { 11, 13, 24 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "UserAccounts",
+                columns: new[] { "Id", "Address", "CityId", "Discriminator", "Email", "GenderId", "IsAdmin", "Name", "Password", "PhoneNumber", "Surname", "Username", "is2FActive", "isUser" },
+                values: new object[,]
+                {
+                    { 2, "useraddress", 18, "User", "testuser@example.com", 1, false, "Test", "userpassword123", "0602213312", "User", "TestUser1", false, true },
+                    { 3, "useraddress2", 16, "User", "testuser2@example.com", 2, false, "Test2", "userpassword123", "0602234312", "User2", "TestUser2", false, true }
+                });
+
+            migrationBuilder.InsertData(
+                table: "FAQs",
+                columns: new[] { "FAQId", "Answer", "Question", "UserId" },
+                values: new object[,]
+                {
+                    { 1, "Koristite našu pretragu po modelu vozila ili kontaktirajte podršku za pomoć.", "Kako da pronađem pravi dio za moje vozilo?", 2 },
+                    { 2, "You can track your order using the tracking number sent to your email.", "How can I track my order?", 3 },
+                    { 3, "Da, povrat novca je moguć unutar 30 dana uz dostavljen dokaz o kupovini.", "Da li nudite povrat novca za neispravne dijelove?", 2 },
+                    { 4, "We accept card payments, cash on delivery, and bank transfers.", "What payment methods are available?", 3 },
+                    { 5, "Dostava obično traje 3-5 radnih dana, u zavisnosti od lokacije.", "Koliko traje dostava?", 2 },
+                    { 6, "Yes, you can return unused parts within 15 days of delivery.", "Can I return a part if it doesn't fit my vehicle?", 3 },
+                    { 7, "Da, popusti su dostupni za narudžbe veće od 500 BAM. Kontaktirajte nas za detalje.", "Da li nudite popuste za veće narudžbe?", 2 },
+                    { 8, "Please contact our support team immediately, and we will arrange for a replacement.", "What should I do if I receive the wrong part?", 3 },
+                    { 9, "Nažalost, trenutno nudimo samo online naručivanje i dostavu.", "Da li je moguće preuzimanje dijelova u prodavnici?", 2 },
+                    { 10, "Currently, we only ship within Bosnia and Herzegovina.", "Do you ship internationally?", 3 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Orders",
+                columns: new[] { "OrderId", "Date", "PaymentId", "StatusId", "SupplierId", "UserId" },
+                values: new object[,]
+                {
+                    { 1, new DateTime(2024, 12, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 1, 1, 1, 2 },
+                    { 2, new DateTime(2024, 11, 30, 0, 0, 0, 0, DateTimeKind.Unspecified), 2, 2, 2, 3 },
+                    { 3, new DateTime(2024, 12, 2, 0, 0, 0, 0, DateTimeKind.Unspecified), 2, 3, 4, 2 },
+                    { 4, new DateTime(2024, 12, 3, 0, 0, 0, 0, DateTimeKind.Unspecified), 1, 4, 5, 3 },
+                    { 5, new DateTime(2024, 12, 4, 0, 0, 0, 0, DateTimeKind.Unspecified), 1, 5, 6, 2 },
+                    { 6, new DateTime(2024, 12, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), 2, 6, 7, 3 },
+                    { 7, new DateTime(2024, 12, 6, 0, 0, 0, 0, DateTimeKind.Unspecified), 2, 7, 8, 2 },
+                    { 8, new DateTime(2024, 12, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), 1, 8, 9, 3 },
+                    { 9, new DateTime(2024, 12, 8, 0, 0, 0, 0, DateTimeKind.Unspecified), 1, 9, 10, 2 },
+                    { 10, new DateTime(2024, 12, 9, 0, 0, 0, 0, DateTimeKind.Unspecified), 2, 10, 3, 3 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Reviews",
+                columns: new[] { "ReviewId", "Date", "PartId", "Picture", "Text", "UserId" },
+                values: new object[,]
+                {
+                    { 1, new DateTime(2023, 1, 11, 0, 0, 0, 0, DateTimeKind.Unspecified), 1, null, "Odličan kvalitet kočnica, stigle brzo i lako ih je bilo ugraditi.", 2 },
+                    { 2, new DateTime(2023, 2, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), 2, null, "Ovjes je perfektan, poboljšana stabilnost auta. Preporučujem!", 3 },
+                    { 3, new DateTime(2023, 3, 15, 0, 0, 0, 0, DateTimeKind.Unspecified), 3, null, "Filter ulja je odličan, jednostavan za instalaciju i povoljan.", 2 },
+                    { 4, new DateTime(2023, 4, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), 4, null, "Cijev za auspuh savršeno odgovara. Bez problema je montirana.", 3 },
+                    { 5, new DateTime(2023, 5, 10, 0, 0, 0, 0, DateTimeKind.Unspecified), 5, null, "Crijevo rashladnog sistema odlično obavlja posao. Dostava na vrijeme.", 2 },
+                    { 6, new DateTime(2023, 6, 25, 0, 0, 0, 0, DateTimeKind.Unspecified), 6, null, "Zračni filter je povećao efikasnost motora. Zadovoljan kupovinom.", 3 },
+                    { 7, new DateTime(2023, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), 7, null, "Amortizeri su vrhunski. Auto je sada puno stabilniji.", 2 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "OrderItems",
+                columns: new[] { "OrderItemId", "OrderId", "PartId", "Price", "Quantity" },
+                values: new object[,]
+                {
+                    { 1, 1, 1, 45.0, 1 },
+                    { 2, 1, 2, 90.0, 2 },
+                    { 3, 2, 3, 15.0, 1 },
+                    { 4, 2, 4, 70.0, 1 },
+                    { 5, 3, 5, 25.0, 1 },
+                    { 6, 3, 6, 20.0, 1 },
+                    { 7, 4, 7, 50.0, 2 },
+                    { 8, 4, 8, 40.0, 4 },
+                    { 9, 5, 9, 150.0, 1 },
+                    { 10, 5, 10, 30.0, 1 },
+                    { 11, 6, 11, 100.0, 2 },
+                    { 12, 6, 12, 35.0, 1 },
+                    { 13, 7, 13, 200.0, 1 },
+                    { 14, 8, 14, 250.0, 1 },
+                    { 15, 9, 15, 20.0, 1 }
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Cities_CountryId",
+                table: "Cities",
+                column: "CountryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_FAQs_UserId",
+                table: "FAQs",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Journeys_EndCityId",
+                table: "Journeys",
+                column: "EndCityId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Journeys_StartCityId",
+                table: "Journeys",
+                column: "StartCityId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ModelParts_ModelId",
+                table: "ModelParts",
+                column: "ModelId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ModelParts_PartId",
+                table: "ModelParts",
+                column: "PartId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Models_CarId",
+                table: "Models",
+                column: "CarId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Models_EngineId",
+                table: "Models",
+                column: "EngineId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Models_TypeId",
+                table: "Models",
+                column: "TypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MyAuthenticationTokens_MyAppUserId",
+                table: "MyAuthenticationTokens",
+                column: "MyAppUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OrderItems_OrderId",
+                table: "OrderItems",
+                column: "OrderId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OrderItems_PartId",
+                table: "OrderItems",
+                column: "PartId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Orders_PaymentId",
+                table: "Orders",
+                column: "PaymentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Orders_StatusId",
+                table: "Orders",
+                column: "StatusId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Orders_SupplierId",
+                table: "Orders",
+                column: "SupplierId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Orders_UserId",
+                table: "Orders",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PartEngines_EngineId",
+                table: "PartEngines",
+                column: "EngineId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PartEngines_PartId",
+                table: "PartEngines",
+                column: "PartId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Parts_CategoryId",
+                table: "Parts",
+                column: "CategoryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Parts_ManufacturerId",
+                table: "Parts",
+                column: "ManufacturerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Reviews_PartId",
+                table: "Reviews",
+                column: "PartId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Reviews_UserId",
+                table: "Reviews",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserAccounts_CityId",
+                table: "UserAccounts",
+                column: "CityId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserAccounts_GenderId",
+                table: "UserAccounts",
+                column: "GenderId");
+        }
+
+        /// <inheritdoc />
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.DropTable(
+                name: "FAQs");
+
+            migrationBuilder.DropTable(
+                name: "Journeys");
+
+            migrationBuilder.DropTable(
+                name: "ModelParts");
+
+            migrationBuilder.DropTable(
+                name: "MyAuthenticationTokens");
+
+            migrationBuilder.DropTable(
+                name: "OrderItems");
+
+            migrationBuilder.DropTable(
+                name: "PartEngines");
+
+            migrationBuilder.DropTable(
+                name: "Reviews");
+
+            migrationBuilder.DropTable(
+                name: "Models");
+
+            migrationBuilder.DropTable(
+                name: "MyAppUsers");
+
+            migrationBuilder.DropTable(
+                name: "Orders");
+
+            migrationBuilder.DropTable(
+                name: "Parts");
+
+            migrationBuilder.DropTable(
+                name: "Cars");
+
+            migrationBuilder.DropTable(
+                name: "Engines");
+
+            migrationBuilder.DropTable(
+                name: "Types");
+
+            migrationBuilder.DropTable(
+                name: "Payments");
+
+            migrationBuilder.DropTable(
+                name: "Statuses");
+
+            migrationBuilder.DropTable(
+                name: "Suppliers");
+
+            migrationBuilder.DropTable(
+                name: "UserAccounts");
+
+            migrationBuilder.DropTable(
+                name: "Categories");
+
+            migrationBuilder.DropTable(
+                name: "Manufacturers");
+
+            migrationBuilder.DropTable(
+                name: "Cities");
+
+            migrationBuilder.DropTable(
+                name: "Genders");
+
+            migrationBuilder.DropTable(
+                name: "Countries");
+        }
+    }
+}

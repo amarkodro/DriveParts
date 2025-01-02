@@ -15,7 +15,6 @@ namespace RS1_2024_25.API.Data
 
         public DbSet<Admin> Admins { get; set; }
         public DbSet<Car> Cars { get; set; }
-        public DbSet<CarEngine> CarEngines { get; set; }
         public DbSet<Engine> Engines { get; set; }
         public DbSet<FAQ> FAQs { get; set; }
         public DbSet<Gender> Genders { get; set; }
@@ -30,8 +29,10 @@ namespace RS1_2024_25.API.Data
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
         public DbSet<Review> Reviews { get; set; }
-
-        public DbSet<CarPart> CarParts { get; set; }
+        public DbSet<Types> Types { get; set; }
+        public DbSet<PartEngine> PartEngines { get; set; }
+        public DbSet<Model> Models { get; set; }
+        public DbSet<ModelPart> ModelParts { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

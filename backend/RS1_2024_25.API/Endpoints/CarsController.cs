@@ -36,10 +36,8 @@ namespace RS1_2024_25.API.Endpoints
                         .Select(x => new CarResponse
                         {
                             CarId = x.CarId,
-                            Model = x.Model,
-                            Brand = x.Brand,
-                            Type = x.Type,
-                            Year = x.Year,
+                           Brand = x.Brand,
+                            
                         }).ToArray();
 
             return cars;
@@ -55,10 +53,8 @@ namespace RS1_2024_25.API.Endpoints
                        .Select(x => new CarResponse
                        {
                            CarId = x.CarId,
-                           Model = x.Model,
                            Brand = x.Brand,
-                           Type = x.Type,
-                           Year = x.Year
+                           
                        }).First();
 
             return car;
@@ -69,11 +65,8 @@ namespace RS1_2024_25.API.Endpoints
         public ActionResult<CarResponse> PostCar(CarRequest request)
         {
             var car = new Car
-            {
-                Model = request.Model,
-                Brand = request.Brand,
-                Type = request.Type,
-                Year = request.Year,
+            {          
+                Brand = request.Brand,               
             };
 
             _db.Cars.Add(car);
@@ -81,10 +74,8 @@ namespace RS1_2024_25.API.Endpoints
 
             var response = new CarResponse
             {
-                Model = car.Model,
                 Brand = car.Brand,
-                Type = car.Type,
-                Year = car.Year
+                
             };
 
             return Ok(response);
@@ -96,11 +87,8 @@ namespace RS1_2024_25.API.Endpoints
         {
             var car = _db.Cars.Find(id) ?? throw new KeyNotFoundException("Car not found");
 
-            car.Model = request.Model;
             car.Brand = request.Brand;
-            car.Type = request.Type;
-            car.Year = request.Year;
-            
+        
             _db.SaveChanges();
 
             return Ok("Car updated successfully");

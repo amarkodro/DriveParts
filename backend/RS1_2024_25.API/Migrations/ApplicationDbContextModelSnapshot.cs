@@ -98,17 +98,6 @@ namespace RS1_2024_25.API.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Model")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Year")
-                        .HasColumnType("int");
-
                     b.HasKey("CarId");
 
                     b.ToTable("Cars");
@@ -117,456 +106,97 @@ namespace RS1_2024_25.API.Migrations
                         new
                         {
                             CarId = 1,
-                            Brand = "Volkswagen",
-                            Model = "Golf",
-                            Type = "Hatchback",
-                            Year = 2022
+                            Brand = "Volkswagen"
                         },
                         new
                         {
                             CarId = 2,
-                            Brand = "Audi",
-                            Model = "Q5",
-                            Type = "SUV",
-                            Year = 2021
+                            Brand = "Audi"
                         },
                         new
                         {
                             CarId = 3,
-                            Brand = "Renault",
-                            Model = "Clio",
-                            Type = "Hatchback",
-                            Year = 2023
+                            Brand = "Renault"
                         },
                         new
                         {
                             CarId = 4,
-                            Brand = "Peugeot",
-                            Model = "508",
-                            Type = "Sedan",
-                            Year = 2020
+                            Brand = "Peugeot"
                         },
                         new
                         {
                             CarId = 5,
-                            Brand = "Fiat",
-                            Model = "Panda",
-                            Type = "Compact",
-                            Year = 2019
+                            Brand = "Fiat"
                         },
                         new
                         {
                             CarId = 6,
-                            Brand = "Volkswagen",
-                            Model = "Tiguan",
-                            Type = "SUV",
-                            Year = 2022
+                            Brand = "BMW"
                         },
                         new
                         {
                             CarId = 7,
-                            Brand = "Volkswagen",
-                            Model = "Passat",
-                            Type = "Sedan",
-                            Year = 2021
+                            Brand = "Mercedes"
                         },
                         new
                         {
                             CarId = 8,
-                            Brand = "Volkswagen",
-                            Model = "Golf 8",
-                            Type = "Hatchback",
-                            Year = 2023
+                            Brand = "Tesla"
                         },
                         new
                         {
                             CarId = 9,
-                            Brand = "Volkswagen",
-                            Model = "Golf 7",
-                            Type = "Hatchback",
-                            Year = 2020
+                            Brand = "Ford"
                         },
                         new
                         {
                             CarId = 10,
-                            Brand = "BMW",
-                            Model = "X5",
-                            Type = "SUV",
-                            Year = 2022
+                            Brand = "Toyota"
                         },
                         new
                         {
                             CarId = 11,
-                            Brand = "BMW",
-                            Model = "3 Series",
-                            Type = "Sedan",
-                            Year = 2021
+                            Brand = "Honda"
                         },
                         new
                         {
                             CarId = 12,
-                            Brand = "Mercedes",
-                            Model = "C-Class",
-                            Type = "Sedan",
-                            Year = 2023
+                            Brand = "Nissan"
                         },
                         new
                         {
                             CarId = 13,
-                            Brand = "Mercedes",
-                            Model = "GLE",
-                            Type = "SUV",
-                            Year = 2022
+                            Brand = "Mazda"
                         },
                         new
                         {
                             CarId = 14,
-                            Brand = "Tesla",
-                            Model = "Model S",
-                            Type = "Sedan",
-                            Year = 2023
+                            Brand = "Kia"
                         },
                         new
                         {
                             CarId = 15,
-                            Brand = "Ford",
-                            Model = "Focus",
-                            Type = "Hatchback",
-                            Year = 2021
+                            Brand = "Hyundai"
                         },
                         new
                         {
                             CarId = 16,
-                            Brand = "Toyota",
-                            Model = "Corolla",
-                            Type = "Sedan",
-                            Year = 2020
+                            Brand = "Chevrolet"
                         },
                         new
                         {
                             CarId = 17,
-                            Brand = "Honda",
-                            Model = "Civic",
-                            Type = "Hatchback",
-                            Year = 2022
+                            Brand = "Subaru"
                         },
                         new
                         {
                             CarId = 18,
-                            Brand = "Nissan",
-                            Model = "Altima",
-                            Type = "Sedan",
-                            Year = 2021
+                            Brand = "Jeep"
                         },
                         new
                         {
                             CarId = 19,
-                            Brand = "Mazda",
-                            Model = "CX-5",
-                            Type = "SUV",
-                            Year = 2023
-                        },
-                        new
-                        {
-                            CarId = 20,
-                            Brand = "Kia",
-                            Model = "Sportage",
-                            Type = "SUV",
-                            Year = 2020
-                        },
-                        new
-                        {
-                            CarId = 21,
-                            Brand = "Hyundai",
-                            Model = "Tucson",
-                            Type = "SUV",
-                            Year = 2023
-                        },
-                        new
-                        {
-                            CarId = 22,
-                            Brand = "Chevrolet",
-                            Model = "Malibu",
-                            Type = "Sedan",
-                            Year = 2022
-                        },
-                        new
-                        {
-                            CarId = 23,
-                            Brand = "Subaru",
-                            Model = "Outback",
-                            Type = "SUV",
-                            Year = 2021
-                        },
-                        new
-                        {
-                            CarId = 24,
-                            Brand = "Jeep",
-                            Model = "Wrangler",
-                            Type = "SUV",
-                            Year = 2020
-                        },
-                        new
-                        {
-                            CarId = 25,
-                            Brand = "Volvo",
-                            Model = "XC90",
-                            Type = "SUV",
-                            Year = 2023
-                        });
-                });
-
-            modelBuilder.Entity("RS1_2024_25.API.Data.Models.CarEngine", b =>
-                {
-                    b.Property<int>("CarEngineId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CarEngineId"));
-
-                    b.Property<int>("CarId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("EngineId")
-                        .HasColumnType("int");
-
-                    b.HasKey("CarEngineId");
-
-                    b.HasIndex("CarId");
-
-                    b.HasIndex("EngineId");
-
-                    b.ToTable("CarEngines");
-
-                    b.HasData(
-                        new
-                        {
-                            CarEngineId = 1,
-                            CarId = 1,
-                            EngineId = 1
-                        },
-                        new
-                        {
-                            CarEngineId = 2,
-                            CarId = 2,
-                            EngineId = 2
-                        },
-                        new
-                        {
-                            CarEngineId = 3,
-                            CarId = 3,
-                            EngineId = 3
-                        },
-                        new
-                        {
-                            CarEngineId = 4,
-                            CarId = 4,
-                            EngineId = 4
-                        },
-                        new
-                        {
-                            CarEngineId = 5,
-                            CarId = 5,
-                            EngineId = 5
-                        },
-                        new
-                        {
-                            CarEngineId = 6,
-                            CarId = 6,
-                            EngineId = 6
-                        },
-                        new
-                        {
-                            CarEngineId = 7,
-                            CarId = 7,
-                            EngineId = 7
-                        },
-                        new
-                        {
-                            CarEngineId = 8,
-                            CarId = 8,
-                            EngineId = 1
-                        },
-                        new
-                        {
-                            CarEngineId = 9,
-                            CarId = 9,
-                            EngineId = 2
-                        },
-                        new
-                        {
-                            CarEngineId = 10,
-                            CarId = 10,
-                            EngineId = 7
-                        },
-                        new
-                        {
-                            CarEngineId = 11,
-                            CarId = 11,
-                            EngineId = 2
-                        },
-                        new
-                        {
-                            CarEngineId = 12,
-                            CarId = 12,
-                            EngineId = 8
-                        },
-                        new
-                        {
-                            CarEngineId = 13,
-                            CarId = 13,
-                            EngineId = 8
-                        },
-                        new
-                        {
-                            CarEngineId = 14,
-                            CarId = 14,
-                            EngineId = 9
-                        },
-                        new
-                        {
-                            CarEngineId = 15,
-                            CarId = 15,
-                            EngineId = 10
-                        },
-                        new
-                        {
-                            CarEngineId = 16,
-                            CarId = 16,
-                            EngineId = 11
-                        },
-                        new
-                        {
-                            CarEngineId = 17,
-                            CarId = 17,
-                            EngineId = 11
-                        },
-                        new
-                        {
-                            CarEngineId = 18,
-                            CarId = 18,
-                            EngineId = 12
-                        },
-                        new
-                        {
-                            CarEngineId = 19,
-                            CarId = 19,
-                            EngineId = 12
-                        },
-                        new
-                        {
-                            CarEngineId = 20,
-                            CarId = 20,
-                            EngineId = 13
-                        },
-                        new
-                        {
-                            CarEngineId = 21,
-                            CarId = 21,
-                            EngineId = 13
-                        },
-                        new
-                        {
-                            CarEngineId = 22,
-                            CarId = 22,
-                            EngineId = 14
-                        },
-                        new
-                        {
-                            CarEngineId = 23,
-                            CarId = 23,
-                            EngineId = 7
-                        },
-                        new
-                        {
-                            CarEngineId = 24,
-                            CarId = 24,
-                            EngineId = 14
-                        },
-                        new
-                        {
-                            CarEngineId = 25,
-                            CarId = 25,
-                            EngineId = 15
-                        });
-                });
-
-            modelBuilder.Entity("RS1_2024_25.API.Data.Models.CarPart", b =>
-                {
-                    b.Property<int>("CarPartId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CarPartId"));
-
-                    b.Property<int>("CarId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PartId")
-                        .HasColumnType("int");
-
-                    b.HasKey("CarPartId");
-
-                    b.HasIndex("CarId");
-
-                    b.HasIndex("PartId");
-
-                    b.ToTable("CarParts");
-
-                    b.HasData(
-                        new
-                        {
-                            CarPartId = 1,
-                            CarId = 1,
-                            PartId = 1
-                        },
-                        new
-                        {
-                            CarPartId = 2,
-                            CarId = 1,
-                            PartId = 2
-                        },
-                        new
-                        {
-                            CarPartId = 3,
-                            CarId = 1,
-                            PartId = 5
-                        },
-                        new
-                        {
-                            CarPartId = 4,
-                            CarId = 2,
-                            PartId = 3
-                        },
-                        new
-                        {
-                            CarPartId = 5,
-                            CarId = 2,
-                            PartId = 6
-                        },
-                        new
-                        {
-                            CarPartId = 6,
-                            CarId = 3,
-                            PartId = 4
-                        },
-                        new
-                        {
-                            CarPartId = 7,
-                            CarId = 3,
-                            PartId = 5
-                        },
-                        new
-                        {
-                            CarPartId = 8,
-                            CarId = 4,
-                            PartId = 2
-                        },
-                        new
-                        {
-                            CarPartId = 9,
-                            CarId = 5,
-                            PartId = 6
+                            Brand = "Volvo"
                         });
                 });
 
@@ -1277,6 +907,272 @@ namespace RS1_2024_25.API.Migrations
                         });
                 });
 
+            modelBuilder.Entity("RS1_2024_25.API.Data.Models.Model", b =>
+                {
+                    b.Property<int>("ModelId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ModelId"));
+
+                    b.Property<int>("CarId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EngineId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("TypeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Year")
+                        .HasColumnType("int");
+
+                    b.HasKey("ModelId");
+
+                    b.HasIndex("CarId");
+
+                    b.HasIndex("EngineId");
+
+                    b.HasIndex("TypeId");
+
+                    b.ToTable("Models");
+
+                    b.HasData(
+                        new
+                        {
+                            ModelId = 1,
+                            CarId = 4,
+                            EngineId = 1,
+                            Name = "508",
+                            TypeId = 1,
+                            Year = 2020
+                        },
+                        new
+                        {
+                            ModelId = 2,
+                            CarId = 5,
+                            EngineId = 2,
+                            Name = "Panda",
+                            TypeId = 2,
+                            Year = 2019
+                        },
+                        new
+                        {
+                            ModelId = 3,
+                            CarId = 1,
+                            EngineId = 3,
+                            Name = "Tiguan",
+                            TypeId = 3,
+                            Year = 2022
+                        },
+                        new
+                        {
+                            ModelId = 4,
+                            CarId = 1,
+                            EngineId = 4,
+                            Name = "Passat",
+                            TypeId = 1,
+                            Year = 2021
+                        },
+                        new
+                        {
+                            ModelId = 5,
+                            CarId = 1,
+                            EngineId = 5,
+                            Name = "Golf 8",
+                            TypeId = 4,
+                            Year = 2023
+                        },
+                        new
+                        {
+                            ModelId = 6,
+                            CarId = 1,
+                            EngineId = 6,
+                            Name = "Golf 7",
+                            TypeId = 4,
+                            Year = 2020
+                        },
+                        new
+                        {
+                            ModelId = 7,
+                            CarId = 6,
+                            EngineId = 7,
+                            Name = "X5",
+                            TypeId = 3,
+                            Year = 2022
+                        },
+                        new
+                        {
+                            ModelId = 8,
+                            CarId = 6,
+                            EngineId = 8,
+                            Name = "3 Series",
+                            TypeId = 1,
+                            Year = 2021
+                        },
+                        new
+                        {
+                            ModelId = 9,
+                            CarId = 7,
+                            EngineId = 9,
+                            Name = "C-Class",
+                            TypeId = 1,
+                            Year = 2023
+                        },
+                        new
+                        {
+                            ModelId = 10,
+                            CarId = 7,
+                            EngineId = 10,
+                            Name = "GLE",
+                            TypeId = 3,
+                            Year = 2022
+                        },
+                        new
+                        {
+                            ModelId = 11,
+                            CarId = 8,
+                            EngineId = 11,
+                            Name = "Model S",
+                            TypeId = 1,
+                            Year = 2023
+                        },
+                        new
+                        {
+                            ModelId = 12,
+                            CarId = 9,
+                            EngineId = 12,
+                            Name = "Focus",
+                            TypeId = 4,
+                            Year = 2021
+                        },
+                        new
+                        {
+                            ModelId = 13,
+                            CarId = 10,
+                            EngineId = 13,
+                            Name = "Corolla",
+                            TypeId = 1,
+                            Year = 2020
+                        },
+                        new
+                        {
+                            ModelId = 14,
+                            CarId = 11,
+                            EngineId = 14,
+                            Name = "Civic",
+                            TypeId = 4,
+                            Year = 2022
+                        },
+                        new
+                        {
+                            ModelId = 15,
+                            CarId = 12,
+                            EngineId = 15,
+                            Name = "Altima",
+                            TypeId = 1,
+                            Year = 2021
+                        },
+                        new
+                        {
+                            ModelId = 16,
+                            CarId = 13,
+                            EngineId = 10,
+                            Name = "CX-5",
+                            TypeId = 3,
+                            Year = 2023
+                        });
+                });
+
+            modelBuilder.Entity("RS1_2024_25.API.Data.Models.ModelPart", b =>
+                {
+                    b.Property<int>("ModelPartId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ModelPartId"));
+
+                    b.Property<int>("ModelId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PartId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ModelPartId");
+
+                    b.HasIndex("ModelId");
+
+                    b.HasIndex("PartId");
+
+                    b.ToTable("ModelParts");
+
+                    b.HasData(
+                        new
+                        {
+                            ModelPartId = 1,
+                            ModelId = 1,
+                            PartId = 4
+                        },
+                        new
+                        {
+                            ModelPartId = 2,
+                            ModelId = 1,
+                            PartId = 17
+                        },
+                        new
+                        {
+                            ModelPartId = 3,
+                            ModelId = 2,
+                            PartId = 3
+                        },
+                        new
+                        {
+                            ModelPartId = 4,
+                            ModelId = 2,
+                            PartId = 6
+                        },
+                        new
+                        {
+                            ModelPartId = 5,
+                            ModelId = 3,
+                            PartId = 23
+                        },
+                        new
+                        {
+                            ModelPartId = 6,
+                            ModelId = 4,
+                            PartId = 5
+                        },
+                        new
+                        {
+                            ModelPartId = 7,
+                            ModelId = 5,
+                            PartId = 19
+                        },
+                        new
+                        {
+                            ModelPartId = 8,
+                            ModelId = 6,
+                            PartId = 19
+                        },
+                        new
+                        {
+                            ModelPartId = 9,
+                            ModelId = 7,
+                            PartId = 15
+                        },
+                        new
+                        {
+                            ModelPartId = 10,
+                            ModelId = 9,
+                            PartId = 12
+                        });
+                });
+
             modelBuilder.Entity("RS1_2024_25.API.Data.Models.Order", b =>
                 {
                     b.Property<int>("OrderId")
@@ -1916,6 +1812,97 @@ namespace RS1_2024_25.API.Migrations
                         });
                 });
 
+            modelBuilder.Entity("RS1_2024_25.API.Data.Models.PartEngine", b =>
+                {
+                    b.Property<int>("PartEngineId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PartEngineId"));
+
+                    b.Property<int>("EngineId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PartId")
+                        .HasColumnType("int");
+
+                    b.HasKey("PartEngineId");
+
+                    b.HasIndex("EngineId");
+
+                    b.HasIndex("PartId");
+
+                    b.ToTable("PartEngines");
+
+                    b.HasData(
+                        new
+                        {
+                            PartEngineId = 1,
+                            EngineId = 4,
+                            PartId = 3
+                        },
+                        new
+                        {
+                            PartEngineId = 2,
+                            EngineId = 12,
+                            PartId = 4
+                        },
+                        new
+                        {
+                            PartEngineId = 3,
+                            EngineId = 6,
+                            PartId = 5
+                        },
+                        new
+                        {
+                            PartEngineId = 4,
+                            EngineId = 5,
+                            PartId = 6
+                        },
+                        new
+                        {
+                            PartEngineId = 5,
+                            EngineId = 13,
+                            PartId = 7
+                        },
+                        new
+                        {
+                            PartEngineId = 6,
+                            EngineId = 9,
+                            PartId = 8
+                        },
+                        new
+                        {
+                            PartEngineId = 7,
+                            EngineId = 5,
+                            PartId = 9
+                        },
+                        new
+                        {
+                            PartEngineId = 8,
+                            EngineId = 1,
+                            PartId = 10
+                        },
+                        new
+                        {
+                            PartEngineId = 9,
+                            EngineId = 6,
+                            PartId = 22
+                        },
+                        new
+                        {
+                            PartEngineId = 10,
+                            EngineId = 7,
+                            PartId = 23
+                        },
+                        new
+                        {
+                            PartEngineId = 11,
+                            EngineId = 13,
+                            PartId = 24
+                        });
+                });
+
             modelBuilder.Entity("RS1_2024_25.API.Data.Models.Payment", b =>
                 {
                     b.Property<int>("PaymentId")
@@ -2202,6 +2189,45 @@ namespace RS1_2024_25.API.Migrations
                         });
                 });
 
+            modelBuilder.Entity("RS1_2024_25.API.Data.Models.Types", b =>
+                {
+                    b.Property<int>("TypeId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TypeId"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("TypeId");
+
+                    b.ToTable("Types");
+
+                    b.HasData(
+                        new
+                        {
+                            TypeId = 1,
+                            Name = "Sedan"
+                        },
+                        new
+                        {
+                            TypeId = 2,
+                            Name = "Compact"
+                        },
+                        new
+                        {
+                            TypeId = 3,
+                            Name = "SUV"
+                        },
+                        new
+                        {
+                            TypeId = 4,
+                            Name = "Hatchback"
+                        });
+                });
+
             modelBuilder.Entity("RS1_2024_25.API.Data.Models.UserAccount", b =>
                 {
                     b.Property<int>("Id")
@@ -2366,44 +2392,6 @@ namespace RS1_2024_25.API.Migrations
                     b.Navigation("MyAppUser");
                 });
 
-            modelBuilder.Entity("RS1_2024_25.API.Data.Models.CarEngine", b =>
-                {
-                    b.HasOne("RS1_2024_25.API.Data.Models.Car", "Car")
-                        .WithMany()
-                        .HasForeignKey("CarId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("RS1_2024_25.API.Data.Models.Engine", "Engine")
-                        .WithMany()
-                        .HasForeignKey("EngineId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("Car");
-
-                    b.Navigation("Engine");
-                });
-
-            modelBuilder.Entity("RS1_2024_25.API.Data.Models.CarPart", b =>
-                {
-                    b.HasOne("RS1_2024_25.API.Data.Models.Car", "Car")
-                        .WithMany()
-                        .HasForeignKey("CarId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("RS1_2024_25.API.Data.Models.Part", "Part")
-                        .WithMany()
-                        .HasForeignKey("PartId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("Car");
-
-                    b.Navigation("Part");
-                });
-
             modelBuilder.Entity("RS1_2024_25.API.Data.Models.City", b =>
                 {
                     b.HasOne("RS1_2024_25.API.Data.Models.Country", "Country")
@@ -2443,6 +2431,52 @@ namespace RS1_2024_25.API.Migrations
                     b.Navigation("EndCity");
 
                     b.Navigation("StartCity");
+                });
+
+            modelBuilder.Entity("RS1_2024_25.API.Data.Models.Model", b =>
+                {
+                    b.HasOne("RS1_2024_25.API.Data.Models.Car", "Car")
+                        .WithMany()
+                        .HasForeignKey("CarId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("RS1_2024_25.API.Data.Models.Engine", "Engine")
+                        .WithMany()
+                        .HasForeignKey("EngineId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("RS1_2024_25.API.Data.Models.Types", "Types")
+                        .WithMany()
+                        .HasForeignKey("TypeId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Car");
+
+                    b.Navigation("Engine");
+
+                    b.Navigation("Types");
+                });
+
+            modelBuilder.Entity("RS1_2024_25.API.Data.Models.ModelPart", b =>
+                {
+                    b.HasOne("RS1_2024_25.API.Data.Models.Model", "Model")
+                        .WithMany()
+                        .HasForeignKey("ModelId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("RS1_2024_25.API.Data.Models.Part", "Part")
+                        .WithMany()
+                        .HasForeignKey("PartId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Model");
+
+                    b.Navigation("Part");
                 });
 
             modelBuilder.Entity("RS1_2024_25.API.Data.Models.Order", b =>
@@ -2516,6 +2550,25 @@ namespace RS1_2024_25.API.Migrations
                     b.Navigation("Category");
 
                     b.Navigation("Manufacturer");
+                });
+
+            modelBuilder.Entity("RS1_2024_25.API.Data.Models.PartEngine", b =>
+                {
+                    b.HasOne("RS1_2024_25.API.Data.Models.Engine", "Engine")
+                        .WithMany()
+                        .HasForeignKey("EngineId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("RS1_2024_25.API.Data.Models.Part", "Part")
+                        .WithMany()
+                        .HasForeignKey("PartId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Engine");
+
+                    b.Navigation("Part");
                 });
 
             modelBuilder.Entity("RS1_2024_25.API.Data.Models.Review", b =>
