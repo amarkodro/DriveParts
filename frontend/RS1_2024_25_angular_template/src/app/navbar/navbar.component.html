@@ -1,29 +1,40 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 <header>
-    <nav class="navbar">
-        <div class="container">
-            <a href="/" class="logo">
-                <img ngSrc="assets/logo.png" alt="DriveParts Logo" height="80" width="211">
-            </a>
-            <div class="search-container">
-                <div class="input-group rounded">
-                    <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search"
-                           aria-describedby="search-addon"/>
-                    <span class="input-group-text border-0" id="search-addon">
-                            <i class="fas fa-search"></i>
-                        </span>
-                </div>
-            </div>
-            <ul class="nav-links">
-                <li><a href="/">Home</a></li>
-                <li><a routerLink="/parts">Parts</a></li>
-                <li><a href="#">Brands</a></li>
-                <li><a href="#">FAQs</a></li>
-                <li><a href="#">Reviews</a></li>
-                <li><a href="#">About Us</a></li>
-                <li><a href="#"><i class="fas fa-shopping-cart"></i></a></li>
-                <a routerLink="/login"><i class="fas fa-user"></i></a>
-            </ul>
+  <nav class="navbar">
+    <div class="container">
+      <a href="/" class="logo">
+        <img ngSrc="assets/logo.png" alt="DriveParts Logo" height="80" width="211">
+      </a>
+      <div class="search-container">
+        <div class="input-group rounded">
+          <input type="search" class="form-control rounded" placeholder="Search parts..."
+                 [(ngModel)]="searchString" (input)="onSearchChange()"
+                 aria-label="Search" aria-describedby="search-addon"/>
+          <span class="input-group-text border-0" id="search-addon">
+                        <i class="fas fa-search"></i>
+                    </span>
         </div>
-    </nav>
+
+        <ul *ngIf="filteredParts.length > 0" class="dropdown">
+          <li *ngFor="let part of filteredParts" (click)="selectPart(part)">
+            <img [src]="'http://localhost:7000' + part.partImage || 'https://via.placeholder.com/300x200'" alt="{{ part.name }}" />
+            <div>
+              <p class="part-name">{{ part.name }}</p>
+              <p class="part-description">{{ part.description }}</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <ul class="nav-links">
+        <li><a href="/">Home</a></li>
+        <li><a routerLink="/parts">Parts</a></li>
+        <li><a href="#">Brands</a></li>
+        <li><a href="#">FAQs</a></li>
+        <li><a href="#">Reviews</a></li>
+        <li><a href="#">About Us</a></li>
+        <li><a href="#"><i class="fas fa-shopping-cart"></i></a></li>
+        <a routerLink="/login"><i class="fas fa-user"></i></a>
+      </ul>
+    </div>
+  </nav>
 </header>

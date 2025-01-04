@@ -23,15 +23,14 @@ header {
   gap: 20px;
 }
 
-/* Logo stil */
 .logo img {
   height: 70px;
   padding-right: 10px;
   margin-right: 50px;
 }
 
-/* Stil for search bar */
 .search-container {
+  position: relative;
   flex: 1;
   max-width: 650px;
   margin-right: 30px;
@@ -61,7 +60,6 @@ header {
   align-items: center;
 }
 
-/* Nav links stils */
 .nav-links {
   list-style: none;
   display: flex;
@@ -89,4 +87,78 @@ header {
 
 .icon-links a:hover {
   color: #ffd700;
+}
+
+.dropdown {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  position: absolute;
+  background-color: white;
+  border: 1px solid #ccc;
+  max-height: 200px;
+  overflow-y: auto;
+  width: 100%;
+  max-width: 650px;
+  z-index: 1000;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  left: 0;
+  top: 100%;
+}
+
+.dropdown li {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.dropdown li:hover {
+  background-color: #f0f0f0;
+}
+
+.dropdown img {
+  width: 40px;
+  height: 40px;
+  margin-right: 10px;
+  border-radius: 5px;
+}
+
+.dropdown .part-name {
+  font-weight: bold;
+  font-size: 14px;
+  margin: 0;
+}
+
+.dropdown .part-description {
+  font-size: 12px;
+  color: #666;
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .dropdown {
+    max-width: 90%;
+    left: 5%;
+  }
+
+  .dropdown li {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .dropdown img {
+    width: 30px;
+    height: 30px;
+  }
+
+  .dropdown .part-name {
+    font-size: 12px;
+  }
+
+  .dropdown .part-description {
+    font-size: 10px;
+  }
 }

@@ -40,6 +40,7 @@ namespace RS1_2024_25.API.Endpoints
                           .Include(p => p.Manufacturer)
                           .Select(x => new PartResponse
                           {
+                              PartId=x.PartId,
                               Name = x.Name,
                               Price = x.Price,
                               Description = x.Description,
