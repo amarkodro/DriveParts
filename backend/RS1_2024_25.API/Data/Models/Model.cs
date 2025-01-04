@@ -12,10 +12,6 @@ namespace RS1_2024_25.API.Data.Models
         public int CarId { get; set; }
         public Car Car { get; set; }
 
-        [ForeignKey(nameof (Types))]
-        public int TypeId { get; set; }
-        public Types Types { get; set; }
-
         [ForeignKey(nameof(Engine))]
         public int EngineId { get; set; }
         public Engine Engine { get; set; }

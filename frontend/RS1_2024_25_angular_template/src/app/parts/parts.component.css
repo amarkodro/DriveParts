@@ -1,50 +1,55 @@
-.main-content {
+/* Page Container */
+.page-container {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 130px 20px;
+  gap: 20px;
+  padding: 20px;
+  max-width: 100%;
+  margin: 0 auto;
 }
 
-/* Stil for form-box */
-.form-box {
+/* Filters Section */
+.filters-section {
+  flex: 1;
+  max-width: 258px;
   background-color: #fff;
-  padding: 30px 40px;
+  padding: 20px;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  text-align: center;
-  max-width: 600px;
-  width: 100%;
-  margin-top: 35px;
 }
 
-/* Stil for form-group */
+/* Form Box */
+.form-box {
+  text-align: center;
+}
+
+/* Form Group */
 .form-group {
   display: flex;
   flex-direction: column;
   gap: 20px;
 }
 
-/* Stil for input-pair */
+/* Input Pair */
 .input-pair {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   gap: 15px;
 }
 
-/* Stil fort input-item */
+/* Input Item */
 .input-item {
   display: flex;
   flex-direction: column;
   width: 100%;
 }
 
-/* Labela stil */
+/* Label Style */
 label {
   font-weight: bold;
   margin-bottom: 5px;
 }
 
-/* Select stil */
+/* Select Style */
 select {
   padding: 10px;
   border: 1px solid #ccc;
@@ -52,8 +57,17 @@ select {
   font-size: 14px;
 }
 
-/* Search btn */
-.search-btn {
+/* Button Section */
+.button-section {
+  display: flex;
+  gap: 20px;
+  margin-top: 20px;
+  justify-content: space-between;
+}
+
+/* Search Button */
+.search-btn,
+.reset-btn {
   background-color: #007bff;
   color: #fff;
   padding: 12px;
@@ -61,37 +75,56 @@ select {
   border-radius: 5px;
   cursor: pointer;
   font-size: 18px;
+  flex: 1;
   transition: background-color 0.3s;
-  margin-top: 20px;
 }
 
+/* Search Button Hover */
 .search-btn:hover {
   background-color: #fff;
   color: #1266f1;
   border: 1px solid #1266f1;
-  border-radius: 5px;
   transition: background-color 0.3s, border 0.3s;
 }
-.parts-grid {
-  display: flex;
-  gap: 20px;
-  margin: auto;
-  justify-content: center;
-  flex-wrap: wrap;
-  margin-top: 20px;
-  margin-bottom: 20px;
-  width: 90%;
+
+/* Reset Button */
+.reset-btn {
+  background-color: #fb1000;
 }
+
+/* Reset Button Hover */
+.reset-btn:hover {
+  background-color: #fff;
+  color: #f11212;
+  border: 1px solid #f11212;
+  transition: background-color 0.3s, border 0.3s;
+}
+
+/* Parts Section */
+.parts-section {
+  flex: 3;
+  padding: 0 20px;
+}
+
+/* Parts Grid */
+.parts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  justify-content: center;
+}
+
+/* Part Card */
 .part-card {
   background-color: #f9f9f9;
-  padding: 15px;
+  padding: 22px;
   border: 1px solid #ddd;
   border-radius: 10px;
   text-align: center;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  max-width: 300px;
 }
 
+/* Part Card Image */
 .part-card img {
   width: 100%;
   height: 200px;
@@ -100,17 +133,20 @@ select {
   margin-bottom: 15px;
 }
 
+/* Part Card Title */
 .part-card h3 {
   font-size: 20px;
   margin-bottom: 10px;
 }
 
+/* Part Card Description */
 .part-card p {
   font-size: 18px;
   color: #1266f1;
   margin-bottom: 15px;
 }
 
+/* Add to Cart Button */
 .add-to-cart-btn {
   background-color: #1266f1;
   color: #fff;
@@ -124,6 +160,5 @@ select {
   background-color: #fff;
   color: #1266f1;
   border: 2px solid #1266f1;
-  border-radius: 5px;
   transition: background-color 0.3s, border 0.3s;
 }

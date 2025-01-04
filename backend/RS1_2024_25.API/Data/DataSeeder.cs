@@ -62,74 +62,14 @@ namespace RS1_2024_25.API.Data
 
             // Admins
             modelBuilder.Entity<Admin>().HasData(
-                new Admin
-                {
-                    Id = 1,
-                    Username = "amar.kodro",
-                    Password = "driveparts2003",
-                    IsAdmin = true,
-                    isUser = false,
-                    is2FActive = true,
-                    Address = "Masline-Kocine bb",
-                    Email = "amar.kodro@edu.fit.ba",
-                    Name = "Amar",
-                    Surname = "Kodro",
-                    PhoneNumber = "0623331233",
-                    AdminLevel = "Moderator"
-                },
-
-                new Admin
-                {
-                    Id = 4,
-                    Username = "ammar.puce",
-                    Password = "driveparts2003",
-                    IsAdmin = true,
-                    isUser = false,
-                    is2FActive = true,
-                    Address = "Masline-Kocine bb",
-                    Email = "ammar.puce@edu.fit.ba",
-                    Name = "Ammar",
-                    Surname = "Puce",
-                    PhoneNumber = "0623331233",
-                    AdminLevel = "Moderator"
-                }
-
+                new Admin { Id = 1, Username = "amar.kodro", Password = "driveparts2003", IsAdmin = true, isUser = false, is2FActive = true, Address = "Masline-Kocine bb", Email = "amar.kodro@edu.fit.ba", Name = "Amar", Surname = "Kodro", PhoneNumber = "0623331233", AdminLevel = "Moderator" },
+                new Admin { Id = 4, Username = "ammar.puce", Password = "driveparts2003", IsAdmin = true, isUser = false, is2FActive = true, Address = "Masline-Kocine bb", Email = "ammar.puce@edu.fit.ba", Name = "Ammar", Surname = "Puce", PhoneNumber = "0623331233", AdminLevel = "Moderator" }
             );
 
             // Users
             modelBuilder.Entity<User>().HasData(
-                new User
-                {
-                    Id = 2,
-                    Username = "TestUser1",
-                    Password = "userpassword123",
-                    IsAdmin = false,
-                    isUser = true,
-                    is2FActive = false,
-                    Address = "useraddress",
-                    Email = "testuser@example.com",
-                    Name = "Test",
-                    Surname = "User",
-                    CityId = 18,
-                    GenderId = 1,
-                    PhoneNumber = "0602213312"
-                },
-                new User
-                {
-                    Id = 3,
-                    Username = "TestUser2",
-                    Password = "userpassword123",
-                    IsAdmin = false,
-                    isUser = true,
-                    is2FActive = false,
-                    Address = "useraddress2",
-                    Email = "testuser2@example.com",
-                    Name = "Test2",
-                    Surname = "User2",
-                    CityId = 16,
-                    GenderId = 2,
-                    PhoneNumber = "0602234312"
-                }
+                new User { Id = 2, Username = "TestUser1", Password = "userpassword123", IsAdmin = false, isUser = true, is2FActive = false, Address = "useraddress", Email = "testuser@example.com", Name = "Test", Surname = "User", CityId = 18, GenderId = 1, PhoneNumber = "0602213312" },
+                new User { Id = 3, Username = "TestUser2", Password = "userpassword123", IsAdmin = false, isUser = true, is2FActive = false, Address = "useraddress2", Email = "testuser2@example.com", Name = "Test2", Surname = "User2", CityId = 16, GenderId = 2, PhoneNumber = "0602234312" }
             );
 
             // Cars
@@ -174,6 +114,7 @@ namespace RS1_2024_25.API.Data
                 new Engine { EngineId = 15, Name = "T6 2.0", Power = 316, Displacement = 2000, FuelType = "Petrol" }
             );
 
+            //Types
             modelBuilder.Entity<Types>().HasData(
                 new Types { TypeId = 1, Name = "Sedan" },
                 new Types { TypeId = 2, Name = "Compact" },
@@ -181,25 +122,27 @@ namespace RS1_2024_25.API.Data
                 new Types { TypeId = 4, Name = "Hatchback" }
             );
 
+            //Models
             modelBuilder.Entity<Model>().HasData(
-                new Model { ModelId = 1, Name = "508", CarId = 4, TypeId = 1, Year = 2020, EngineId = 1 },
-                new Model { ModelId = 2, Name = "Panda", CarId = 5, TypeId = 2, Year = 2019, EngineId = 2 },
-                new Model { ModelId = 3, Name = "Tiguan", CarId = 1, TypeId = 3, Year = 2022, EngineId = 3 },
-                new Model { ModelId = 4, Name = "Passat", CarId = 1, TypeId = 1, Year = 2021, EngineId = 4 },
-                new Model { ModelId = 5, Name = "Golf 8", CarId = 1, TypeId = 4, Year = 2023, EngineId = 5 },
-                new Model { ModelId = 6, Name = "Golf 7", CarId = 1, TypeId = 4, Year = 2020, EngineId = 6 },
-                new Model { ModelId = 7, Name = "X5", CarId = 6, TypeId = 3, Year = 2022, EngineId = 7 },
-                new Model { ModelId = 8, Name = "3 Series", CarId = 6, TypeId = 1, Year = 2021, EngineId = 8 },
-                new Model { ModelId = 9, Name = "C-Class", CarId = 7, TypeId = 1, Year = 2023, EngineId = 9 },
-                new Model { ModelId = 10, Name = "GLE", CarId = 7, TypeId = 3, Year = 2022, EngineId = 10 },
-                new Model { ModelId = 11, Name = "Model S", CarId = 8, TypeId = 1, Year = 2023, EngineId = 11 },
-                new Model { ModelId = 12, Name = "Focus", CarId = 9, TypeId = 4, Year = 2021, EngineId = 12 },
-                new Model { ModelId = 13, Name = "Corolla", CarId = 10, TypeId = 1, Year = 2020, EngineId = 13 },
-                new Model { ModelId = 14, Name = "Civic", CarId = 11, TypeId = 4, Year = 2022, EngineId = 14 },
-                new Model { ModelId = 15, Name = "Altima", CarId = 12, TypeId = 1, Year = 2021, EngineId = 15 },
-                new Model { ModelId = 16, Name = "CX-5", CarId = 13, TypeId = 3, Year = 2023, EngineId = 10 }
+                new Model { ModelId = 1, Name = "508", CarId = 4, Year = 2020, EngineId = 1 },
+                new Model { ModelId = 2, Name = "Panda", CarId = 5, Year = 2019, EngineId = 2 },
+                new Model { ModelId = 3, Name = "Tiguan", CarId = 1, Year = 2022, EngineId = 3 },
+                new Model { ModelId = 4, Name = "Passat", CarId = 1, Year = 2021, EngineId = 4 },
+                new Model { ModelId = 5, Name = "Golf 8", CarId = 1, Year = 2023, EngineId = 5 },
+                new Model { ModelId = 6, Name = "Golf 7", CarId = 1, Year = 2020, EngineId = 6 },
+                new Model { ModelId = 7, Name = "X5", CarId = 6, Year = 2022, EngineId = 7 },
+                new Model { ModelId = 8, Name = "3 Series", CarId = 6, Year = 2021, EngineId = 8 },
+                new Model { ModelId = 9, Name = "C-Class", CarId = 7, Year = 2023, EngineId = 9 },
+                new Model { ModelId = 10, Name = "GLE", CarId = 7, Year = 2022, EngineId = 10 },
+                new Model { ModelId = 11, Name = "Model S", CarId = 8, Year = 2023, EngineId = 11 },
+                new Model { ModelId = 12, Name = "Focus", CarId = 9, Year = 2021, EngineId = 12 },
+                new Model { ModelId = 13, Name = "Corolla", CarId = 10, Year = 2020, EngineId = 13 },
+                new Model { ModelId = 14, Name = "Civic", CarId = 11, Year = 2022, EngineId = 14 },
+                new Model { ModelId = 15, Name = "Altima", CarId = 12, Year = 2021, EngineId = 15 },
+                new Model { ModelId = 16, Name = "CX-5", CarId = 13, Year = 2023, EngineId = 10 }
              );
 
+            //ModelParts
             modelBuilder.Entity<ModelPart>().HasData(
                 new ModelPart { ModelPartId = 1, ModelId = 1, PartId = 4 },  // 508 -> Exhaust Pipe
                 new ModelPart { ModelPartId = 2, ModelId = 1, PartId = 17 }, // 508 -> Catalytic Converter
@@ -207,10 +150,14 @@ namespace RS1_2024_25.API.Data
                 new ModelPart { ModelPartId = 4, ModelId = 2, PartId = 6 },  // Panda -> Water Pump
                 new ModelPart { ModelPartId = 5, ModelId = 3, PartId = 23 }, // Tiguan -> Turbo Hose
                 new ModelPart { ModelPartId = 6, ModelId = 4, PartId = 5 },  // Passat -> Timing Belt
-                new ModelPart { ModelPartId = 7, ModelId = 5, PartId = 19 }, // Golf 8 -> Brake Discs
                 new ModelPart { ModelPartId = 8, ModelId = 6, PartId = 19 }, // Golf 7 -> Brake Discs
                 new ModelPart { ModelPartId = 9, ModelId = 7, PartId = 15 }, // X5 -> Wheel Bearings
-                new ModelPart { ModelPartId = 10, ModelId = 9, PartId = 12 } // C-Class -> Spark Plugs
+                new ModelPart { ModelPartId = 10, ModelId = 9, PartId = 12 },// C-Class -> Spark Plugs
+                new ModelPart { ModelPartId = 11, ModelId = 4, PartId = 25 },// Passat -> Stop Light
+                new ModelPart { ModelPartId = 12, ModelId = 3, PartId = 2 }, // Tiguan -> Suspension Springs
+                new ModelPart { ModelPartId = 13, ModelId = 14, PartId = 16 }, // Civic -> Clutch Kit
+                new ModelPart { ModelPartId = 14, ModelId = 13, PartId = 22 }, // Corolla -> Fuel Injector
+                new ModelPart { ModelPartId = 15, ModelId = 15, PartId = 21 }  // Altima -> Exhaust Manifold
                 );
 
             // Part Engines
@@ -265,16 +212,20 @@ namespace RS1_2024_25.API.Data
                 new Category { CategoryId = 7, Name = "Electrical Components" },
                 new Category { CategoryId = 8, Name = "Cooling Systems" },
                 new Category { CategoryId = 9, Name = "Interior Accessories" },
-                new Category { CategoryId = 10, Name = "Tires and Wheels" }
+                new Category { CategoryId = 10, Name = "Tires and Wheels" },
+                new Category { CategoryId = 11, Name = "Body Parts and Exterior" },
+                new Category { CategoryId = 12, Name = "Lighting Systems" },
+                new Category { CategoryId = 13, Name = "Transmission Parts" },
+                new Category { CategoryId = 14, Name = "Fuel System Components" }
             );
 
+            //Parts
             modelBuilder.Entity<Part>().HasData(
-
-                new Part { PartId = 1, Name = "Brake Pads", Description = "High-quality brake pads for Golf", CategoryId = 1, ManufacturerId = 1, Price = 85, IsFeatured = true, IsNewArrival = false, IsOnSale = false, PartImage = "/images/BOSCH_brake_pads.jpg" },
-                new Part { PartId = 2, Name = "Suspension Springs", Description = "Durable suspension springs for Q5", CategoryId = 2, ManufacturerId = 2, Price = 220, IsFeatured = true, IsNewArrival = false, IsOnSale = false, PartImage = "/images/Suspension_Springs_q5.jpg" },
+               new Part { PartId = 1, Name = "Brake Pads", Description = "High-quality brake pads for Golf", CategoryId = 1, ManufacturerId = 1, Price = 85, IsFeatured = true, IsNewArrival = false, IsOnSale = false, PartImage = "/images/BOSCH_brake_pads.jpg" },
+                new Part { PartId = 2, Name = "Suspension Springs", Description = "Durable suspension springs for Q5,Tiguan", CategoryId = 2, ManufacturerId = 2, Price = 220, IsFeatured = true, IsNewArrival = false, IsOnSale = false, PartImage = "/images/Suspension_Springs_q5.jpg" },
                 new Part { PartId = 3, Name = "Engine Oil Filter", Description = "Oil filter suitable for Clio engines", CategoryId = 6, ManufacturerId = 3, Price = 25, IsFeatured = true, IsNewArrival = false, IsOnSale = false, PartImage = "/images/oil_filter_renault_clio.jpg" },
-                new Part { PartId = 4, Name = "Exhaust Pipe", Description = "Rust-resistant exhaust pipe for 508", CategoryId = 4, ManufacturerId = 4, Price = 300, IsFeatured = true, IsNewArrival = false, IsOnSale = false, PartImage = "/images/Exhaust_Pipe peugeot_508.jpg" },
-                new Part { PartId = 5, Name = "Timing Belt", Description = "Durable timing belt for Golf", CategoryId = 6, ManufacturerId = 5, Price = 120, IsFeatured = true, IsNewArrival = false, IsOnSale = false, PartImage = "/images/Timing_Belt_gol_VI.jpg" },
+                new Part { PartId = 4, Name = "Exhaust Pipe", Description = "Rust-resistant exhaust pipe for 508", CategoryId = 4, ManufacturerId = 4, Price = 300, IsFeatured = true, IsNewArrival = false, IsOnSale = false, PartImage = "/images/Exhaust_Pipe_peugeot_508.jpg", TypeId = 1 },
+                new Part { PartId = 5, Name = "Timing Belt", Description = "Durable timing belt for Golf", CategoryId = 3, ManufacturerId = 5, Price = 120, IsFeatured = true, IsNewArrival = false, IsOnSale = false, PartImage = "/images/Timing_Belt_gol_VI.jpg" },
                 new Part { PartId = 6, Name = "Water Pump", Description = "High-efficiency water pump for Panda", CategoryId = 8, ManufacturerId = 6, Price = 200, IsFeatured = true, IsNewArrival = false, IsOnSale = false, PartImage = "/images/Water_Pump_panda.jpg" },
                 new Part { PartId = 7, Name = "Camshaft", Description = "Precision camshaft for Q5", CategoryId = 3, ManufacturerId = 7, Price = 500, IsFeatured = true, IsNewArrival = false, IsOnSale = false, PartImage = "/images/Camshaft_q5.jpg" },
                 new Part { PartId = 8, Name = "Starter Motor", Description = "Reliable starter motor for Clio", CategoryId = 7, ManufacturerId = 8, Price = 250, IsFeatured = true, IsNewArrival = false, IsOnSale = false, PartImage = "/images/Starter_Motor_clio.jpg" },
@@ -286,17 +237,18 @@ namespace RS1_2024_25.API.Data
                 new Part { PartId = 14, Name = "Radiator Cap", Description = "Pressure-regulating radiator cap for Golf", CategoryId = 8, ManufacturerId = 6, Price = 20, IsFeatured = false, IsNewArrival = true, IsOnSale = false, PartImage = "/images/radiator_cap_golVI.jpg" },
                 new Part { PartId = 15, Name = "Wheel Bearings", Description = "Precision wheel bearings for Q5", CategoryId = 2, ManufacturerId = 7, Price = 100, IsFeatured = false, IsNewArrival = true, IsOnSale = false, PartImage = "/images/wheel_bearings_q5.jpg" },
                 new Part { PartId = 16, Name = "Clutch Kit", Description = "Complete clutch kit for Clio", CategoryId = 5, ManufacturerId = 8, Price = 300, IsFeatured = false, IsNewArrival = true, IsOnSale = false, PartImage = "/images/clutch_kit_clio.jpg" },
-                new Part { PartId = 17, Name = "Catalytic Converter", Description = "Eco-friendly exhaust component for 508", CategoryId = 4, ManufacturerId = 1, Price = 450, IsFeatured = false, IsNewArrival = false, IsOnSale = true, PartImage = "/images/catalytic_converter_508.jpg" },
+                new Part { PartId = 17, Name = "Catalytic Converter", Description = "Eco-friendly exhaust component for 508", CategoryId = 4, ManufacturerId = 1, Price = 450, IsFeatured = false, IsNewArrival = false, IsOnSale = true, PartImage = "/images/catalytic_converter_508.jpg", TypeId = 2 },
                 new Part { PartId = 18, Name = "Engine Oil", Description = "Premium oil for Panda engines", CategoryId = 5, ManufacturerId = 2, Price = 90, IsFeatured = false, IsNewArrival = false, IsOnSale = true, PartImage = "/images/engine_oil_panda.jpg" },
                 new Part { PartId = 19, Name = "Brake Discs", Description = "Front brake discs for Golf", CategoryId = 1, ManufacturerId = 3, Price = 150, IsFeatured = false, IsNewArrival = false, IsOnSale = true, PartImage = "/images/brake_discs_golfVI.jpg" },
                 new Part { PartId = 20, Name = "Tie Rod Ends", Description = "Steering system component for Q5", CategoryId = 2, ManufacturerId = 4, Price = 180, IsFeatured = false, IsNewArrival = false, IsOnSale = true, PartImage = "/images/tie_rod_ends_q5.jpg" },
                 new Part { PartId = 21, Name = "Exhaust Manifold", Description = "Durable exhaust manifold for Panda", CategoryId = 4, ManufacturerId = 5, Price = 400, IsFeatured = false, IsNewArrival = false, IsOnSale = true, PartImage = "/images/exhaust_manifold_panda.jpg" },
                 new Part { PartId = 22, Name = "Fuel Injector", Description = "High-performance fuel injector for Golf", CategoryId = 3, ManufacturerId = 6, Price = 250, IsFeatured = false, IsNewArrival = false, IsOnSale = true, PartImage = "/images/fuel_injector_golfVI.jpg" },
-                new Part { PartId = 23, Name = "Turbo Hose", Description = "Heat-resistant turbo hose for Q5", CategoryId = 8, ManufacturerId = 7, Price = 80, IsFeatured = false, IsNewArrival = false, IsOnSale = true, PartImage = "/images/turbo_hose_q5.jpg" },
-                new Part { PartId = 24, Name = "Air Conditioning Compressor", Description = "Efficient AC compressor for Clio", CategoryId = 9, ManufacturerId = 8, Price = 600, IsFeatured = false, IsNewArrival = false, IsOnSale = true, PartImage = "/images/air_conditioning_compressor_clio.jpg" }
+                new Part { PartId = 23, Name = "Turbo Hose", Description = "Heat-resistant turbo hose for Q5,Tiguan", CategoryId = 8, ManufacturerId = 7, Price = 80, IsFeatured = false, IsNewArrival = false, IsOnSale = true, PartImage = "/images/turbo_hose_q5.jpg" },
+                new Part { PartId = 24, Name = "Air Conditioning Compressor", Description = "Efficient AC compressor for Clio", CategoryId = 9, ManufacturerId = 8, Price = 600, IsFeatured = false, IsNewArrival = false, IsOnSale = true, PartImage = "/images/air_conditioning_compressor_clio.jpg" },
+                new Part { PartId = 25, Name = "Stop light", Description = "Stop light for Passat", CategoryId = 11, ManufacturerId = 1, Price = 150, IsFeatured = false, IsNewArrival = false, IsOnSale = false, PartImage = "/images/stoplight_passat.jpg", TypeId = 3 }
+            );
 
-             );
-
+            //Payments 
             modelBuilder.Entity<Payment>().HasData(
 
                 new Payment { PaymentId = 1, PaymentMethod = "Card" },
@@ -304,7 +256,7 @@ namespace RS1_2024_25.API.Data
 
             );
 
-
+            //Status
             modelBuilder.Entity<Status>().HasData(
 
                 new Status { StatusId = 1, Name = "Pending" },
@@ -320,6 +272,7 @@ namespace RS1_2024_25.API.Data
 
             );
 
+            //Orders
             modelBuilder.Entity<Order>().HasData(
 
                 new Order { OrderId = 1, UserId = 2, PaymentId = 1, StatusId = 1, SupplierId = 1, Date = new DateTime(2024, 12, 1) },
@@ -335,6 +288,7 @@ namespace RS1_2024_25.API.Data
 
             );
 
+            //OrderItems
             modelBuilder.Entity<OrderItem>().HasData(
 
                 new OrderItem { OrderItemId = 1, OrderId = 1, PartId = 1, Quantity = 1, Price = 45 },
@@ -355,7 +309,7 @@ namespace RS1_2024_25.API.Data
 
             );
 
-
+            //FAQs
             modelBuilder.Entity<FAQ>().HasData(
 
                 new FAQ { FAQId = 1, Question = "Kako da pronađem pravi dio za moje vozilo?", Answer = "Koristite našu pretragu po modelu vozila ili kontaktirajte podršku za pomoć.", UserId = 2 },
@@ -371,6 +325,7 @@ namespace RS1_2024_25.API.Data
 
             );
 
+            //Reviews
             modelBuilder.Entity<Review>().HasData(
 
                 new Review { ReviewId = 1, UserId = 2, PartId = 1, Text = "Odličan kvalitet kočnica, stigle brzo i lako ih je bilo ugraditi.", Picture = null, Date = new DateTime(2023, 01, 11) },
@@ -382,8 +337,6 @@ namespace RS1_2024_25.API.Data
                 new Review { ReviewId = 7, UserId = 2, PartId = 7, Text = "Amortizeri su vrhunski. Auto je sada puno stabilniji.", Picture = null, Date = new DateTime(2023, 07, 12) }
 
             );
-
-
         }
     }
 }

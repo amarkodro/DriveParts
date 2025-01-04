@@ -25,5 +25,10 @@ namespace RS1_2024_25.API.Data.Models
         public bool IsOnSale { get; set; } = false;
         public bool IsNewArrival { get; set; } = false;
 
+        [ForeignKey(nameof(Types))]
+
+        public int? TypeId { get; set; }
+        public Types? Type { get; set; }
+
     }
 }

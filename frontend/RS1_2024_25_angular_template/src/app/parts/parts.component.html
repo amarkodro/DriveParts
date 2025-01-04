@@ -1,61 +1,69 @@
-<section class="main-content">
-  <div class="form-box">
-    <h2>Select Car Parts</h2>
-
-    <div class="form-group">
-      <div class="input-pair">
-        <!-- Car Dropdown -->
-        <div class="input-item">
-          <label for="car">Car:</label>
-          <select id="car" [(ngModel)]="selectedCarId" name="car">
-            <option [value]="null">Select a car</option>
-            <option *ngFor="let car of cars" [value]="car.id">{{ car.name }}</option>
-          </select>
+<div class="page-container">
+  <!-- Filters Section -->
+  <div class="filters-section">
+    <div class="form-box">
+      <h2>Select Car Parts</h2>
+      <div class="form-group">
+        <div class="input-pair">
+          <!-- Car Dropdown -->
+          <div class="input-item">
+            <label for="car">Car:</label>
+            <select id="car" [(ngModel)]="selectedCarId" name="car" (change)="onCarChange()">
+              <option [value]="null">Select a car</option>
+              <option *ngFor="let car of cars" [value]="car.id">{{ car.name }}</option>
+            </select>
+          </div>
+          <div class="input-item">
+            <label for="model">Model:</label>
+            <select id="model" [(ngModel)]="selectedModelId" name="model">
+              <option [value]="null">Select a model</option>
+              <option *ngFor="let model of models" [value]="model.id">{{ model.name }}</option>
+            </select>
+          </div>
         </div>
+        <div class="input-pair">
 
-        <!-- Category Dropdown -->
-        <div class="input-item">
-          <label for="category">Category:</label>
-          <select id="category" [(ngModel)]="selectedCategoryId" name="category">
-            <option [value]="null">Select a category</option>
-            <option *ngFor="let category of categories" [value]="category.id">{{ category.name }}</option>
-          </select>
+          <div class="input-item">
+            <label for="category">Category:</label>
+            <select id="category" [(ngModel)]="selectedCategoryId" name="category" (change)="onCategoryChange()">
+              <option [value]="null">Select a category</option>
+              <option *ngFor="let category of categories" [value]="category.id">{{ category.name }}</option>
+            </select>
+          </div>
+          <!-- Part Dropdown -->
+          <div class="input-item">
+            <label for="part">Part:</label>
+            <select id="part" [(ngModel)]="selectedPartId" name="part">
+              <option [value]="null">Select a part</option>
+              <option *ngFor="let part of parts" [value]="part.id">{{ part.name }}</option>
+            </select>
+          </div>
+          <div class="input-item" *ngIf="showVehicleTypeDropdown">
+            <label for="type">Type:</label>
+            <select id="type" [(ngModel)]="selectedTypeId" name="type">
+              <option [value]="null">Select a type</option>
+              <option *ngFor="let type of types" [value]="type.id">{{ type.name }}</option>
+            </select>
+          </div>
         </div>
       </div>
-
-      <div class="input-pair">
-        <!-- Part Dropdown -->
-        <div class="input-item">
-          <label for="part">Part:</label>
-          <select id="part" [(ngModel)]="selectedPartId" name="part">
-            <option [value]="null">Select a part</option>
-            <option *ngFor="let part of parts" [value]="part.id">{{ part.name }}</option>
-          </select>
-        </div>
-
-        <!-- Brand Dropdown -->
-        <div class="input-item">
-          <label for="brand">Brand:</label>
-          <select id="brand" [(ngModel)]="selectedBrandId" name="brand">
-            <option [value]="null">Select a brand</option>
-            <option *ngFor="let brand of brands" [value]="brand.id">{{ brand.name }}</option>
-          </select>
-        </div>
+      <div class="button-section">
+        <button class="search-btn" (click)="applyFilter()">Apply</button>
+        <button class="reset-btn" (click)="resetFilters()">Reset</button>
       </div>
     </div>
-
-    <button class="search-btn" (click)="applyFilter()">Apply Filter</button>
   </div>
-</section>
 
-
-
-<section class="parts-grid">
-  <div class="part-card" *ngFor="let part of filteredParts">
-    <img [src]="'http://localhost:7000' + part.partImage || 'https://via.placeholder.com/300x200'" alt="{{ part.name }}" />
-    <h3>{{ part.name }}</h3>
-    <p>{{ part.description }}</p>
-    <p><strong>{{ part.price }} KM</strong></p>
-    <button class="add-to-cart-btn">Add to Cart</button>
+  <!-- Parts Section -->
+  <div class="parts-section">
+    <div class="parts-grid">
+      <div class="part-card" *ngFor="let part of filteredParts">
+        <img [src]="'http://localhost:7000' + part.partImage || 'https://via.placeholder.com/300x200'" alt="{{ part.name }}" />
+        <h3>{{ part.name }}</h3>
+        <p>{{ part.description }}</p>
+        <p><strong>{{ part.price }} KM</strong></p>
+        <button class="add-to-cart-btn">Add to Cart</button>
+      </div>
+    </div>
   </div>
-</section>
+</div>
