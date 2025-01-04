@@ -5,16 +5,35 @@
   padding: 20px;
   max-width: 100%;
   margin: 0 auto;
+  align-items: flex-start;
+  justify-content: flex-start;
 }
 
 /* Filters Section */
 .filters-section {
-  flex: 1;
-  max-width: 258px;
+  flex: 0 0 258px;
   background-color: #fff;
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  height: auto;
+  align-self: stretch;
+}
+
+/* Parts Section */
+.parts-section {
+  flex: 1;
+  padding: 0 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Parts Grid */
+.parts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  justify-content: start;
 }
 
 /* Form Box */
@@ -100,24 +119,12 @@ select {
   transition: background-color 0.3s, border 0.3s;
 }
 
-/* Parts Section */
-.parts-section {
-  flex: 3;
-  padding: 0 20px;
-}
-
-/* Parts Grid */
-.parts-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 20px;
-  justify-content: center;
-}
-
 /* Part Card */
 .part-card {
+  flex: 1 0 250px; 
+  max-width: 250px;
   background-color: #f9f9f9;
-  padding: 22px;
+  padding: 15px;
   border: 1px solid #ddd;
   border-radius: 10px;
   text-align: center;
