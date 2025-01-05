@@ -111,7 +111,10 @@ namespace RS1_2024_25.API.Data
                 new Engine { EngineId = 12, Name = "Skyactiv 2.5", Power = 187, Displacement = 2500, FuelType = "Petrol" },
                 new Engine { EngineId = 13, Name = "GDi 1.6", Power = 177, Displacement = 1600, FuelType = "Petrol" },
                 new Engine { EngineId = 14, Name = "Hemi 5.7", Power = 395, Displacement = 5700, FuelType = "Petrol" },
-                new Engine { EngineId = 15, Name = "T6 2.0", Power = 316, Displacement = 2000, FuelType = "Petrol" }
+                new Engine { EngineId = 15, Name = "T6 2.0", Power = 316, Displacement = 2000, FuelType = "Petrol" },
+                new Engine { EngineId = 16, Name = "3.0 TDI", Power = 245, Displacement = 3000, FuelType = "Diesel" },
+                new Engine { EngineId = 17, Name = "N57D30O0", Power = 241, Displacement = 3000, FuelType = "Diesel" },
+                new Engine { EngineId = 18, Name = "M157 V8", Power = 577, Displacement = 5500, FuelType = "Petrol" }
             );
 
             //Types
@@ -139,7 +142,16 @@ namespace RS1_2024_25.API.Data
                 new Model { ModelId = 13, Name = "Corolla", CarId = 10, Year = 2020, EngineId = 13 },
                 new Model { ModelId = 14, Name = "Civic", CarId = 11, Year = 2022, EngineId = 14 },
                 new Model { ModelId = 15, Name = "Altima", CarId = 12, Year = 2021, EngineId = 15 },
-                new Model { ModelId = 16, Name = "CX-5", CarId = 13, Year = 2023, EngineId = 10 }
+                new Model { ModelId = 16, Name = "CX-5", CarId = 13, Year = 2023, EngineId = 10 },
+
+                new Model { ModelId = 17, Name = "5 series", CarId = 6, Year = 2014, EngineId = 17 },
+                new Model { ModelId = 18, Name = "308", CarId = 4, Year = 2008, EngineId = 13 },
+                new Model { ModelId = 19, Name = "S63", CarId = 7, Year = 2020, EngineId = 18 },
+                new Model { ModelId = 20, Name = "A6", CarId = 2, Year = 2013, EngineId = 16 },
+                new Model { ModelId = 21, Name = "7 series", CarId = 6, Year = 2013, EngineId = 17 }
+
+
+
              );
 
             //ModelParts
@@ -157,7 +169,17 @@ namespace RS1_2024_25.API.Data
                 new ModelPart { ModelPartId = 12, ModelId = 3, PartId = 2 }, // Tiguan -> Suspension Springs
                 new ModelPart { ModelPartId = 13, ModelId = 14, PartId = 16 }, // Civic -> Clutch Kit
                 new ModelPart { ModelPartId = 14, ModelId = 13, PartId = 22 }, // Corolla -> Fuel Injector
-                new ModelPart { ModelPartId = 15, ModelId = 15, PartId = 21 }  // Altima -> Exhaust Manifold
+                new ModelPart { ModelPartId = 15, ModelId = 15, PartId = 21 },  // Altima -> Exhaust Manifold
+                new ModelPart { ModelPartId = 16, ModelId = 17, PartId = 26 }, //5 series->Alternator
+                new ModelPart { ModelPartId = 17, ModelId = 17, PartId = 33 },//5 series->Fuel pump
+                new ModelPart { ModelPartId = 18, ModelId = 18, PartId = 27 },//308->Radiator
+                new ModelPart { ModelPartId = 19, ModelId = 19, PartId = 28 },//s63->headlight
+                new ModelPart { ModelPartId = 20, ModelId = 20, PartId = 29 },//A6-Taillight
+                new ModelPart { ModelPartId = 21, ModelId = 21, PartId = 30 },//7 series->Battery
+                new ModelPart { ModelPartId = 22, ModelId = 3, PartId = 31},//Tiguan->Windshield wipers
+                new ModelPart { ModelPartId = 23, ModelId = 4, PartId = 32 },//Passat->Oil pump
+                new ModelPart { ModelPartId = 24, ModelId = 10, PartId = 34 },//GLE->Dashboard
+                new ModelPart { ModelPartId = 25, ModelId = 8, PartId = 35 }//3 series->Steering wheel
                 );
 
             // Part Engines
@@ -172,7 +194,11 @@ namespace RS1_2024_25.API.Data
                 new PartEngine { PartEngineId = 8, PartId = 10, EngineId = 1 }, // Air Filter -> TDI 2.0
                 new PartEngine { PartEngineId = 9, PartId = 22, EngineId = 6 }, // Fuel Injector -> TDI 1.6
                 new PartEngine { PartEngineId = 10, PartId = 23, EngineId = 7 }, // Turbo Hose -> TSI 2.0
-                new PartEngine { PartEngineId = 11, PartId = 24, EngineId = 13 } // Air Conditioning Compressor -> GDI 1.6
+                new PartEngine { PartEngineId = 11, PartId = 24, EngineId = 13 }, // Air Conditioning Compressor -> GDI 1.6
+                new PartEngine { PartEngineId = 12, PartId = 26, EngineId = 17 }, //Alternator->n5730O0
+                new PartEngine { PartEngineId = 13, PartId = 27, EngineId = 13 },//Radiator->GDi 1.6
+                new PartEngine { PartEngineId = 14, PartId = 32, EngineId = 1 },//Oil Filter->Passat
+                new PartEngine { PartEngineId = 15, PartId = 33, EngineId = 17 }//Fuel Filter->5 series
             );
 
             // Manufacturers
@@ -224,7 +250,7 @@ namespace RS1_2024_25.API.Data
                new Part { PartId = 1, Name = "Brake Pads", Description = "High-quality brake pads for Golf", CategoryId = 1, ManufacturerId = 1, Price = 85, IsFeatured = true, IsNewArrival = false, IsOnSale = false, PartImage = "/images/BOSCH_brake_pads.jpg" },
                 new Part { PartId = 2, Name = "Suspension Springs", Description = "Durable suspension springs for Q5,Tiguan", CategoryId = 2, ManufacturerId = 2, Price = 220, IsFeatured = true, IsNewArrival = false, IsOnSale = false, PartImage = "/images/Suspension_Springs_q5.jpg" },
                 new Part { PartId = 3, Name = "Engine Oil Filter", Description = "Oil filter suitable for Clio engines", CategoryId = 6, ManufacturerId = 3, Price = 25, IsFeatured = true, IsNewArrival = false, IsOnSale = false, PartImage = "/images/oil_filter_renault_clio.jpg" },
-                new Part { PartId = 4, Name = "Exhaust Pipe", Description = "Rust-resistant exhaust pipe for 508", CategoryId = 4, ManufacturerId = 4, Price = 300, IsFeatured = true, IsNewArrival = false, IsOnSale = false, PartImage = "/images/Exhaust_Pipe_peugeot_508.jpg", TypeId = 1 },
+                new Part { PartId = 4, Name = "Exhaust Pipe", Description = "Rust-resistant exhaust pipe for 508", CategoryId = 4, ManufacturerId = 4, Price = 300, IsFeatured = true, IsNewArrival = false, IsOnSale = false, PartImage = "/images/Exhaust_Pipe peugeot_508.jpg", TypeId = 1 },
                 new Part { PartId = 5, Name = "Timing Belt", Description = "Durable timing belt for Golf", CategoryId = 3, ManufacturerId = 5, Price = 120, IsFeatured = true, IsNewArrival = false, IsOnSale = false, PartImage = "/images/Timing_Belt_gol_VI.jpg" },
                 new Part { PartId = 6, Name = "Water Pump", Description = "High-efficiency water pump for Panda", CategoryId = 8, ManufacturerId = 6, Price = 200, IsFeatured = true, IsNewArrival = false, IsOnSale = false, PartImage = "/images/Water_Pump_panda.jpg" },
                 new Part { PartId = 7, Name = "Camshaft", Description = "Precision camshaft for Q5", CategoryId = 3, ManufacturerId = 7, Price = 500, IsFeatured = true, IsNewArrival = false, IsOnSale = false, PartImage = "/images/Camshaft_q5.jpg" },
@@ -245,8 +271,21 @@ namespace RS1_2024_25.API.Data
                 new Part { PartId = 22, Name = "Fuel Injector", Description = "High-performance fuel injector for Golf", CategoryId = 3, ManufacturerId = 6, Price = 250, IsFeatured = false, IsNewArrival = false, IsOnSale = true, PartImage = "/images/fuel_injector_golfVI.jpg" },
                 new Part { PartId = 23, Name = "Turbo Hose", Description = "Heat-resistant turbo hose for Q5,Tiguan", CategoryId = 8, ManufacturerId = 7, Price = 80, IsFeatured = false, IsNewArrival = false, IsOnSale = true, PartImage = "/images/turbo_hose_q5.jpg" },
                 new Part { PartId = 24, Name = "Air Conditioning Compressor", Description = "Efficient AC compressor for Clio", CategoryId = 9, ManufacturerId = 8, Price = 600, IsFeatured = false, IsNewArrival = false, IsOnSale = true, PartImage = "/images/air_conditioning_compressor_clio.jpg" },
-                new Part { PartId = 25, Name = "Stop light", Description = "Stop light for Passat", CategoryId = 11, ManufacturerId = 1, Price = 150, IsFeatured = false, IsNewArrival = false, IsOnSale = false, PartImage = "/images/stoplight_passat.jpg", TypeId = 3 }
-            );
+                new Part { PartId = 25, Name = "Stop light", Description = "Stop light for Passat", CategoryId = 11, ManufacturerId = 1, Price = 150, IsFeatured = false, IsNewArrival = false, IsOnSale = false, PartImage = "/images/stoplight_passat.jpg", TypeId = 1 },
+
+                new Part { PartId = 26, Name = "Alternator", Description = "German made battery charging part F10", CategoryId = 7, ManufacturerId = 1, Price = 350, IsFeatured = false, IsNewArrival = false, IsOnSale = false, PartImage = "/images/Alternator_BMW.jpg" },
+                new Part { PartId = 27, Name = "Radiator", Description = "High-quality cooling part for 308", CategoryId = 8, ManufacturerId = 2, Price = 200, IsFeatured = false, IsNewArrival = false, IsOnSale = false, PartImage = "/images/Radiator_308.jpg" },
+                new Part { PartId = 28, Name = "Headlights", Description = "Clear and blinding headlights for S63", CategoryId = 12, ManufacturerId = 1, Price = 320, IsFeatured = false, IsNewArrival = false, IsOnSale = false, PartImage = "/images/Headlight_S63.jpg" },
+                new Part { PartId = 29, Name = "Taillights", Description = "LED tailights,highly visible for A6", CategoryId = 12, ManufacturerId = 2, Price = 100, IsFeatured = false, IsNewArrival = false, IsOnSale = false, PartImage = "/images/Taillights-A6.jpg",TypeId=1 },
+                new Part { PartId = 30, Name = "Car Battery", Description = "Long lasting battery with start-stop system for BMW 7-series", CategoryId = 7, ManufacturerId = 1, Price = 280, IsFeatured = false, IsNewArrival = false, IsOnSale = false, PartImage = "/images/Battery_BMW.jpg" },
+                new Part { PartId = 31, Name = "Windshield Wipers", Description = "Smooth and high quality wipers for Tiguan", CategoryId = 11, ManufacturerId = 4, Price = 54, IsFeatured = false, IsNewArrival = false, IsOnSale = false, PartImage = "/images/Wipers_VW.jpg" },
+                new Part { PartId = 32, Name = "Oil Pump", Description = "Durable pump for Passat", CategoryId = 5, ManufacturerId = 2, Price = 140, IsFeatured = false, IsNewArrival = false, IsOnSale = false, PartImage = "/images/OilPump_Passat.jpg" },
+                new Part { PartId = 33, Name = "Fuel Pump", Description = "Pump with filter for F10", CategoryId = 14, ManufacturerId = 2, Price = 170, IsFeatured = false, IsNewArrival = false, IsOnSale = false, PartImage = "/images/FuelPump_BMW.jpg" },
+                new Part { PartId = 34, Name = "Dashboard", Description = "Dashboard with sun protection for GLE", CategoryId = 9, ManufacturerId = 3, Price = 480, IsFeatured = false, IsNewArrival = false, IsOnSale = false, PartImage = "/images/DashBoard_Mercedes.jpg" },
+                new Part { PartId = 35, Name = "Steering Wheel", Description = "M-Performance Steering wheel for 3 series", CategoryId = 9, ManufacturerId = 8, Price = 220, IsFeatured = false, IsNewArrival = false, IsOnSale = false, PartImage = "/images/SteeringWheel_3S.jpg" }
+
+
+                );
 
             //Payments 
             modelBuilder.Entity<Payment>().HasData(

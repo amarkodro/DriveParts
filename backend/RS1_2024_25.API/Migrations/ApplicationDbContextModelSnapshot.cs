@@ -687,6 +687,30 @@ namespace RS1_2024_25.API.Migrations
                             FuelType = "Petrol",
                             Name = "T6 2.0",
                             Power = 316
+                        },
+                        new
+                        {
+                            EngineId = 16,
+                            Displacement = 3000.0,
+                            FuelType = "Diesel",
+                            Name = "3.0 TDI",
+                            Power = 245
+                        },
+                        new
+                        {
+                            EngineId = 17,
+                            Displacement = 3000.0,
+                            FuelType = "Diesel",
+                            Name = "N57D30O0",
+                            Power = 241
+                        },
+                        new
+                        {
+                            EngineId = 18,
+                            Displacement = 5500.0,
+                            FuelType = "Petrol",
+                            Name = "M157 V8",
+                            Power = 577
                         });
                 });
 
@@ -1084,6 +1108,46 @@ namespace RS1_2024_25.API.Migrations
                             EngineId = 10,
                             Name = "CX-5",
                             Year = 2023
+                        },
+                        new
+                        {
+                            ModelId = 17,
+                            CarId = 6,
+                            EngineId = 17,
+                            Name = "5 series",
+                            Year = 2014
+                        },
+                        new
+                        {
+                            ModelId = 18,
+                            CarId = 4,
+                            EngineId = 13,
+                            Name = "308",
+                            Year = 2008
+                        },
+                        new
+                        {
+                            ModelId = 19,
+                            CarId = 7,
+                            EngineId = 18,
+                            Name = "S63",
+                            Year = 2020
+                        },
+                        new
+                        {
+                            ModelId = 20,
+                            CarId = 2,
+                            EngineId = 16,
+                            Name = "A6",
+                            Year = 2013
+                        },
+                        new
+                        {
+                            ModelId = 21,
+                            CarId = 6,
+                            EngineId = 17,
+                            Name = "7 series",
+                            Year = 2013
                         });
                 });
 
@@ -1193,6 +1257,66 @@ namespace RS1_2024_25.API.Migrations
                             ModelPartId = 15,
                             ModelId = 15,
                             PartId = 21
+                        },
+                        new
+                        {
+                            ModelPartId = 16,
+                            ModelId = 17,
+                            PartId = 26
+                        },
+                        new
+                        {
+                            ModelPartId = 17,
+                            ModelId = 17,
+                            PartId = 33
+                        },
+                        new
+                        {
+                            ModelPartId = 18,
+                            ModelId = 18,
+                            PartId = 27
+                        },
+                        new
+                        {
+                            ModelPartId = 19,
+                            ModelId = 19,
+                            PartId = 28
+                        },
+                        new
+                        {
+                            ModelPartId = 20,
+                            ModelId = 20,
+                            PartId = 29
+                        },
+                        new
+                        {
+                            ModelPartId = 21,
+                            ModelId = 21,
+                            PartId = 30
+                        },
+                        new
+                        {
+                            ModelPartId = 22,
+                            ModelId = 3,
+                            PartId = 31
+                        },
+                        new
+                        {
+                            ModelPartId = 23,
+                            ModelId = 4,
+                            PartId = 32
+                        },
+                        new
+                        {
+                            ModelPartId = 24,
+                            ModelId = 10,
+                            PartId = 34
+                        },
+                        new
+                        {
+                            ModelPartId = 25,
+                            ModelId = 8,
+                            PartId = 35
                         });
                 });
 
@@ -1575,7 +1699,7 @@ namespace RS1_2024_25.API.Migrations
                             IsOnSale = false,
                             ManufacturerId = 4,
                             Name = "Exhaust Pipe",
-                            PartImage = "/images/Exhaust_Pipe_peugeot_508.jpg",
+                            PartImage = "/images/Exhaust_Pipe peugeot_508.jpg",
                             Price = 300.0,
                             TypeId = 1
                         },
@@ -1852,7 +1976,138 @@ namespace RS1_2024_25.API.Migrations
                             Name = "Stop light",
                             PartImage = "/images/stoplight_passat.jpg",
                             Price = 150.0,
-                            TypeId = 3
+                            TypeId = 1
+                        },
+                        new
+                        {
+                            PartId = 26,
+                            CategoryId = 7,
+                            Description = "German made battery charging part F10",
+                            IsFeatured = false,
+                            IsNewArrival = false,
+                            IsOnSale = false,
+                            ManufacturerId = 1,
+                            Name = "Alternator",
+                            PartImage = "/images/Alternator_BMW.jpg",
+                            Price = 350.0
+                        },
+                        new
+                        {
+                            PartId = 27,
+                            CategoryId = 8,
+                            Description = "High-quality cooling part for 308",
+                            IsFeatured = false,
+                            IsNewArrival = false,
+                            IsOnSale = false,
+                            ManufacturerId = 2,
+                            Name = "Radiator",
+                            PartImage = "/images/Radiator_308.jpg",
+                            Price = 200.0
+                        },
+                        new
+                        {
+                            PartId = 28,
+                            CategoryId = 12,
+                            Description = "Clear and blinding headlights for S63",
+                            IsFeatured = false,
+                            IsNewArrival = false,
+                            IsOnSale = false,
+                            ManufacturerId = 1,
+                            Name = "Headlights",
+                            PartImage = "/images/Headlight_S63.jpg",
+                            Price = 320.0
+                        },
+                        new
+                        {
+                            PartId = 29,
+                            CategoryId = 12,
+                            Description = "LED tailights,highly visible for A6",
+                            IsFeatured = false,
+                            IsNewArrival = false,
+                            IsOnSale = false,
+                            ManufacturerId = 2,
+                            Name = "Taillights",
+                            PartImage = "/images/Taillights-A6.jpg",
+                            Price = 100.0,
+                            TypeId = 1
+                        },
+                        new
+                        {
+                            PartId = 30,
+                            CategoryId = 7,
+                            Description = "Long lasting battery with start-stop system for BMW 7-series",
+                            IsFeatured = false,
+                            IsNewArrival = false,
+                            IsOnSale = false,
+                            ManufacturerId = 1,
+                            Name = "Car Battery",
+                            PartImage = "/images/Battery_BMW.jpg",
+                            Price = 280.0
+                        },
+                        new
+                        {
+                            PartId = 31,
+                            CategoryId = 11,
+                            Description = "Smooth and high quality wipers for Tiguan",
+                            IsFeatured = false,
+                            IsNewArrival = false,
+                            IsOnSale = false,
+                            ManufacturerId = 4,
+                            Name = "Windshield Wipers",
+                            PartImage = "/images/Wipers_VW.jpg",
+                            Price = 54.0
+                        },
+                        new
+                        {
+                            PartId = 32,
+                            CategoryId = 5,
+                            Description = "Durable pump for Passat",
+                            IsFeatured = false,
+                            IsNewArrival = false,
+                            IsOnSale = false,
+                            ManufacturerId = 2,
+                            Name = "Oil Pump",
+                            PartImage = "/images/OilPump_Passat.jpg",
+                            Price = 140.0
+                        },
+                        new
+                        {
+                            PartId = 33,
+                            CategoryId = 14,
+                            Description = "Pump with filter for F10",
+                            IsFeatured = false,
+                            IsNewArrival = false,
+                            IsOnSale = false,
+                            ManufacturerId = 2,
+                            Name = "Fuel Pump",
+                            PartImage = "/images/FuelPump_BMW.jpg",
+                            Price = 170.0
+                        },
+                        new
+                        {
+                            PartId = 34,
+                            CategoryId = 9,
+                            Description = "Dashboard with sun protection for GLE",
+                            IsFeatured = false,
+                            IsNewArrival = false,
+                            IsOnSale = false,
+                            ManufacturerId = 3,
+                            Name = "Dashboard",
+                            PartImage = "/images/DashBoard_Mercedes.jpg",
+                            Price = 480.0
+                        },
+                        new
+                        {
+                            PartId = 35,
+                            CategoryId = 9,
+                            Description = "M-Performance Steering wheel for 3 series",
+                            IsFeatured = false,
+                            IsNewArrival = false,
+                            IsOnSale = false,
+                            ManufacturerId = 8,
+                            Name = "Steering Wheel",
+                            PartImage = "/images/SteeringWheel_3S.jpg",
+                            Price = 220.0
                         });
                 });
 
@@ -1944,6 +2199,30 @@ namespace RS1_2024_25.API.Migrations
                             PartEngineId = 11,
                             EngineId = 13,
                             PartId = 24
+                        },
+                        new
+                        {
+                            PartEngineId = 12,
+                            EngineId = 17,
+                            PartId = 26
+                        },
+                        new
+                        {
+                            PartEngineId = 13,
+                            EngineId = 13,
+                            PartId = 27
+                        },
+                        new
+                        {
+                            PartEngineId = 14,
+                            EngineId = 1,
+                            PartId = 32
+                        },
+                        new
+                        {
+                            PartEngineId = 15,
+                            EngineId = 17,
+                            PartId = 33
                         });
                 });
 
