@@ -60,6 +60,7 @@ namespace RS1_2024_25.API.Endpoints
                           .Where(c => c.PartId == id)
                           .Select(c => new PartResponse
                           {
+                              PartId=c.PartId,
                               Name = c.Name,
                               Price = c.Price,
                               Description = c.Description,
@@ -153,6 +154,7 @@ namespace RS1_2024_25.API.Endpoints
                          .Where(c => c.IsFeatured == true)
                          .Select(c => new PartResponse
                          {
+                             PartId=c.PartId,
                              Name = c.Name,
                              Price = c.Price,
                              Description = c.Description,
@@ -172,6 +174,7 @@ namespace RS1_2024_25.API.Endpoints
                          .Where(c => c.IsNewArrival == true)
                          .Select(c => new PartResponse
                          {
+                             PartId = c.PartId,
                              Name = c.Name,
                              Price = c.Price,
                              Description = c.Description,
@@ -191,6 +194,7 @@ namespace RS1_2024_25.API.Endpoints
                          .Where(c => c.IsOnSale == true)
                          .Select(c => new PartResponse
                          {
+                             PartId = c.PartId,
                              Name = c.Name,
                              Price = c.Price,
                              Description = c.Description,

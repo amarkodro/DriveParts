@@ -14,6 +14,7 @@ import { ProductSectionComponent } from './product-section/product-section.compo
 import { FooterComponent } from './footer/footer.component';
 import {ReactiveFormsModule} from '@angular/forms';
 import { PartsComponent } from './parts/parts.component';
+import { PartDetailComponent } from './part-detail/part-detail.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { PartsComponent } from './parts/parts.component';
     HeroSectionComponent,
     ProductSectionComponent,
     FooterComponent,
-    PartsComponent
+    PartsComponent,
+    PartDetailComponent
   ],
     imports: [
         BrowserModule,

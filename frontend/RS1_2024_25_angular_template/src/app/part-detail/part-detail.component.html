@@ -1,0 +1,33 @@
+<div *ngIf="!part">Loading...</div>
+<section class="py-5">
+  <div class="container px-4 px-lg-5 my-5">
+    <div class="row gx-4 gx-lg-5 align-items-center">
+      <div class="col-md-5">
+        <img class="card-img-top mb-5 mb-md-0 part-image" [src]="'http://localhost:7000' + part.partImage" alt="{{ part.name }}" />
+      </div>
+      <div class="col-md-1 d-flex justify-content-center">
+
+      </div>
+      <div class="col-md-6">
+        <h2>{{ part.name }}</h2>
+        <p>{{ part.description }}</p>
+        <div class="meta-info">
+          <span class="category-part">Category: {{part.categoryName}}</span>
+          <span class="manufacturer-part">Manufacturer: {{part.manufacturerName}}</span>
+        </div>
+        <p class="current-price">Price: {{ part.price }}KM</p>
+        <div class="actions mb-4">
+          <button class="btn btn-outline-dark me-3 add-to-cart">Add to Cart</button>
+          <button class="btn btn-outline-primary add-to-favorites">Add to Favorites</button>
+        </div>
+        <div class="reviews">
+          <h3>Customer Reviews</h3>
+          <div class="stars mb-2">
+            <span style="color: gold;">★ ★ ★ ★ ★</span>
+          </div>
+          <p>Everyone loves this part! It's simply the best choice you can make.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

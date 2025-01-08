@@ -73,3 +73,13 @@
   border-radius: 8px;
 }
 
+/*Addddd*/
+.part-card {
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.part-card:hover {
+  transform: scale(1.02);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}

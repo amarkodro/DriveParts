@@ -57,7 +57,7 @@
   <!-- Parts Section -->
   <div class="parts-section">
     <div class="parts-grid">
-      <div class="part-card" *ngFor="let part of filteredParts">
+      <div class="part-card" *ngFor="let part of filteredParts" (click)="navigateToPartDetail(part)">
         <img [src]="'http://localhost:7000' + part.partImage || 'https://via.placeholder.com/300x200'" alt="{{ part.name }}" />
         <h3>{{ part.name }}</h3>
         <p>{{ part.description }}</p>

@@ -8,6 +8,7 @@ import {NavbarComponent} from './navbar/navbar.component';
 import {LoginComponent} from './login/login.component';
 import {RegisterComponent} from './register/register.component';
 import {PartsComponent} from './parts/parts.component';
+import { PartDetailComponent } from './part-detail/part-detail.component';
 
 
 const routes: Routes = [
@@ -33,6 +34,7 @@ const routes: Routes = [
 
   {path: '', component: HeroSectionComponent},
   {path: 'parts', component: PartsComponent},
+  { path: 'part-detail/:id', component: PartDetailComponent },
   {path: 'login', component: LoginComponent},
   {path: 'register', component: RegisterComponent},
   {path: '**', redirectTo: 'public', pathMatch: 'full'},

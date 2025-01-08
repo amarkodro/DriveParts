@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { DropdownService } from '../services/dropdown.service';
+import { Router } from '@angular/router';
 
 interface DropdownItem {
   id: number;
@@ -36,7 +37,7 @@ export class PartsComponent implements OnInit {
   showVehicleTypeDropdown: boolean = false;
   frontCategoryId: number = 11;
 
-  constructor(private dropdownService: DropdownService) {}
+  constructor(private dropdownService: DropdownService,private router: Router) {}
 
   ngOnInit(): void {
     this.loadDropdowns();
@@ -134,5 +135,15 @@ export class PartsComponent implements OnInit {
 
     this.showVehicleTypeDropdown = false;
     this.loadDropdowns();
+  }
+
+  navigateToPartDetail(part: any): void {
+    const partId = part.partId;
+    if (!partId) {
+      console.error('Part ID is undefined:', part);
+      return;
+    }
+    console.log('Navigating to part detail with ID:', partId);
+    this.router.navigate(['/part-detail', partId]);
   }
 }

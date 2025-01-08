@@ -3,7 +3,7 @@
   <div class="container">
     <h2>Parts Featured</h2>
     <div class="product-grid">
-      <div *ngFor="let part of featuredParts" class="product-card">
+      <div *ngFor="let part of featuredParts" class="product-card" (click)="navigateToPartDetail(part)">
         <img [src]="'http://localhost:7000' + part.partImage || 'https://via.placeholder.com/300x200'" alt="{{ part.name }}" class="product-image" />
         <h3>{{ part.name }}</h3>
         <p>{{ part.price }} KM</p>
@@ -17,7 +17,7 @@
   <div class="container">
     <h2>New Arrivals</h2>
     <div class="product-grid">
-      <div *ngFor="let part of newArrivalParts" class="product-card">
+      <div *ngFor="let part of newArrivalParts" class="product-card" (click)="navigateToPartDetail(part)">
         <img [src]="'http://localhost:7000' + part.partImage || 'https://via.placeholder.com/300x200'" alt="{{ part.name }}" class="product-image" />
         <h3>{{ part.name }}</h3>
         <p>{{ part.price }} KM</p>
@@ -31,7 +31,7 @@
   <div class="container">
     <h2>On Sale</h2>
     <div class="product-grid">
-      <div *ngFor="let part of onSaleParts" class="product-card">
+      <div *ngFor="let part of onSaleParts" class="product-card" (click)="navigateToPartDetail(part)" >
         <img [src]="'http://localhost:7000' + part.partImage || 'https://via.placeholder.com/300x200'" alt="{{ part.name }}" class="product-image" />
         <h3>{{ part.name }}</h3>
         <p>{{ part.price }} KM</p>

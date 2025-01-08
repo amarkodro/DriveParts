@@ -31,9 +31,9 @@
 /* Parts Grid */
 .parts-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 20px;
-  justify-content: start;
+  justify-content: center;
 }
 
 /* Form Box */
@@ -121,7 +121,7 @@ select {
 
 /* Part Card */
 .part-card {
-  flex: 1 0 250px; 
+  flex: 1 0 250px;
   max-width: 250px;
   background-color: #f9f9f9;
   padding: 15px;

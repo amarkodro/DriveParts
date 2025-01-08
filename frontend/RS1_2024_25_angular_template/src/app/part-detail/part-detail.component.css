@@ -1,0 +1,91 @@
+.part-image {
+  border-radius: 40px;
+  width: 100%;
+  height: 400px;
+  object-fit: cover;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+}
+.part-image:hover {
+  transform: scale(1.25);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.current-price {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #0d6efd;
+  margin-bottom: 1rem;
+}
+
+.meta-info {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
+}
+.manufacturer-part{
+  padding-left: 2rem;
+}
+.manufacturer-part,
+.category-part {
+  font-size: 1rem;
+  color: #6c757d;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+}
+
+.actions button {
+  font-size: 1rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 5px;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.actions .add-to-cart {
+  background-color: #0d6efd;
+  color: white;
+}
+
+.actions .add-to-cart:hover {
+  background-color: white;
+  color: #0d6efd;
+  transform: translateY(-3px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.actions .add-to-favorites {
+  background-color: #6610f2;
+  color: white;
+}
+
+.actions .add-to-favorites:hover {
+  background-color: white;
+  color: #6610f2;
+  transform: translateY(-3px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.stars {
+  font-size: 1.5rem;
+  color: gold;
+  margin-bottom: 10px;
+}
+
+.reviews h3 {
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.reviews p {
+  font-style: italic;
+  color: #6c757d;
+  margin-top: 0.5rem;
+}
+.col-md-6
+{
+  border-left: 1px solid #d6d6d6;
+}
