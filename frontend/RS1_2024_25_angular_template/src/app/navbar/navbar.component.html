@@ -1,23 +1,86 @@
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-<header>
-  <nav class="navbar">
-    <div class="container">
-      <a href="/" class="logo">
-        <img ngSrc="assets/logo.png" alt="DriveParts Logo" height="80" width="211">
-      </a>
-      <div class="search-container">
-        <div class="input-group rounded">
-          <input type="search" class="form-control rounded" placeholder="Search parts..."
-                 [(ngModel)]="searchString" (input)="onSearchChange()"
-                 aria-label="Search" aria-describedby="search-addon"/>
-          <span class="input-group-text border-0" id="search-addon">
-                        <i class="fas fa-search"></i>
-                    </span>
-        </div>
+<div class="top-navbar" id="home">
 
-        <ul *ngIf="filteredParts.length > 0" class="dropdown">
+  <div class="container d-flex align-items-center justify-content-between d-none d-lg-flex">
+
+    <a class="navbar-brand" routerLink="/">
+      <img src="assets/logo1.png" alt="DriveParts Logo">
+    </a>
+
+    <div class="search-container">
+      <input type="search" class="search-input" placeholder="Search parts..."
+             [(ngModel)]="searchString" (input)="onSearchChange()">
+      <ul *ngIf="filteredParts.length > 0" class="search-dropdown">
+        <li *ngFor="let part of filteredParts" (click)="selectPart(part)">
+          <img [src]="'http://localhost:7000' + part.partImage || 'https://via.placeholder.com/50x50'"
+               alt="{{ part.name }}" />
+          <div>
+            <p class="part-name">{{ part.name }}</p>
+            <p class="part-description">{{ part.description }}</p>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="icon-links d-flex align-items-center">
+      <a routerLink="/cart">
+        <i class="fas fa-shopping-cart"></i> Cart
+      </a>
+      <div class="dropdown" (click)="toggleDropdown()">
+        <a class="account-link" [class.open]="dropdownOpen">
+          <img *ngIf="isLoggedIn" [src]="userProfileImage" class="profile-pic" alt="User Profile">
+          <i *ngIf="!isLoggedIn" class="fas fa-user-circle profile-icon"></i>
+          My Account <i class="fas fa-chevron-down" [class.open]="dropdownOpen"></i>
+        </a>
+        <ul *ngIf="dropdownOpen" class="dropdown-menu">
+          <li><a routerLink="/my-offers">My Offers</a></li>
+          <li><a routerLink="/settings">Settings</a></li>
+          <li><a routerLink="/login">Login</a></li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="mobile-nav d-lg-none">
+
+    <div class="mobile-logo text-center">
+      <a class="navbar-brand" routerLink="/">
+        <img src="assets/logo1.png" alt="DriveParts Logo">
+      </a>
+    </div>
+
+    <div class="icon-bar d-flex align-items-center justify-content-center">
+      <a routerLink="/cart">
+        <i class="fas fa-shopping-cart"></i> Cart
+      </a>
+
+      <div class="dropdown" (click)="toggleDropdown()">
+        <a class="account-link" [class.open]="dropdownOpen">
+          <i class="fas fa-user-circle"></i> My Account
+          <i class="fas fa-chevron-down" [class.open]="dropdownOpen"></i>
+        </a>
+        <ul *ngIf="dropdownOpen" class="dropdown-menu">
+          <li><a routerLink="/my-offers">My Offers</a></li>
+          <li><a routerLink="/settings">Settings</a></li>
+          <li><a routerLink="/login">Login</a></li>
+        </ul>
+      </div>
+
+      <div class="mobile-menu-toggle" (click)="toggleMenu()">
+        <i class="fas fa-bars"></i> Menu
+      </div>
+    </div>
+
+    <div class="search-wrapper">
+      <div class="search-container">
+        <input type="search" class="search-input" placeholder="Search parts..."
+               [(ngModel)]="searchString" (input)="onSearchChange()" #searchBox>
+
+
+        <ul *ngIf="filteredParts.length > 0" class="search-dropdown">
           <li *ngFor="let part of filteredParts" (click)="selectPart(part)">
-            <img [src]="'http://localhost:7000' + part.partImage || 'https://via.placeholder.com/300x200'" alt="{{ part.name }}" />
+            <img [src]="'http://localhost:7000' + part.partImage || 'https://via.placeholder.com/50x50'"
+                 alt="{{ part.name }}" />
             <div>
               <p class="part-name">{{ part.name }}</p>
               <p class="part-description">{{ part.description }}</p>
@@ -25,16 +88,31 @@
           </li>
         </ul>
       </div>
-      <ul class="nav-links">
-        <li><a href="/">Home</a></li>
-        <li><a routerLink="/parts">Parts</a></li>
-        <li><a href="#">Brands</a></li>
-        <li><a href="#">FAQs</a></li>
-        <li><a href="#">Reviews</a></li>
-        <li><a href="#">About Us</a></li>
-        <li><a href="#"><i class="fas fa-shopping-cart"></i></a></li>
-        <a routerLink="/login"><i class="fas fa-user"></i></a>
+    </div>
+
+  </div>
+
+  <nav class="bottom-navbar d-none d-lg-flex">
+    <div class="container">
+      <ul class="navbar-nav">
+        <li class="nav-item"><a class="nav-link" routerLink="/">Home</a></li>
+        <li class="nav-item"><a class="nav-link" routerLink="/parts">Categories</a></li>
+        <li class="nav-item"><a class="nav-link" href="#">Brands</a></li>
+        <li class="nav-item"><a class="nav-link" href="#">FAQ</a></li>
+        <li class="nav-item"><a class="nav-link" href="#">About Us</a></li>
       </ul>
     </div>
   </nav>
-</header>
+
+  <div class="mobile-menu d-lg-none" [ngClass]="{'show': menuOpen}">
+    <ul>
+      <li (click)="closeMenu()" routerLink="/"><a>Home</a></li>
+      <li (click)="closeMenu()" routerLink="/parts"><a>Categories</a></li>
+      <li (click)="closeMenu()" href="#"><a>Brands</a></li>
+      <li (click)="closeMenu()" href="#"><a>FAQ</a></li>
+      <li (click)="closeMenu()" href="#"><a>About Us</a></li>
+    </ul>
+  </div>
+
+</div>
+

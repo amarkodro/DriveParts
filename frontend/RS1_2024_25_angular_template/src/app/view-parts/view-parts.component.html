@@ -1,0 +1,61 @@
+<section class="products">
+  <div class="section visible">
+    <div class="container">
+      <div class="section-header">
+        <h2>{{ category | titlecase }} Parts</h2>
+      </div>
+      <div class="product-grid">
+        <div *ngFor="let part of parts" class="product-card">
+          <div class="product-icons">
+            <div class="product-detail-box" (click)="openProductModal(part)">
+              <img src="/assets/zoom-in.png">
+            </div>
+            <span class="wishlist-icon">&#9825;</span>
+          </div>
+          <img [src]="'http://localhost:7000' + part.partImage || 'https://via.placeholder.com/300x200'" alt="{{ part.name }}" class="product-image">
+          <div class="product-info">
+            <h3 class="product-name">{{ part.name }}</h3>
+            <p class="product-description">{{ part.description }}</p>
+            <div class="product-bottom">
+              <p class="product-price">{{ part.price }} KM</p>
+              <button class="cart-btn" (click)="addToCart(part); $event.stopPropagation();">🛒</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Product Detail Modal -->
+  <div class="modal-overlay" *ngIf="selectedProduct">
+    <div class="modal-content">
+      <span class="close-btn" (click)="closeProductModal()">&times;</span>
+      <div class="modal-body">
+        <div class="modal-image-container">
+          <img [src]="'http://localhost:7000' + selectedProduct.partImage || 'https://via.placeholder.com/300x200'"
+               alt="{{ selectedProduct.name }}" class="modal-image" />
+        </div>
+        <div class="modal-info">
+          <h2 class="modal-title">{{ selectedProduct.name }}</h2>
+          <div class="modal-info-row">
+            <p><strong>Manufacturer:</strong> {{ selectedProduct.manufacturerName || 'N/A' }}</p>
+            <p><strong>Category:</strong> {{ selectedProduct.categoryName || 'N/A' }}</p>
+          </div>
+          <p class="modal-description"><strong>Description:</strong> {{ selectedProduct.description }}</p>
+          <p class="modal-price"><strong>Price:</strong> <span>{{ selectedProduct.price * selectedProduct.quantity }} KM</span></p>
+          <hr class="modal-divider">
+          <div class="modal-actions">
+            <label class="quantity-label">Quantity:</label>
+            <div class="input-group quantity-selector">
+              <button type="button" class="btn btn-secondary btn-sm quantity-btn" (click)="decreaseQuantity()">-</button>
+              <input type="number" class="form-control text-center quantity-input"
+                     [(ngModel)]="selectedProduct.quantity" min="1" max="10" step="1">
+              <button type="button" class="btn btn-secondary btn-sm quantity-btn" (click)="increaseQuantity()">+</button>
+            </div>
+            <button class="btn add-to-cart-btn" (click)="addToCart(selectedProduct)">Add to Cart</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

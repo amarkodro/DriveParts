@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit, ElementRef } from '@angular/core';
 import { PartService } from '../services/navbar-search.service';
 import { Router } from '@angular/router';
 
@@ -11,14 +11,19 @@ export class NavbarComponent implements OnInit {
   searchString: string = '';
   allParts: any[] = [];
   filteredParts: any[] = [];
+  dropdownOpen: boolean = false;
+  isScrolled: boolean = false;
+  userProfileImage: string = 'assets/default-user.png';
+  isLoggedIn: boolean = false;
+  menuOpen: boolean = false;
+  searchOpen: boolean = false;
 
-  constructor(private partService: PartService, private router: Router) {}
+  constructor(private partService: PartService, private router: Router, private elementRef: ElementRef) {}
 
   ngOnInit() {
     this.partService.getAllParts().subscribe(
       (data) => {
         this.allParts = data;
-        console.log('Fetched all parts:', this.allParts); 
       },
       (error) => {
         console.error('Error fetching parts:', error);
@@ -28,22 +33,51 @@ export class NavbarComponent implements OnInit {
 
   onSearchChange() {
     const normalizedSearch = this.searchString.toLowerCase().trim();
-    console.log('Search term:', normalizedSearch); 
     if (normalizedSearch === '') {
       this.filteredParts = [];
-      console.log('No search term, filteredParts cleared');
+      this.searchOpen = false;
     } else {
       this.filteredParts = this.allParts.filter(part =>
         part.description.toLowerCase().includes(normalizedSearch)
       );
-      console.log('Filtered parts:', this.filteredParts); 
+      this.searchOpen = this.filteredParts.length > 0;
     }
   }
 
   selectPart(part: any) {
-    console.log('Selected part:', part); 
     this.searchString = '';
     this.filteredParts = [];
+    this.searchOpen = false;
     this.router.navigate(['/part-detail', part.partId]);
+  }
+
+  logout() {
+    this.isLoggedIn = false;
+    this.dropdownOpen = false;
+  }
+
+  toggleDropdown() {
+    this.dropdownOpen = !this.dropdownOpen;
+  }
+
+  toggleMenu() {
+    this.menuOpen = !this.menuOpen;
+  }
+  closeMenu(): void {
+    this.menuOpen = false;
+  }
+  @HostListener('window:scroll', [])
+  onWindowScroll() {
+    this.isScrolled = window.scrollY > 90;
+  }
+
+
+  @HostListener('document:click', ['$event'])
+  onClickOutside(event: Event) {
+    if (!this.elementRef.nativeElement.contains(event.target)) {
+      this.dropdownOpen = false;
+      this.menuOpen = false;
+      this.searchOpen = false;
+    }
   }
 }

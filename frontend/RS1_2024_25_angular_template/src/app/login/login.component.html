@@ -1,40 +1,41 @@
-<section class="login">
-  <div class="container">
-    <div class="header">
-      <img src="assets/user.png" alt="Log In Icon" class="login-icon">
-      <h2>Log In</h2>
-    </div>
+<section class="login-page">
+  <div class="login-container">
 
-    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
-      <div class="form-group">
-        <label for="username">Username:</label>
-        <input type="text" id="username" formControlName="username">
-        <div *ngIf="loginForm.get('username')?.invalid && loginForm.get('username')?.touched">
-          <small class="error-text">Username is required.</small>
+    <!-- Left Side - Login Form -->
+    <div class="login-form">
+      <h1>WELCOME BACK</h1>
+      <p>Welcome back! Please enter your details.</p>
+
+      <form>
+        <div class="input-group">
+          <input type="text" id="username" placeholder=" " required>
+          <label for="username">Enter your username</label>
         </div>
-      </div>
 
-      <div class="form-group">
-        <label for="password">Password:</label>
-        <input type="password" id="password" formControlName="password">
-        <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
-          <small class="error-text">Password is required.</small>
+        <div class="input-group">
+          <input type="password" id="password" placeholder=" " required>
+          <label for="password">Password</label>
         </div>
-      </div>
 
-      <button type="submit" class="btn primary-btn" [disabled]="loginForm.invalid">Log In</button>
-    </form>
+        <div class="options">
+          <label><input type="checkbox"> Remember me</label>
+          <a href="#">Forgot password?</a>
+        </div>
 
-    <div class="divider">
-      <span>Or log in with</span>
+        <button type="submit" class="btn-signin">Sign in</button>
+
+        <button class="btn-google">
+          <img src="https://img.icons8.com/color/48/000000/google-logo.png"/> Sign in with Google
+        </button>
+
+        <p class="register-text">Don't have an account? <a routerLink="/register">Sign up for free!</a></p>
+      </form>
     </div>
 
-    <div class="social-buttons">
-      <button type="button" class="btn-social google-btn">
-        <img src="assets/icons8-google-50.png" alt="Google"> Log in with Google
-      </button>
+    <!-- Right Side - Image -->
+    <div class="login-image">
+      <img src="/assets/logo1.png" alt="Login Illustration">
     </div>
 
-    <p class="register-link">Don't have an account? <a routerLink="/register">Register</a></p>
   </div>
 </section>

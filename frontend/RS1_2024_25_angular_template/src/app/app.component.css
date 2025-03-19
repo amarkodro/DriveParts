@@ -17,4 +17,5 @@ router-outlet {
 
 app-footer {
   flex: 0 0 auto;
+  background: #e6e6e6;
 }

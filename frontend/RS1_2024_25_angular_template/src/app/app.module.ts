@@ -15,6 +15,8 @@ import { FooterComponent } from './footer/footer.component';
 import {ReactiveFormsModule} from '@angular/forms';
 import { PartsComponent } from './parts/parts.component';
 import { PartDetailComponent } from './part-detail/part-detail.component';
+import { ViewPartsComponent } from './view-parts/view-parts.component';
+import {RouterModule} from '@angular/router';
 
 @NgModule({
   declarations: [
@@ -26,7 +28,8 @@ import { PartDetailComponent } from './part-detail/part-detail.component';
     ProductSectionComponent,
     FooterComponent,
     PartsComponent,
-    PartDetailComponent
+    PartDetailComponent,
+    ViewPartsComponent
   ],
     imports: [
         BrowserModule,
@@ -35,9 +38,14 @@ import { PartDetailComponent } from './part-detail/part-detail.component';
         SharedModule,
         NgOptimizedImage,
         ReactiveFormsModule,
+        RouterModule.forRoot([], {
+         anchorScrolling: 'enabled',
+         scrollPositionRestoration: 'enabled'
+      })
     ],
   providers: [
     {
+
       provide: HTTP_INTERCEPTORS,
       useClass: MyAuthInterceptor,
       multi: true

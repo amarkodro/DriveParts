@@ -1,164 +1,260 @@
-.register {
+/* Glavni kontejner */
+.main-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 50px 20px;
-  background-color: #f9f9f9;
+  height: 100vh;
+  background: url("/assets/banner-find.jpg") no-repeat center center fixed;
+  background-size: cover;
 }
 
-.register .container {
-  max-width: 400px;
-  width: 100%;
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  text-align: center;
-}
 
-.header {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 20px;
-}
-
-.header h2 {
-  font-size: 28px;
-  color: #1266f1;
-  margin-left: 10px;
-}
-
-.register-icon {
-  width: 40px;
-  height: 40px;
-}
-
-.register-form .form-group {
-  margin-bottom: 15px;
+p {
   text-align: left;
 }
 
-.register-form label {
-  display: block;
-  font-size: 14px;
-  margin-bottom: 5px;
-  color: #333;
+/* Kontejner za registraciju */
+.register-container {
+  width: 500px;
+  background: white;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  position: relative;
 }
 
-.register-form input,
-.register-form select {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  font-size: 14px;
+/* Step Progress Bar */
+.step-progress {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.step {
+  width: 40px;
   height: 40px;
-  box-sizing: border-box;
+  border-radius: 50%;
+  background: #ddd;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: 0.3s;
 }
 
-.register-form select {
-  cursor: pointer;
+.step.active {
+  background: #e37635;
 }
 
-.register-form .btn {
+.step-line {
+  width: 60px;
+  height: 4px;
+  background: #ddd;
+  transition: 0.3s;
+}
+
+.step-line.active {
+  background: #e37635;
+}
+
+/* Form Container */
+.form-container h4 {
+  font-size: 22px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+/* Stilizacija input polja */
+.form-group {
+  position: relative;
+  margin-bottom: 20px;
+  text-align: left;
   width: 100%;
-  padding: 10px;
-  background-color: #1266f1;
-  color: #fff;
+}
+
+/* Input polja i select polja */
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 14px 15px;
+  border: 2px solid #ddd;
+  border-radius: 50px;
+  font-size: 16px;
+  outline: none;
+  transition: all 0.3s ease-in-out;
+  background: white;
+  box-sizing: border-box;
+  display: block;
+  text-align: left;
+}
+
+/* Plutajuća labela */
+.form-group label {
+  position: absolute;
+  top: 50%;
+  left: 20px;
+  transform: translateY(-50%);
+  font-size: 16px;
+  color: #999;
+  transition: all 0.3s ease-in-out;
+  pointer-events: none;
+  background: white;
+  padding: 0 5px;
+  z-index: 5; /* Osigurava da je labela iznad bordera */
+}
+
+/* Kada je input aktivan ili ispunjen */
+.form-group input:focus,
+.form-group input:not(:placeholder-shown),
+.form-group select:focus {
+  border-color: #cc6320;
+  box-shadow: 0px 4px 10px rgba(204, 99, 32, 0.3);
+}
+
+/* Pomjeranje labele **NA** liniju bordera */
+.form-group input:focus + label,
+.form-group input:not(:placeholder-shown) + label,
+.form-group select:valid + label {
+  top: 0;  /* Pomjera labelu tačno na border */
+  left: 15px;
+  font-size: 12px;
+  color: #cc6320;
+  background: white;
+  padding: 0 8px;
+  z-index: 6; /* Veći z-index da bude iznad bordera */
+}
+
+/* Fix za select polje */
+.form-group select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  padding-right: 30px;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='16' height='16'><path fill='%23999' d='M7 10l5 5 5-5z'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 15px center;
+  background-size: 12px;
+
+}
+/* Dugmad - Back i Next */
+.button-group {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+/* Dugme Back */
+.btn-back {
+  background: #ddd;
+  color: black;
+  padding: 12px 20px;
+  border-radius: 20px;
   border: none;
-  border-radius: 5px;
   font-size: 16px;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: 0.3s;
+  width: 48%;
 }
 
-.register-form .btn:hover {
-  background-color: #0b4db8;
+.btn-back:hover {
+  background: #373636;
+  border-color: #504e4e;
+  box-shadow: 0 6px 15px rgba(122, 120, 119, 0.3);
+  transform: scale(1.03);
+  color: white;
 }
 
-.register p {
-  margin-top: 15px;
+/* Dugme Next */
+.btn-next {
+  background: #e37635;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 20px;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.3s;
+  width: 48%;
+}
+
+.btn-next:hover {
+  background: #b55a1c;
+  border-color: #b55a1c;
+  box-shadow: 0 6px 15px rgba(204, 99, 32, 0.3);
+  transform: scale(1.03);
+}
+
+/* Dugme Next na prvom koraku - Full Width */
+.btn-next.full-width {
+  width: 100%;
+}
+
+/* Dugme Submit */
+.btn-submit {
+  background: #28a745;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 20px;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.3s;
+  width: 48%;
+}
+
+.btn-submit:hover {
+  background: #5c9856;
+  border-color: #1ea814;
+  box-shadow: 0 6px 15px rgb(43, 138, 44);
+  transform: scale(1.03);
+}
+
+/* Efekti Hover na dugmad */
+.btn:hover {
+  opacity: 0.85;
+}
+
+.login-redirect {
+  text-align: center;
+  margin-top: 20px;
   font-size: 14px;
   color: #666;
 }
 
-.register p a {
-  color: #1266f1;
-  text-decoration: none;
+.login-redirect a {
+  color: #cc6320;
   font-weight: bold;
-}
-
-.register p a:hover {
-  text-decoration: underline;
-}
-
-.divider {
-  display: flex;
-  align-items: center;
-  margin: 25px 0;
-  color: #999;
-  font-size: 14px;
-}
-
-.divider::before,
-.divider::after {
-  content: '';
-  flex: 1;
-  border-bottom: 1px solid #ddd;
-}
-
-.divider span {
-  padding: 0 10px;
-}
-
-
-.btn-social {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  padding: 12px;
-  font-size: 14px;
-  background-color: #db4437;
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.btn-social img {
-  width: 20px;
-  height: 20px;
-  margin-right: 10px;
-}
-
-.btn-social:hover {
-  background-color: #c1351d;
-}
-
-
-.register-link {
-  margin-top: 15px;
-  font-size: 14px;
-  color: #555;
-}
-
-.register-link a {
-  color: #007bff;
   text-decoration: none;
-  font-weight: bold;
+  transition: color 0.3s ease-in-out;
 }
 
-.register-link a:hover {
-  text-decoration: underline;
-}
-
-.error-text {
-  color: #dc3545;
-  font-size: 12px;
-  margin-top: 5px;
+.login-redirect a:hover {
+  color: #b55a1c;
 }
 
 
+/* Responsive */
+@media (max-width: 600px) {
+  .register-container {
+    width: 90%;
+    padding: 30px;
+  }
+
+  .step-line {
+    width: 40px;
+  }
+
+  .button-group {
+    flex-direction: column;
+  }
+
+  .btn-back, .btn-next {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+}

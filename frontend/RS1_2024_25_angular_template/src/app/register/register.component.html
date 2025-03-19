@@ -1,102 +1,119 @@
-<section class="register">
-  <div class="container">
-    <div class="header">
-      <img src="assets/user.png" alt="Register Icon" class="register-icon">
-      <h2>Register</h2>
+<div class="main-container">
+  <div class="register-container">
+    <!-- Step Progress Bar -->
+    <div class="step-progress">
+      <div class="step" [class.active]="currentStep >= 1">1</div>
+      <div class="step-line" [class.active]="currentStep >= 2"></div>
+      <div class="step" [class.active]="currentStep >= 2">2</div>
+      <div class="step-line" [class.active]="currentStep >= 3"></div>
+      <div class="step" [class.active]="currentStep >= 3">3</div>
+      <div class="step-line" [class.active]="currentStep >= 4"></div>
+      <div class="step" [class.active]="currentStep >= 4">4</div>
     </div>
 
-    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="register-form">
-      <div class="form-group">
-        <label for="firstName">First Name:</label>
-        <input type="text" id="firstName" formControlName="firstName">
-        <div *ngIf="registerForm.get('firstName')?.invalid && registerForm.get('firstName')?.touched">
-          <small class="error-text">First Name is required.</small>
-        </div>
-      </div>
+    <!-- Form -->
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+      <div class="form-container">
 
-      <div class="form-group">
-        <label for="lastName">Last Name:</label>
-        <input type="text" id="lastName" formControlName="lastName">
-        <div *ngIf="registerForm.get('lastName')?.invalid && registerForm.get('lastName')?.touched">
-          <small class="error-text">Last Name is required.</small>
-        </div>
-      </div>
+        <!-- Step 1: Personal Details -->
+        <div *ngIf="currentStep === 1">
+          <h4>Step 1: Personal Details</h4>
 
-      <div class="form-group">
-        <label for="username">Username:</label>
-        <input type="text" id="username" formControlName="username">
-        <div *ngIf="registerForm.get('username')?.invalid && registerForm.get('username')?.touched">
-          <small class="error-text">Username is required.</small>
-        </div>
-      </div>
+          <div class="form-group">
+            <input type="text" id="name" formControlName="name" placeholder=" ">
+            <label for="name">Enter your name</label>
+          </div>
 
+          <div class="form-group">
+            <input type="text" id="surname" formControlName="surname" placeholder=" ">
+            <label for="surname">Enter your surname</label>
+          </div>
 
-      <div class="form-group email-group">
-        <label for="email">Email Address:</label>
-        <input type="email" id="email" formControlName="email">
-        <div *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched">
-          <small class="error-text" *ngIf="registerForm.get('email')?.errors?.['required']">Email is required.</small>
-          <small class="error-text" *ngIf="registerForm.get('email')?.errors?.['email']">Please enter a valid email address.</small>
+          <div class="button-group center">
+            <button type="button" class="btn btn-next full-width" (click)="nextStep()">Next</button>
+          </div>
         </div>
-      </div>
 
-      <div class="form-group">
-        <label for="address">Address:</label>
-        <input type="text" id="address" formControlName="address">
-        <div *ngIf="registerForm.get('address')?.invalid && registerForm.get('address')?.touched">
-          <small class="error-text">Address is required.</small>
-        </div>
-      </div>
+        <!-- Step 2: Contact Details -->
+        <div *ngIf="currentStep === 2">
+          <h4>Step 2: Contact Details</h4>
 
-      <div class="form-group">
-        <label for="phone">Phone:</label>
-        <input type="tel" id="phone" formControlName="phone">
-        <div *ngIf="registerForm.get('phone')?.invalid && registerForm.get('phone')?.touched">
-          <small class="error-text">Phone is required.</small>
-        </div>
-      </div>
-      <div class="form-group">
-        <label for="gender">Gender:</label>
-        <select id="gender" formControlName="gender">
-          <option value="">Select a gender</option>
-          <option value="male">Male</option>
-          <option value="female">Female</option>
-          <option value="other">Other</option>
-        </select>
-        <div *ngIf="registerForm.get('gender')?.invalid && registerForm.get('gender')?.touched">
-          <small class="error-text">Gender is required.</small>
-        </div>
-      </div>
+          <div class="form-group">
+            <input type="email" id="email" formControlName="email" placeholder=" ">
+            <label for="email">Email</label>
+          </div>
 
-      <div class="form-group">
-        <label for="password">Password:</label>
-        <input type="password" id="password" formControlName="password">
-        <div *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched">
-          <small class="error-text">Password is required.</small>
-        </div>
-      </div>
+          <div class="form-group">
+            <input type="text" id="phone" formControlName="phoneNumber" placeholder=" ">
+            <label for="phone">Phone Number</label>
+          </div>
 
-      <div class="form-group">
-        <label for="confirmPassword">Confirm Password:</label>
-        <input type="password" id="confirmPassword" formControlName="confirmPassword">
-        <div *ngIf="registerForm.get('confirmPassword')?.invalid && registerForm.get('confirmPassword')?.touched">
-          <small class="error-text">Confirm Password is required.</small>
-        </div>
-      </div>
+          <div class="form-group">
+            <input type="text" id="address" formControlName="address" placeholder=" ">
+            <label for="address">Address</label>
+          </div>
 
-      <button type="submit" class="btn" [disabled]="registerForm.invalid">Register</button>
+          <div class="form-group">
+            <select id="cityId" formControlName="cityId">
+              <option value="" disabled selected>Select your city</option>
+              <option *ngFor="let city of cities" [value]="city.id">{{ city.name }}</option>
+            </select>
+            <label for="cityId">Select your city</label>
+          </div>
+
+          <div class="button-group">
+            <button type="button" class="btn btn-back" (click)="prevStep()">Back</button>
+            <button type="button" class="btn btn-next" (click)="nextStep()">Next</button>
+          </div>
+        </div>
+
+        <!-- Step 3: Account Details -->
+        <div *ngIf="currentStep === 3">
+          <h4>Step 3: Account Details</h4>
+
+          <div class="form-group">
+            <input type="text" id="username" formControlName="username" placeholder=" ">
+            <label for="username">Username</label>
+          </div>
+
+          <div class="form-group">
+            <input type="password" id="password" formControlName="password" placeholder=" ">
+            <label for="password">Password</label>
+          </div>
+
+          <div class="form-group">
+            <input type="password" id="confirmPassword" formControlName="confirmPassword" placeholder=" ">
+            <label for="confirmPassword">Confirm Password</label>
+          </div>
+
+          <div class="button-group">
+            <button type="button" class="btn btn-back" (click)="prevStep()">Back</button>
+            <button type="button" class="btn btn-next" (click)="nextStep()">Next</button>
+          </div>
+        </div>
+
+        <!-- Step 4: Review & Submit -->
+        <div *ngIf="currentStep === 4">
+          <h4>Step 4: Review & Submit</h4>
+          <p><strong>Name:</strong> {{ registerForm.get('name')?.value }}</p>
+          <p><strong>Surname:</strong> {{ registerForm.get('surname')?.value }}</p>
+          <p><strong>Email:</strong> {{ registerForm.get('email')?.value }}</p>
+          <p><strong>Phone:</strong> {{ registerForm.get('phoneNumber')?.value }}</p>
+          <p><strong>Address:</strong> {{ registerForm.get('address')?.value }}</p>
+          <p><strong>City:</strong> {{ getCityName(registerForm.get('cityId')?.value) }}</p>
+          <p><strong>Username:</strong> {{ registerForm.get('username')?.value }}</p>
+
+          <div class="button-group">
+            <button type="button" class="btn btn-back" (click)="prevStep()">Back</button>
+            <button type="submit" class="btn btn-submit">Submit</button>
+          </div>
+        </div>
+
+      </div>
     </form>
 
-    <div class="divider">
-      <span>Or sign in with</span>
-    </div>
-
-    <div class="social-buttons">
-      <button type="button" class="btn-social google-btn">
-        <img src="assets/icons8-google-50.png" alt="Google"> Sign In with Google
-      </button>
-    </div>
-
-    <p>Already have an account? <a routerLink="/login">Log in</a></p>
+    <p class="login-redirect">
+      Already have an account? <a href="/login">Login here</a>
+    </p>
   </div>
-</section>
+</div>

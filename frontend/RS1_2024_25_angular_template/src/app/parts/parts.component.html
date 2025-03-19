@@ -1,69 +1,207 @@
-<div class="page-container">
-  <!-- Filters Section -->
-  <div class="filters-section">
-    <div class="form-box">
-      <h2>Select Car Parts</h2>
-      <div class="form-group">
-        <div class="input-pair">
-          <!-- Car Dropdown -->
-          <div class="input-item">
-            <label for="car">Car:</label>
-            <select id="car" [(ngModel)]="selectedCarId" name="car" (change)="onCarChange()">
-              <option [value]="null">Select a car</option>
-              <option *ngFor="let car of cars" [value]="car.id">{{ car.name }}</option>
-            </select>
-          </div>
-          <div class="input-item">
-            <label for="model">Model:</label>
-            <select id="model" [(ngModel)]="selectedModelId" name="model">
-              <option [value]="null">Select a model</option>
-              <option *ngFor="let model of models" [value]="model.id">{{ model.name }}</option>
-            </select>
-          </div>
-        </div>
-        <div class="input-pair">
+<div class="filter-container">
+  <!-- Background Overlay -->
+  <div class="filter-overlay">
+    <h1 class="filter-title">Find Parts For Your Vehicle</h1>
+    <p class="filter-subtitle">Over hundreds of brands and tens of thousands of parts</p>
 
-          <div class="input-item">
-            <label for="category">Category:</label>
-            <select id="category" [(ngModel)]="selectedCategoryId" name="category" (change)="onCategoryChange()">
-              <option [value]="null">Select a category</option>
-              <option *ngFor="let category of categories" [value]="category.id">{{ category.name }}</option>
-            </select>
-          </div>
-          <!-- Part Dropdown -->
-          <div class="input-item">
-            <label for="part">Part:</label>
-            <select id="part" [(ngModel)]="selectedPartId" name="part">
-              <option [value]="null">Select a part</option>
-              <option *ngFor="let part of parts" [value]="part.id">{{ part.name }}</option>
-            </select>
-          </div>
-          <div class="input-item" *ngIf="showVehicleTypeDropdown">
-            <label for="type">Type:</label>
-            <select id="type" [(ngModel)]="selectedTypeId" name="type">
-              <option [value]="null">Select a type</option>
-              <option *ngFor="let type of types" [value]="type.id">{{ type.name }}</option>
-            </select>
+    <div class="filter-box">
+      <!-- Car Dropdown -->
+      <div class="filter-item" [ngClass]="{'open': dropdownState['car']}" (click)="toggleDropdown('car'); $event.stopPropagation()">
+        <div class="dropdown-container">
+          <div class="selected-option">{{ getSelectedCarName() || 'Select Car' }}</div>
+          <div class="dropdown-arrow"><i class="fas fa-chevron-down"></i></div>
+        </div>
+        <div class="dropdown-options" *ngIf="dropdownState['car']">
+          <div *ngFor="let car of cars" (click)="selectCar(car.id)">
+            {{ car.name }}
           </div>
         </div>
       </div>
-      <div class="button-section">
-        <button class="search-btn" (click)="applyFilter()">Apply</button>
-        <button class="reset-btn" (click)="resetFilters()">Reset</button>
-      </div>
-    </div>
-  </div>
 
-  <!-- Parts Section -->
-  <div class="parts-section">
-    <div class="parts-grid">
-      <div class="part-card" *ngFor="let part of filteredParts" (click)="navigateToPartDetail(part)">
-        <img [src]="'http://localhost:7000' + part.partImage || 'https://via.placeholder.com/300x200'" alt="{{ part.name }}" />
-        <h3>{{ part.name }}</h3>
-        <p>{{ part.description }}</p>
-        <p><strong>{{ part.price }} KM</strong></p>
-        <button class="add-to-cart-btn">Add to Cart</button>
+      <!-- Model Dropdown (uvijek vidljiv, ali opcije dolaze tek nakon izbora auta) -->
+      <div class="filter-item" [ngClass]="{'open': dropdownState['model']}" (click)="toggleDropdown('model');$event.stopPropagation()">
+        <div class="dropdown-container">
+          <div class="selected-option">{{ getSelectedModelName() || 'Select Model' }}</div>
+          <div class="dropdown-arrow"><i class="fas fa-chevron-down"></i></div>
+        </div>
+        <div class="dropdown-options" *ngIf="dropdownState['model']">
+          <div *ngFor="let model of models" (click)="selectModel(model.id)">
+            {{ model.name }}
+          </div>
+          <div *ngIf="!models.length" class="dropdown-placeholder">No models available</div>
+        </div>
+      </div>
+
+      <!-- Category Dropdown -->
+      <div class="filter-item" [ngClass]="{'open': dropdownState['category']}" (click)="toggleDropdown('category');$event.stopPropagation()">
+        <div class="dropdown-container">
+          <div class="selected-option">{{ getSelectedCategoryName() || 'Select Category' }}</div>
+          <div class="dropdown-arrow"><i class="fas fa-chevron-down"></i></div>
+        </div>
+        <div class="dropdown-options" *ngIf="dropdownState['category']">
+          <div *ngFor="let category of categories" (click)="selectCategory(category.id)">
+            {{ category.name }}
+          </div>
+        </div>
+      </div>
+
+      <!-- Part Dropdown -->
+      <div class="filter-item" [ngClass]="{'open': dropdownState['part']}" (click)="toggleDropdown('part');$event.stopPropagation()">
+        <div class="dropdown-container">
+          <div class="selected-option">{{ getSelectedPartName() || 'Select Part' }}</div>
+          <div class="dropdown-arrow"><i class="fas fa-chevron-down"></i></div>
+        </div>
+        <div class="dropdown-options" *ngIf="dropdownState['part']">
+          <div *ngFor="let part of parts" (click)="selectPart(part.id)">
+            {{ part.name }}
+          </div>
+        </div>
+      </div>
+
+
+      <div class="filter-item" *ngIf="showVehicleTypeDropdown" [ngClass]="{'open': dropdownState['type']}" (click)="toggleDropdown('type');$event.stopPropagation()">
+        <div class="dropdown-container">
+          <div class="selected-option">{{ getSelectedTypeName() || 'Select Type' }}</div>
+          <div class="dropdown-arrow"><i class="fas fa-chevron-down"></i></div>
+        </div>
+        <div class="dropdown-options" *ngIf="dropdownState['type']">
+          <div *ngFor="let type of types" (click)="selectType(type.id)">
+            {{ type.name }}
+          </div>
+        </div>
+      </div>
+
+
+
+    <div class="filter-buttons">
+      <!-- Search Button -->
+      <button class="search-btn" (click)="applyFilter()">Search</button>
+
+      <!-- Reset Button -->
+      <button class="reset-btn" (click)="resetFilter()">Reset</button>
       </div>
     </div>
   </div>
 </div>
+
+<!-- Parts Section -->
+<div class="product-section" *ngIf="filteredParts.length>0">
+  <div class="product-grid">
+    <div class="product-card" *ngFor="let part of filteredParts">
+      <!-- Wishlist & Details Container -->
+      <div class="product-icons">
+        <div class="product-detail-box" (click)="openProductModal(part)"> <img src="/assets/zoom-in.png"></div>
+        <span class="wishlist-icon">&#9825;</span>
+      </div>
+
+      <!-- Product Image -->
+      <img [src]="'http://localhost:7000' + part.partImage || 'https://via.placeholder.com/300x200'"
+           alt="{{ part.name }}"
+           class="product-image" />
+
+      <!-- Product Info -->
+      <div class="product-info">
+        <h3 class="product-name">{{ part.name }}</h3>
+        <p class="product-description">{{ part.description }}</p>
+
+        <div class="product-bottom">
+          <p class="product-price">{{ part.price }} KM</p>
+          <button class="cart-btn" (click)="addToCart(part); $event.stopPropagation();">🛒</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- MODAL - Overlay -->
+<div class="modal-overlay" *ngIf="selectedPart">
+  <div class="modal-content">
+    <span class="close-btn" (click)="closeProductModal()">&times;</span>
+
+    <div class="modal-body">
+      <!-- Slika proizvoda -->
+      <div class="modal-image-container">
+        <img
+          [src]="'http://localhost:7000' + selectedPart.partImage || 'https://via.placeholder.com/300x200'"
+          alt="{{ selectedPart.name }}"
+          class="modal-image" />
+      </div>
+
+      <!-- Informacije o proizvodu -->
+      <div class="modal-info">
+        <h2 class="modal-title">{{ selectedPart.name }}</h2>
+
+        <div class="modal-details">
+          <p class="modal-description"><strong>Description:</strong>{{ selectedPart.description }}</p>
+          <p><strong>Manufacturer:</strong> {{ selectedPart.manufacturerName || 'N/A' }}</p>
+          <p><strong>Category:</strong> {{ selectedPart.categoryName || 'N/A' }}</p>
+          <p class="modal-price"><strong>Price:</strong> <span>{{ selectedPart.price }} KM</span></p>
+
+
+          <div class="modal-overlay" *ngIf="selectedPart">
+            <div class="modal-content">
+              <span class="close-btn" (click)="closeProductModal()">&times;</span>
+
+              <div class="modal-body">
+                <!-- Picture's product -->
+                <div class="modal-image-container">
+                  <img
+                    [src]="'http://localhost:7000' + selectedPart.partImage || 'https://via.placeholder.com/300x200'"
+                    alt="{{ selectedPart.name }}"
+                    class="modal-image" />
+                </div>
+
+                <!-- Information of product -->
+                <div class="modal-info">
+                  <h2 class="modal-title">{{ selectedPart.name }}</h2>
+
+                  <div class="modal-details">
+                    <p class="modal-description"><strong>Description:</strong> {{ selectedPart.description }}</p>
+
+                    <!-- Manufacturer and Category in the same row -->
+                    <div class="modal-info-row">
+                      <p><strong>Manufacturer:</strong> {{ selectedPart.manufacturerName || 'N/A' }}</p>
+                      <p><strong>Category:</strong> {{ selectedPart.categoryName || 'N/A' }}</p>
+                    </div>
+
+                    <p class="modal-price"><strong>Price:</strong> <span>{{ selectedPart.price * selectedPart.quantity}} KM</span></p>
+                  </div>
+
+                  <hr class="modal-divider">
+
+                  <!-- Button and Quantitiy for added -->
+                  <div class="modal-actions">
+                    <label for="inputQuantitySelector" class="quantity-label">Quantity:</label>
+
+                    <div class="input-group quantity-selector">
+                      <!-- Button for decrease quantity -->
+                      <button type="button" class="btn btn-secondary btn-sm quantity-btn" (click)="decreaseQuantity()">
+                        <span>-</span>
+                      </button>
+
+                      <!-- Input for quantity -->
+                      <input type="number" id="inputQuantitySelector" class="form-control text-center quantity-input"
+                             [(ngModel)]="selectedPart.quantity" min="1" max="10" step="1"
+                             aria-label="Quantity selector">
+
+                      <!-- Button for increase quantity -->
+                      <button type="button" class="btn btn-secondary btn-sm quantity-btn" (click)="increaseQuantity()">
+                        <span>+</span>
+                      </button>
+                    </div>
+
+                    <button class="btn add-to-cart-btn" (click)="addToCart(selectedPart)">Add to Cart</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+

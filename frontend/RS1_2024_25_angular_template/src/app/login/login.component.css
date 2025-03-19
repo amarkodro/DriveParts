@@ -1,158 +1,240 @@
-
-.login {
+/* Full-page container */
+.login-page {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 90vh;
-  background-color: #f0f2f5;
-  padding: 20px;
+  height: 100vh;
+  background: url("/assets/background-login.jpg") no-repeat center center fixed;
+  position: relative;
 }
 
-
-.login .container {
-  background-color: #fff;
-  padding: 30px;
-  border-radius: 15px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+/* Popravljen overlay efekat */
+.login-page::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
-  max-width: 400px;
-  text-align: center;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6); /* Lagano zatamnjenje za bolju čitljivost */
+  z-index: 1;
 }
 
-.header {
+/* Popravljen stil za formu - ona ostaje iznad overlay-a */
+.login-container {
+  position: relative;
+  z-index: 2;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  margin-bottom: 20px;
+  width: 900px;
+  height: 500px;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
 }
 
-.login-icon {
-  width: 40px;
-  height: 40px;
-}
-
-.header h2 {
-  font-size: 28px;
-  margin: 0;
-  color: #007bff;
-}
-
-.login-icon {
-  width: 40px;
-  height: 40px;
-}
-
-
-.login-form .form-group {
-  margin-bottom: 20px;
-  text-align: left;
-}
-
-.login-form label {
-  display: block;
-  font-size: 14px;
-  color: #555;
-  margin-bottom: 5px;
-}
-
-.login-form input {
-  width: 100%;
-  padding: 12px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  font-size: 14px;
-  box-sizing: border-box;
-  transition: border-color 0.3s;
-}
-
-.login-form input:focus {
-  border-color: #007bff;
-  outline: none;
-}
-
-
-.primary-btn {
-  width: 100%;
-  padding: 12px;
-  background-color: #007bff;
-  color: #fff;
-  font-size: 16px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.primary-btn:hover {
-  background-color: #0056b3;
-}
-
-
-.divider {
-  display: flex;
-  align-items: center;
-  margin: 25px 0;
-  color: #999;
-  font-size: 14px;
-}
-
-.divider::before,
-.divider::after {
-  content: '';
+/* Left Side - Login Form */
+.login-form {
   flex: 1;
-  border-bottom: 1px solid #ddd;
+  padding: 50px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
-.divider span {
-  padding: 0 10px;
+/* Title & Text */
+.login-form h1 {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: #cc6320;
 }
 
-.btn-social {
+.login-form p {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+/* Input Group */
+.input-group {
+  position: relative;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+/* Input Field */
+.input-group input {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #ddd;
+  border-radius: 50px; /* Zaobljene ivice */
+  font-size: 16px;
+  outline: none;
+  transition: all 0.3s ease-in-out;
+  background: white;
+  box-sizing: border-box;
+  text-indent: 15px; /* Pomaknut tekst malo desno */
+}
+
+/* Floating Label */
+.input-group label {
+  position: absolute;
+  top: 50%;
+  left: 15px;
+  transform: translateY(-50%);
+  font-size: 16px;
+  color: #999;
+  transition: all 0.3s ease-in-out;
+  pointer-events: none;
+}
+
+/* Kada korisnik klikne */
+.input-group input:focus,
+.input-group input:not(:placeholder-shown) {
+  border-color: #cc6320;
+  box-shadow: 0px 4px 10px rgba(204, 99, 32, 0.3);
+}
+
+.input-group input:focus + label,
+.input-group input:not(:placeholder-shown) + label {
+  top: 0;
+  left: 20px;
+  font-size: 12px;
+  color: #cc6320;
+  background: white;
+  padding: 0 5px;
+}
+
+/* Options Section */
+.options {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  margin-bottom: 15px;
+  max-height: 10px;
+}
+
+.options a {
+  text-decoration: none;
+  color: #cc6320;
+  font-weight: bold;
+}
+
+/* Dugmad (Sign in + Google) */
+.btn-signin,
+.btn-google {
   display: flex;
   align-items: center;
   justify-content: center;
   width: 100%;
   padding: 12px;
-  font-size: 14px;
-  background-color: #db4437;
-  color: #fff;
-  border: none;
-  border-radius: 8px;
+  margin-top: 15px;
+  border-radius: 50px;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: all 0.3s ease-in-out;
+  font-weight: bold;
+  font-size: 14px;
+  gap: 10px;
+  border: 2px solid transparent;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-.btn-social img {
+/* Sign In Button */
+.btn-signin {
+  background: #cc6320;
+  color: white;
+  border: 2px solid #cc6320;
+}
+
+.btn-signin:hover {
+  background: #b55a1c;
+  border-color: #b55a1c;
+  box-shadow: 0 6px 15px rgba(204, 99, 32, 0.3);
+  transform: scale(1.03);
+}
+
+/* Google Sign In Button */
+.btn-google {
+  background: white;
+  color: #555;
+  border: 2px solid #cc6320;
+}
+
+.btn-google:hover {
+  background: #ffede0;
+  border-color: #b55a1c;
+  box-shadow: 0 6px 15px rgba(204, 99, 32, 0.3);
+  transform: scale(1.03);
+}
+
+/* Google Logo */
+.btn-google img {
   width: 20px;
   height: 20px;
-  margin-right: 10px;
+  transition: transform 0.3s ease-in-out;
 }
 
-.btn-social:hover {
-  background-color: #c1351d;
+/* Rotate Google Icon on Hover */
+.btn-google:hover img {
+  transform: rotate(360deg);
 }
 
-
-.register-link {
+/* Register text */
+.register-text {
+  text-align: center;
   margin-top: 15px;
-  font-size: 14px;
-  color: #555;
+  font-size: 12px;
 }
 
-.register-link a {
-  color: #007bff;
+.register-text a {
+  color: #cc6320;
   text-decoration: none;
   font-weight: bold;
 }
 
-.register-link a:hover {
-  text-decoration: underline;
+/* Right Side - Background Image */
+.login-image {
+  flex: 1;
+  background: linear-gradient(135deg, #cc6320, #7a3406);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-top-right-radius: 12px;
+  border-bottom-right-radius: 12px;
+  position: relative;
 }
 
+/* Overlay Effect */
+.login-image::before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.1);
+  border-top-right-radius: 12px;
+  border-bottom-right-radius: 12px;
+}
 
-.error-text {
-  color: #dc3545;
-  font-size: 12px;
-  margin-top: 5px;
+/* Logo Inside Right Section */
+.login-image img {
+  width: 60%;
+  filter: brightness(1.2) contrast(1.1);
+  z-index: 2;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .login-container {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .login-image {
+    display: none;
+  }
+
+  .login-form {
+    padding: 30px;
+  }
 }
