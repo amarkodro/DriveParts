@@ -6,23 +6,64 @@
       <h1>WELCOME BACK</h1>
       <p>Welcome back! Please enter your details.</p>
 
-      <form>
+      <form [formGroup]="loginForm"  (ngSubmit)="onSubmit()">
         <div class="input-group">
-          <input type="text" id="username" placeholder=" " required>
+          <input
+            type="text"
+            id="username"
+            placeholder=" "
+            required
+            formControlName="username"
+            [class.invalid]="loginForm.get('username')?.invalid && loginForm.get('username')?.touched"
+          />
           <label for="username">Enter your username</label>
+
+
+          <div class="error-message" *ngIf="loginForm.get('username')?.invalid && loginForm.get('username')?.touched">
+            Username is required
+          </div>
         </div>
 
+
         <div class="input-group">
-          <input type="password" id="password" placeholder=" " required>
+          <input
+            [type]="showPassword ? 'text' : 'password'"
+            id="password"
+            placeholder=" "
+            required
+            formControlName="password"
+            [class.invalid]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
+          />
           <label for="password">Password</label>
+
+          <span class="toggle-password" (click)="togglePasswordVisibility()">
+            {{showPassword ? '🙈' : '👁️'}}
+          </span>
+
+          <div class="error-message" *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+            Password is required
+          </div>
         </div>
+
+
 
         <div class="options">
-          <label><input type="checkbox"> Remember me</label>
+          <label>
+            <input type="checkbox" formControlName="rememberMe">
+            Remember me
+          </label>
           <a href="#">Forgot password?</a>
         </div>
 
-        <button type="submit" class="btn-signin">Sign in</button>
+        <button type="submit" class="btn-signin" [disabled]="isLoading">
+          <ng-container *ngIf="!isLoading; else loading">
+            Sign in
+          </ng-container>
+          <ng-template #loading>
+            <span class="spinner"></span> Signing in...
+          </ng-template>
+        </button>
+
 
         <button class="btn-google">
           <img src="https://img.icons8.com/color/48/000000/google-logo.png"/> Sign in with Google

@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace RS1_2024_25.API.Migrations
 {
     /// <inheritdoc />
-    public partial class Init : Migration
+    public partial class InitalCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -125,6 +125,21 @@ namespace RS1_2024_25.API.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Payments", x => x.PaymentId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "RefreshTokens",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    Token = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ExpiryDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RefreshTokens", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -312,6 +327,7 @@ namespace RS1_2024_25.API.Migrations
                     IsAdmin = table.Column<bool>(type: "bit", nullable: false),
                     isUser = table.Column<bool>(type: "bit", nullable: false),
                     is2FActive = table.Column<bool>(type: "bit", nullable: false),
+                    ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Discriminator = table.Column<string>(type: "nvarchar(13)", maxLength: 13, nullable: false),
                     AdminLevel = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     GenderId = table.Column<int>(type: "int", nullable: true),
@@ -378,6 +394,32 @@ namespace RS1_2024_25.API.Migrations
                         column: x => x.PartId,
                         principalTable: "Parts",
                         principalColumn: "PartId");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CartItems",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    PartId = table.Column<int>(type: "int", nullable: false),
+                    Quantity = table.Column<int>(type: "int", nullable: false),
+                    AddedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CartItems", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CartItems_Parts_PartId",
+                        column: x => x.PartId,
+                        principalTable: "Parts",
+                        principalColumn: "PartId");
+                    table.ForeignKey(
+                        name: "FK_CartItems_UserAccounts_UserId",
+                        column: x => x.UserId,
+                        principalTable: "UserAccounts",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -646,15 +688,6 @@ namespace RS1_2024_25.API.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "UserAccounts",
-                columns: new[] { "Id", "Address", "AdminLevel", "Discriminator", "Email", "IsAdmin", "Name", "Password", "PhoneNumber", "Surname", "Username", "is2FActive", "isUser" },
-                values: new object[,]
-                {
-                    { 1, "Masline-Kocine bb", "Moderator", "Admin", "amar.kodro@edu.fit.ba", true, "Amar", "driveparts2003", "0623331233", "Kodro", "amar.kodro", true, false },
-                    { 4, "Masline-Kocine bb", "Moderator", "Admin", "ammar.puce@edu.fit.ba", true, "Ammar", "driveparts2003", "0623331233", "Puce", "ammar.puce", true, false }
-                });
-
-            migrationBuilder.InsertData(
                 table: "Cities",
                 columns: new[] { "ID", "CountryId", "Name" },
                 values: new object[,]
@@ -818,84 +851,15 @@ namespace RS1_2024_25.API.Migrations
                     { 15, 17, 33 }
                 });
 
-            migrationBuilder.InsertData(
-                table: "UserAccounts",
-                columns: new[] { "Id", "Address", "CityId", "Discriminator", "Email", "GenderId", "IsAdmin", "Name", "Password", "PhoneNumber", "Surname", "Username", "is2FActive", "isUser" },
-                values: new object[,]
-                {
-                    { 2, "useraddress", 18, "User", "testuser@example.com", 1, false, "Test", "userpassword123", "0602213312", "User", "TestUser1", false, true },
-                    { 3, "useraddress2", 16, "User", "testuser2@example.com", 2, false, "Test2", "userpassword123", "0602234312", "User2", "TestUser2", false, true }
-                });
+            migrationBuilder.CreateIndex(
+                name: "IX_CartItems_PartId",
+                table: "CartItems",
+                column: "PartId");
 
-            migrationBuilder.InsertData(
-                table: "FAQs",
-                columns: new[] { "FAQId", "Answer", "Question", "UserId" },
-                values: new object[,]
-                {
-                    { 1, "Koristite našu pretragu po modelu vozila ili kontaktirajte podršku za pomoć.", "Kako da pronađem pravi dio za moje vozilo?", 2 },
-                    { 2, "You can track your order using the tracking number sent to your email.", "How can I track my order?", 3 },
-                    { 3, "Da, povrat novca je moguć unutar 30 dana uz dostavljen dokaz o kupovini.", "Da li nudite povrat novca za neispravne dijelove?", 2 },
-                    { 4, "We accept card payments, cash on delivery, and bank transfers.", "What payment methods are available?", 3 },
-                    { 5, "Dostava obično traje 3-5 radnih dana, u zavisnosti od lokacije.", "Koliko traje dostava?", 2 },
-                    { 6, "Yes, you can return unused parts within 15 days of delivery.", "Can I return a part if it doesn't fit my vehicle?", 3 },
-                    { 7, "Da, popusti su dostupni za narudžbe veće od 500 BAM. Kontaktirajte nas za detalje.", "Da li nudite popuste za veće narudžbe?", 2 },
-                    { 8, "Please contact our support team immediately, and we will arrange for a replacement.", "What should I do if I receive the wrong part?", 3 },
-                    { 9, "Nažalost, trenutno nudimo samo online naručivanje i dostavu.", "Da li je moguće preuzimanje dijelova u prodavnici?", 2 },
-                    { 10, "Currently, we only ship within Bosnia and Herzegovina.", "Do you ship internationally?", 3 }
-                });
-
-            migrationBuilder.InsertData(
-                table: "Orders",
-                columns: new[] { "OrderId", "Date", "PaymentId", "StatusId", "SupplierId", "UserId" },
-                values: new object[,]
-                {
-                    { 1, new DateTime(2024, 12, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 1, 1, 1, 2 },
-                    { 2, new DateTime(2024, 11, 30, 0, 0, 0, 0, DateTimeKind.Unspecified), 2, 2, 2, 3 },
-                    { 3, new DateTime(2024, 12, 2, 0, 0, 0, 0, DateTimeKind.Unspecified), 2, 3, 4, 2 },
-                    { 4, new DateTime(2024, 12, 3, 0, 0, 0, 0, DateTimeKind.Unspecified), 1, 4, 5, 3 },
-                    { 5, new DateTime(2024, 12, 4, 0, 0, 0, 0, DateTimeKind.Unspecified), 1, 5, 6, 2 },
-                    { 6, new DateTime(2024, 12, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), 2, 6, 7, 3 },
-                    { 7, new DateTime(2024, 12, 6, 0, 0, 0, 0, DateTimeKind.Unspecified), 2, 7, 8, 2 },
-                    { 8, new DateTime(2024, 12, 7, 0, 0, 0, 0, DateTimeKind.Unspecified), 1, 8, 9, 3 },
-                    { 9, new DateTime(2024, 12, 8, 0, 0, 0, 0, DateTimeKind.Unspecified), 1, 9, 10, 2 },
-                    { 10, new DateTime(2024, 12, 9, 0, 0, 0, 0, DateTimeKind.Unspecified), 2, 10, 3, 3 }
-                });
-
-            migrationBuilder.InsertData(
-                table: "Reviews",
-                columns: new[] { "ReviewId", "Date", "PartId", "Picture", "Text", "UserId" },
-                values: new object[,]
-                {
-                    { 1, new DateTime(2023, 1, 11, 0, 0, 0, 0, DateTimeKind.Unspecified), 1, null, "Odličan kvalitet kočnica, stigle brzo i lako ih je bilo ugraditi.", 2 },
-                    { 2, new DateTime(2023, 2, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), 2, null, "Ovjes je perfektan, poboljšana stabilnost auta. Preporučujem!", 3 },
-                    { 3, new DateTime(2023, 3, 15, 0, 0, 0, 0, DateTimeKind.Unspecified), 3, null, "Filter ulja je odličan, jednostavan za instalaciju i povoljan.", 2 },
-                    { 4, new DateTime(2023, 4, 20, 0, 0, 0, 0, DateTimeKind.Unspecified), 4, null, "Cijev za auspuh savršeno odgovara. Bez problema je montirana.", 3 },
-                    { 5, new DateTime(2023, 5, 10, 0, 0, 0, 0, DateTimeKind.Unspecified), 5, null, "Crijevo rashladnog sistema odlično obavlja posao. Dostava na vrijeme.", 2 },
-                    { 6, new DateTime(2023, 6, 25, 0, 0, 0, 0, DateTimeKind.Unspecified), 6, null, "Zračni filter je povećao efikasnost motora. Zadovoljan kupovinom.", 3 },
-                    { 7, new DateTime(2023, 7, 12, 0, 0, 0, 0, DateTimeKind.Unspecified), 7, null, "Amortizeri su vrhunski. Auto je sada puno stabilniji.", 2 }
-                });
-
-            migrationBuilder.InsertData(
-                table: "OrderItems",
-                columns: new[] { "OrderItemId", "OrderId", "PartId", "Price", "Quantity" },
-                values: new object[,]
-                {
-                    { 1, 1, 1, 45.0, 1 },
-                    { 2, 1, 2, 90.0, 2 },
-                    { 3, 2, 3, 15.0, 1 },
-                    { 4, 2, 4, 70.0, 1 },
-                    { 5, 3, 5, 25.0, 1 },
-                    { 6, 3, 6, 20.0, 1 },
-                    { 7, 4, 7, 50.0, 2 },
-                    { 8, 4, 8, 40.0, 4 },
-                    { 9, 5, 9, 150.0, 1 },
-                    { 10, 5, 10, 30.0, 1 },
-                    { 11, 6, 11, 100.0, 2 },
-                    { 12, 6, 12, 35.0, 1 },
-                    { 13, 7, 13, 200.0, 1 },
-                    { 14, 8, 14, 250.0, 1 },
-                    { 15, 9, 15, 20.0, 1 }
-                });
+            migrationBuilder.CreateIndex(
+                name: "IX_CartItems_UserId",
+                table: "CartItems",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Cities_CountryId",
@@ -1022,6 +986,9 @@ namespace RS1_2024_25.API.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "CartItems");
+
+            migrationBuilder.DropTable(
                 name: "FAQs");
 
             migrationBuilder.DropTable(
@@ -1038,6 +1005,9 @@ namespace RS1_2024_25.API.Migrations
 
             migrationBuilder.DropTable(
                 name: "PartEngines");
+
+            migrationBuilder.DropTable(
+                name: "RefreshTokens");
 
             migrationBuilder.DropTable(
                 name: "Reviews");

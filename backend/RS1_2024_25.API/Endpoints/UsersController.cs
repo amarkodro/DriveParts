@@ -46,6 +46,7 @@ namespace RS1_2024_25.API.Endpoints
             public string GenderName { get; set; }
             public int CityId { get; set; }
             public string CityName { get; set; }
+
         }
 
         //Get : api/User

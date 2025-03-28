@@ -15,5 +15,6 @@ namespace RS1_2024_25.API.Data.Models
         public bool IsAdmin { get; set; }
         public bool isUser {  get; set; }
         public bool is2FActive { get; set; }
+        public string? ImageUrl { get; set; }
     }
 }

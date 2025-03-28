@@ -20,14 +20,40 @@
           <h4>Step 1: Personal Details</h4>
 
           <div class="form-group">
-            <input type="text" id="name" formControlName="name" placeholder=" ">
+            <input type="text" id="name" formControlName="name" placeholder="">
             <label for="name">Enter your name</label>
+            <div class="text-danger" *ngIf="registerForm.get('name')?.invalid && registerForm.get('name')?.touched">
+              Name is required.
+            </div>
           </div>
 
           <div class="form-group">
             <input type="text" id="surname" formControlName="surname" placeholder=" ">
             <label for="surname">Enter your surname</label>
+            <div class="text-danger" *ngIf="registerForm.get('surname')?.invalid && registerForm.get('surname')?.touched">
+              Surname is required.
+            </div>
           </div>
+
+          <div class="form-group dropdown" [ngClass]="{'open': dropdownState['gender']}">
+            <div class="dropdown-container" (click)="toggleDropdown('gender'); $event.stopPropagation();" [ngClass]="{'selected':selectedGenderId}">
+              <div class="selected-option">
+                {{ getSelectedGenderName() || 'Select Gender' }}
+              </div>
+              <div class="dropdown-arrow">
+                <i class="fas fa-chevron-down"></i>
+              </div>
+            </div>
+            <div class="dropdown-options" *ngIf="dropdownState['gender']">
+              <div *ngFor="let gender of genders" (click)="selectGender(gender.id); $event.stopPropagation();">
+                {{ gender.genderName }}
+              </div>
+            </div>
+            <div class="text-danger" *ngIf="registerForm.get('genderId')?.invalid && registerForm.get('genderId')?.touched">
+              Please select your gender.
+            </div>
+          </div>
+
 
           <div class="button-group center">
             <button type="button" class="btn btn-next full-width" (click)="nextStep()">Next</button>
@@ -38,27 +64,69 @@
         <div *ngIf="currentStep === 2">
           <h4>Step 2: Contact Details</h4>
 
+          <!-- Email -->
           <div class="form-group">
-            <input type="email" id="email" formControlName="email" placeholder=" ">
+            <input type="email" id="email" formControlName="email" placeholder=" " (blur)="checkEmail()">
             <label for="email">Email</label>
+            <div class="text-danger" *ngIf="registerForm.get('email')?.touched">
+              <ng-container *ngIf="registerForm.get('email')?.hasError('required')">
+                Email is required.
+              </ng-container>
+              <ng-container *ngIf="!registerForm.get('email')?.hasError('required') && registerForm.get('email')?.hasError('email')">
+                Please enter a valid email.
+              </ng-container>
+              <ng-container *ngIf="!registerForm.get('email')?.hasError('required') && !registerForm.get('email')?.hasError('email') && registerForm.get('email')?.hasError('exists')">
+                Email already exists.
+              </ng-container>
+            </div>
+
           </div>
 
           <div class="form-group">
-            <input type="text" id="phone" formControlName="phoneNumber" placeholder=" ">
+            <input type="text" id="phone" formControlName="phoneNumber" placeholder=" " (blur)="checkPhone()">
             <label for="phone">Phone Number</label>
+            <div class="text-danger" *ngIf="registerForm.get('phoneNumber')?.touched">
+              <ng-container *ngIf="registerForm.get('phoneNumber')?.hasError('required')">
+                Phone number is required.
+              </ng-container>
+              <ng-container *ngIf="registerForm.get('phoneNumber')?.hasError('pattern')">
+                Phone must match the format +387 60 000 000 or +387 60 000 00 00.
+              </ng-container>
+              <ng-container *ngIf="registerForm.get('phoneNumber')?.hasError('exists')">
+                Phone number already exists.
+              </ng-container>
+            </div>
           </div>
 
+          <!-- Address -->
           <div class="form-group">
             <input type="text" id="address" formControlName="address" placeholder=" ">
             <label for="address">Address</label>
+            <div class="text-danger" *ngIf="registerForm.get('address')?.invalid && registerForm.get('address')?.touched">
+              Address is required.
+            </div>
           </div>
 
+          <!-- City -->
           <div class="form-group">
-            <select id="cityId" formControlName="cityId">
-              <option value="" disabled selected>Select your city</option>
-              <option *ngFor="let city of cities" [value]="city.id">{{ city.name }}</option>
-            </select>
-            <label for="cityId">Select your city</label>
+            <div class="form-group dropdown" [ngClass]="{'open': dropdownState['city']}">
+              <div class="dropdown-container" (click)="toggleDropdown('city'); $event.stopPropagation();" [ngClass]="{'selected' : selectedCityId}">
+                <div class="selected-option">
+                  {{ getSelectedCityName() || 'Select your city' }}
+                </div>
+                <div class="dropdown-arrow">
+                  <i class="fas fa-chevron-down"></i>
+                </div>
+              </div>
+              <div class="dropdown-options" *ngIf="dropdownState['city']">
+                <div *ngFor="let city of cities" (click)="selectCity(city.id); $event.stopPropagation();">
+                  {{ city.name }}
+                </div>
+              </div>
+              <div class="text-danger" *ngIf="registerForm.get('cityId')?.invalid && registerForm.get('cityId')?.touched">
+                Please select a city.
+              </div>
+            </div>
           </div>
 
           <div class="button-group">
@@ -72,19 +140,78 @@
           <h4>Step 3: Account Details</h4>
 
           <div class="form-group">
-            <input type="text" id="username" formControlName="username" placeholder=" ">
+            <input type="file" (change)="onFileSelected($event)" accept="image/*" />
+            <label>Upload Profile Image</label>
+          </div>
+
+          <!-- Image Preview -->
+          <div *ngIf="previewUrl" style="margin-top: 10px; text-align:center;">
+            <img [src]="previewUrl" alt="Profile Preview" width="120" style="border-radius: 50%; box-shadow: 0 0 5px rgba(0,0,0,0.3);" />
+          </div>
+
+          <!-- Username -->
+          <div class="form-group">
+            <input type="text" id="username" formControlName="username" placeholder=" " (blur)="checkUsername()">
             <label for="username">Username</label>
+            <div class="text-danger" *ngIf="registerForm.get('username')?.touched">
+              <ng-container *ngIf="registerForm.get('username')?.hasError('required')">
+                Username is required.
+              </ng-container>
+              <ng-container *ngIf="!registerForm.get('username')?.hasError('required') && registerForm.get('username')?.hasError('exists')">
+                Username already exists.
+              </ng-container>
+            </div>
           </div>
 
-          <div class="form-group">
-            <input type="password" id="password" formControlName="password" placeholder=" ">
+          <!-- Password -->
+          <div class="form-group password-group">
+            <input [type]="showPassword ? 'text' : 'password'" id="password" formControlName="password" placeholder=" " #passInput (input)="evaluatePasswordStrength(passInput.value)" />
             <label for="password">Password</label>
+
+            <span class="toggle-password" (click)="togglePasswordVisibility()">
+              {{ showPassword ? '🙈' : '👁️' }}
+            </span>
+
+            <div class="password-strength-bar" *ngIf="passwordStrength">
+              <div [ngClass]="{
+              'strength-weak': passwordStrength === 'weak',
+              'strength-medium': passwordStrength === 'medium',
+              'strength-strong': passwordStrength === 'strong'
+            }"></div>
+              <small>{{ passwordStrength | titlecase }} password</small>
+            </div>
+
+            <div class="text-danger" *ngIf="registerForm.get('password')?.touched && registerForm.get('password')?.invalid">
+              <ng-container *ngIf="registerForm.get('password')?.hasError('required')">
+                Password is required.
+              </ng-container>
+              <ng-container *ngIf="registerForm.get('password')?.hasError('minlength')">
+                Password must be at least 6 characters.
+              </ng-container>
+              <ng-container *ngIf="registerForm.get('password')?.hasError('weakPassword')">
+                Password must contain at least one uppercase letter, one number, and one special character.
+              </ng-container>
+            </div>
           </div>
 
+          <!-- Confirm Password -->
           <div class="form-group">
-            <input type="password" id="confirmPassword" formControlName="confirmPassword" placeholder=" ">
+            <input [type]="showConfirmPassword ? 'text' : 'password'"  id="confirmPassword" formControlName="confirmPassword" placeholder=" ">
             <label for="confirmPassword">Confirm Password</label>
+
+            <span class="toggle-password" (click)="toggleConfirmPasswordVisibility()">
+              {{ showConfirmPassword ? '🙈' : '👁️' }}
+            </span>
+
+            <div class="text-danger" *ngIf="registerForm.get('confirmPassword')?.invalid && registerForm.get('confirmPassword')?.touched">
+              Please confirm your password.
+            </div>
+
+            <div class="text-danger" *ngIf="registerForm.hasError('mismatch') && registerForm.get('confirmPassword')?.touched">
+              Passwords do not match.
+            </div>
           </div>
+
 
           <div class="button-group">
             <button type="button" class="btn btn-back" (click)="prevStep()">Back</button>
@@ -97,12 +224,16 @@
           <h4>Step 4: Review & Submit</h4>
           <p><strong>Name:</strong> {{ registerForm.get('name')?.value }}</p>
           <p><strong>Surname:</strong> {{ registerForm.get('surname')?.value }}</p>
+          <p><strong>Gender:</strong>  {{ getSelectedGenderName() }}</p>
           <p><strong>Email:</strong> {{ registerForm.get('email')?.value }}</p>
           <p><strong>Phone:</strong> {{ registerForm.get('phoneNumber')?.value }}</p>
           <p><strong>Address:</strong> {{ registerForm.get('address')?.value }}</p>
           <p><strong>City:</strong> {{ getCityName(registerForm.get('cityId')?.value) }}</p>
           <p><strong>Username:</strong> {{ registerForm.get('username')?.value }}</p>
-
+          <p><strong>Profile Image:</strong></p>
+          <div *ngIf="previewUrl" style="margin-top: 10px; text-align:center;">
+            <img [src]="previewUrl" alt="Profile Preview" width="120" style="border-radius: 50%; box-shadow: 0 0 5px rgba(0,0,0,0.3);" />
+          </div>
           <div class="button-group">
             <button type="button" class="btn btn-back" (click)="prevStep()">Back</button>
             <button type="submit" class="btn btn-submit">Submit</button>

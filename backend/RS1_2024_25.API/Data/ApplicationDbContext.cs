@@ -4,8 +4,7 @@ using RS1_2024_25.API.Data.Models.Auth;
 
 namespace RS1_2024_25.API.Data
 {
-    public class ApplicationDbContext(
-        DbContextOptions options) : DbContext(options)
+    public class ApplicationDbContext(DbContextOptions options) : DbContext(options)
     {
         public DbSet<City> Cities { get; set; }
         public DbSet<Country> Countries { get; set; }
@@ -33,6 +32,8 @@ namespace RS1_2024_25.API.Data
         public DbSet<PartEngine> PartEngines { get; set; }
         public DbSet<Model> Models { get; set; }
         public DbSet<ModelPart> ModelParts { get; set; }
+        public DbSet<CartItem> CartItems { get; set; }
+        public DbSet<RefreshToken> RefreshTokens { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -43,7 +44,6 @@ namespace RS1_2024_25.API.Data
                 relationship.DeleteBehavior = DeleteBehavior.NoAction;
             }
 
-            base.OnModelCreating(modelBuilder);
            var dataSeeder = new DataSeeder();
             dataSeeder.DataSeed(modelBuilder);
 

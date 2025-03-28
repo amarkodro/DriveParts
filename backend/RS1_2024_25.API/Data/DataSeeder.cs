@@ -3,6 +3,7 @@ using RS1_2024_25.API.Data.Models;
 using System.Security.Cryptography;
 using BCrypt.Net;
 using System.Reflection.Emit;
+using Microsoft.AspNetCore.Identity;
 
 namespace RS1_2024_25.API.Data
 {
@@ -10,7 +11,6 @@ namespace RS1_2024_25.API.Data
     {
         public void DataSeed(ModelBuilder modelBuilder)
         {
-
 
             modelBuilder.Entity<City>().HasData(
                 new City { ID = 1, Name = "Banja Luka", CountryId = 1 },
@@ -58,18 +58,6 @@ namespace RS1_2024_25.API.Data
             modelBuilder.Entity<Gender>().HasData(
                 new Gender { GenderId = 1, GenderName = "Male" },
                 new Gender { GenderId = 2, GenderName = "Female" }
-            );
-
-            // Admins
-            modelBuilder.Entity<Admin>().HasData(
-                new Admin { Id = 1, Username = "amar.kodro", Password = "driveparts2003", IsAdmin = true, isUser = false, is2FActive = true, Address = "Masline-Kocine bb", Email = "amar.kodro@edu.fit.ba", Name = "Amar", Surname = "Kodro", PhoneNumber = "0623331233", AdminLevel = "Moderator" },
-                new Admin { Id = 4, Username = "ammar.puce", Password = "driveparts2003", IsAdmin = true, isUser = false, is2FActive = true, Address = "Masline-Kocine bb", Email = "ammar.puce@edu.fit.ba", Name = "Ammar", Surname = "Puce", PhoneNumber = "0623331233", AdminLevel = "Moderator" }
-            );
-
-            // Users
-            modelBuilder.Entity<User>().HasData(
-                new User { Id = 2, Username = "TestUser1", Password = "userpassword123", IsAdmin = false, isUser = true, is2FActive = false, Address = "useraddress", Email = "testuser@example.com", Name = "Test", Surname = "User", CityId = 18, GenderId = 1, PhoneNumber = "0602213312" },
-                new User { Id = 3, Username = "TestUser2", Password = "userpassword123", IsAdmin = false, isUser = true, is2FActive = false, Address = "useraddress2", Email = "testuser2@example.com", Name = "Test2", Surname = "User2", CityId = 16, GenderId = 2, PhoneNumber = "0602234312" }
             );
 
             // Cars
@@ -309,73 +297,7 @@ namespace RS1_2024_25.API.Data
                 new Status { StatusId = 9, Name = "Draft" },
                 new Status { StatusId = 10, Name = "Submitted" }
 
-            );
-
-            //Orders
-            modelBuilder.Entity<Order>().HasData(
-
-                new Order { OrderId = 1, UserId = 2, PaymentId = 1, StatusId = 1, SupplierId = 1, Date = new DateTime(2024, 12, 1) },
-                new Order { OrderId = 2, UserId = 3, PaymentId = 2, StatusId = 2, SupplierId = 2, Date = new DateTime(2024, 11, 30) },
-                new Order { OrderId = 3, UserId = 2, PaymentId = 2, StatusId = 3, SupplierId = 4, Date = new DateTime(2024, 12, 2) },
-                new Order { OrderId = 4, UserId = 3, PaymentId = 1, StatusId = 4, SupplierId = 5, Date = new DateTime(2024, 12, 3) },
-                new Order { OrderId = 5, UserId = 2, PaymentId = 1, StatusId = 5, SupplierId = 6, Date = new DateTime(2024, 12, 4) },
-                new Order { OrderId = 6, UserId = 3, PaymentId = 2, StatusId = 6, SupplierId = 7, Date = new DateTime(2024, 12, 5) },
-                new Order { OrderId = 7, UserId = 2, PaymentId = 2, StatusId = 7, SupplierId = 8, Date = new DateTime(2024, 12, 6) },
-                new Order { OrderId = 8, UserId = 3, PaymentId = 1, StatusId = 8, SupplierId = 9, Date = new DateTime(2024, 12, 7) },
-                new Order { OrderId = 9, UserId = 2, PaymentId = 1, StatusId = 9, SupplierId = 10, Date = new DateTime(2024, 12, 8) },
-                new Order { OrderId = 10, UserId = 3, PaymentId = 2, StatusId = 10, SupplierId = 3, Date = new DateTime(2024, 12, 9) }
-
-            );
-
-            //OrderItems
-            modelBuilder.Entity<OrderItem>().HasData(
-
-                new OrderItem { OrderItemId = 1, OrderId = 1, PartId = 1, Quantity = 1, Price = 45 },
-                new OrderItem { OrderItemId = 2, OrderId = 1, PartId = 2, Quantity = 2, Price = 90 },
-                new OrderItem { OrderItemId = 3, OrderId = 2, PartId = 3, Quantity = 1, Price = 15 },
-                new OrderItem { OrderItemId = 4, OrderId = 2, PartId = 4, Quantity = 1, Price = 70 },
-                new OrderItem { OrderItemId = 5, OrderId = 3, PartId = 5, Quantity = 1, Price = 25 },
-                new OrderItem { OrderItemId = 6, OrderId = 3, PartId = 6, Quantity = 1, Price = 20 },
-                new OrderItem { OrderItemId = 7, OrderId = 4, PartId = 7, Quantity = 2, Price = 50 },
-                new OrderItem { OrderItemId = 8, OrderId = 4, PartId = 8, Quantity = 4, Price = 40 },
-                new OrderItem { OrderItemId = 9, OrderId = 5, PartId = 9, Quantity = 1, Price = 150 },
-                new OrderItem { OrderItemId = 10, OrderId = 5, PartId = 10, Quantity = 1, Price = 30 },
-                new OrderItem { OrderItemId = 11, OrderId = 6, PartId = 11, Quantity = 2, Price = 100 },
-                new OrderItem { OrderItemId = 12, OrderId = 6, PartId = 12, Quantity = 1, Price = 35 },
-                new OrderItem { OrderItemId = 13, OrderId = 7, PartId = 13, Quantity = 1, Price = 200 },
-                new OrderItem { OrderItemId = 14, OrderId = 8, PartId = 14, Quantity = 1, Price = 250 },
-                new OrderItem { OrderItemId = 15, OrderId = 9, PartId = 15, Quantity = 1, Price = 20 }
-
-            );
-
-            //FAQs
-            modelBuilder.Entity<FAQ>().HasData(
-
-                new FAQ { FAQId = 1, Question = "Kako da pronađem pravi dio za moje vozilo?", Answer = "Koristite našu pretragu po modelu vozila ili kontaktirajte podršku za pomoć.", UserId = 2 },
-                new FAQ { FAQId = 2, Question = "How can I track my order?", Answer = "You can track your order using the tracking number sent to your email.", UserId = 3 },
-                new FAQ { FAQId = 3, Question = "Da li nudite povrat novca za neispravne dijelove?", Answer = "Da, povrat novca je moguć unutar 30 dana uz dostavljen dokaz o kupovini.", UserId = 2 },
-                new FAQ { FAQId = 4, Question = "What payment methods are available?", Answer = "We accept card payments, cash on delivery, and bank transfers.", UserId = 3 },
-                new FAQ { FAQId = 5, Question = "Koliko traje dostava?", Answer = "Dostava obično traje 3-5 radnih dana, u zavisnosti od lokacije.", UserId = 2 },
-                new FAQ { FAQId = 6, Question = "Can I return a part if it doesn't fit my vehicle?", Answer = "Yes, you can return unused parts within 15 days of delivery.", UserId = 3 },
-                new FAQ { FAQId = 7, Question = "Da li nudite popuste za veće narudžbe?", Answer = "Da, popusti su dostupni za narudžbe veće od 500 BAM. Kontaktirajte nas za detalje.", UserId = 2 },
-                new FAQ { FAQId = 8, Question = "What should I do if I receive the wrong part?", Answer = "Please contact our support team immediately, and we will arrange for a replacement.", UserId = 3 },
-                new FAQ { FAQId = 9, Question = "Da li je moguće preuzimanje dijelova u prodavnici?", Answer = "Nažalost, trenutno nudimo samo online naručivanje i dostavu.", UserId = 2 },
-                new FAQ { FAQId = 10, Question = "Do you ship internationally?", Answer = "Currently, we only ship within Bosnia and Herzegovina.", UserId = 3 }
-
-            );
-
-            //Reviews
-            modelBuilder.Entity<Review>().HasData(
-
-                new Review { ReviewId = 1, UserId = 2, PartId = 1, Text = "Odličan kvalitet kočnica, stigle brzo i lako ih je bilo ugraditi.", Picture = null, Date = new DateTime(2023, 01, 11) },
-                new Review { ReviewId = 2, UserId = 3, PartId = 2, Text = "Ovjes je perfektan, poboljšana stabilnost auta. Preporučujem!", Picture = null, Date = new DateTime(2023, 02, 05) },
-                new Review { ReviewId = 3, UserId = 2, PartId = 3, Text = "Filter ulja je odličan, jednostavan za instalaciju i povoljan.", Picture = null, Date = new DateTime(2023, 03, 15) },
-                new Review { ReviewId = 4, UserId = 3, PartId = 4, Text = "Cijev za auspuh savršeno odgovara. Bez problema je montirana.", Picture = null, Date = new DateTime(2023, 04, 20) },
-                new Review { ReviewId = 5, UserId = 2, PartId = 5, Text = "Crijevo rashladnog sistema odlično obavlja posao. Dostava na vrijeme.", Picture = null, Date = new DateTime(2023, 05, 10) },
-                new Review { ReviewId = 6, UserId = 3, PartId = 6, Text = "Zračni filter je povećao efikasnost motora. Zadovoljan kupovinom.", Picture = null, Date = new DateTime(2023, 06, 25) },
-                new Review { ReviewId = 7, UserId = 2, PartId = 7, Text = "Amortizeri su vrhunski. Auto je sada puno stabilniji.", Picture = null, Date = new DateTime(2023, 07, 12) }
-
-            );
+            ); 
         }
     }
 }

@@ -19,12 +19,11 @@ export class AuthGuard implements CanActivate {
     const guardData = route.data as AuthGuardData;  // Cast to AuthGuardData
 
 
-    // Provjera da li je korisnik prijavljen
-    /*
+
     if (!this.authService.isLoggedIn()) {
       this.router.navigate(['/auth/login']);
       return false;
-    }*/
+    }
 
     // Provjera prava pristupa za administratora
     if (guardData.isAdmin && !this.authService.isAdmin()) {

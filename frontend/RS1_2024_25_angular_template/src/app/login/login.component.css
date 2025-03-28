@@ -1,4 +1,3 @@
-/* Full-page container */
 .login-page {
   display: flex;
   justify-content: center;
@@ -8,7 +7,6 @@
   position: relative;
 }
 
-/* Popravljen overlay efekat */
 .login-page::before {
   content: "";
   position: absolute;
@@ -16,11 +14,10 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.6); /* Lagano zatamnjenje za bolju čitljivost */
+  background: rgba(0, 0, 0, 0.6);
   z-index: 1;
 }
 
-/* Popravljen stil za formu - ona ostaje iznad overlay-a */
 .login-container {
   position: relative;
   z-index: 2;
@@ -33,7 +30,6 @@
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
 }
 
-/* Left Side - Login Form */
 .login-form {
   flex: 1;
   padding: 50px;
@@ -42,7 +38,6 @@
   justify-content: center;
 }
 
-/* Title & Text */
 .login-form h1 {
   font-size: 28px;
   font-weight: 700;
@@ -56,28 +51,25 @@
   margin-bottom: 20px;
 }
 
-/* Input Group */
 .input-group {
   position: relative;
   width: 100%;
   margin-bottom: 20px;
 }
 
-/* Input Field */
 .input-group input {
   width: 100%;
   padding: 12px;
   border: 2px solid #ddd;
-  border-radius: 50px; /* Zaobljene ivice */
+  border-radius: 50px;
   font-size: 16px;
   outline: none;
   transition: all 0.3s ease-in-out;
   background: white;
   box-sizing: border-box;
-  text-indent: 15px; /* Pomaknut tekst malo desno */
+  text-indent: 15px;
 }
 
-/* Floating Label */
 .input-group label {
   position: absolute;
   top: 50%;
@@ -89,7 +81,6 @@
   pointer-events: none;
 }
 
-/* Kada korisnik klikne */
 .input-group input:focus,
 .input-group input:not(:placeholder-shown) {
   border-color: #cc6320;
@@ -106,7 +97,6 @@
   padding: 0 5px;
 }
 
-/* Options Section */
 .options {
   display: flex;
   justify-content: space-between;
@@ -121,7 +111,6 @@
   font-weight: bold;
 }
 
-/* Dugmad (Sign in + Google) */
 .btn-signin,
 .btn-google {
   display: flex;
@@ -140,7 +129,6 @@
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-/* Sign In Button */
 .btn-signin {
   background: #cc6320;
   color: white;
@@ -154,7 +142,6 @@
   transform: scale(1.03);
 }
 
-/* Google Sign In Button */
 .btn-google {
   background: white;
   color: #555;
@@ -168,19 +155,16 @@
   transform: scale(1.03);
 }
 
-/* Google Logo */
 .btn-google img {
   width: 20px;
   height: 20px;
   transition: transform 0.3s ease-in-out;
 }
 
-/* Rotate Google Icon on Hover */
 .btn-google:hover img {
   transform: rotate(360deg);
 }
 
-/* Register text */
 .register-text {
   text-align: center;
   margin-top: 15px;
@@ -193,7 +177,6 @@
   font-weight: bold;
 }
 
-/* Right Side - Background Image */
 .login-image {
   flex: 1;
   background: linear-gradient(135deg, #cc6320, #7a3406);
@@ -205,7 +188,6 @@
   position: relative;
 }
 
-/* Overlay Effect */
 .login-image::before {
   content: "";
   position: absolute;
@@ -216,14 +198,88 @@
   border-bottom-right-radius: 12px;
 }
 
-/* Logo Inside Right Section */
 .login-image img {
   width: 60%;
   filter: brightness(1.2) contrast(1.1);
   z-index: 2;
 }
+.input-group {
+  position: relative;
+  margin-bottom: 30px;
 
-/* Responsive Adjustments */
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-3px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.error-message {
+  position: absolute;
+  bottom: -18px;
+  left: 20px;
+  font-size: 12px;
+  color: red;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+input.invalid {
+  border-color: red !important;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+input.invalid:hover {
+  border-color: #ff4d4d !important;
+  box-shadow: 0px 4px 10px rgba(255, 77, 77, 0.3);
+}
+
+input.invalid:focus {
+  border-color: #ff1a1a !important;
+  box-shadow: 0 0 0 3px rgba(255, 26, 26, 0.2);
+}
+
+.password-group {
+  position: relative;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 18px;
+  user-select: none;
+  color: #999;
+  transition: color 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s ease;
+}
+
+.toggle-password:hover {
+  color: #cc6320;
+  transform: translateY(-50%) scale(1.15);
+}
+.spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid white;
+  border-top: 2px solid transparent;
+  border-radius: 50%;
+  margin-right: 8px;
+  animation: spin 0.6s linear infinite;
+  vertical-align: middle;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
 @media (max-width: 768px) {
   .login-container {
     flex-direction: column;

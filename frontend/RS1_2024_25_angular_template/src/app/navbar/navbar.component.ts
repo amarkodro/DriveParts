@@ -1,6 +1,9 @@
 import { Component, HostListener, OnInit, ElementRef } from '@angular/core';
 import { PartService } from '../services/navbar-search.service';
 import { Router } from '@angular/router';
+import {AuthService} from '../services/auth-services/auth.service';
+import {CartService} from '../services/cart.service';
+
 
 @Component({
   selector: 'app-navbar',
@@ -17,18 +20,97 @@ export class NavbarComponent implements OnInit {
   isLoggedIn: boolean = false;
   menuOpen: boolean = false;
   searchOpen: boolean = false;
+  userName: string | null = null;
+  cartOpen = false;
+  cartItems : any[] = [];
 
-  constructor(private partService: PartService, private router: Router, private elementRef: ElementRef) {}
 
-  ngOnInit() {
-    this.partService.getAllParts().subscribe(
-      (data) => {
+
+  constructor(private partService: PartService,
+              private router: Router,
+              private elementRef: ElementRef,
+              private authService: AuthService,
+              private cartService: CartService,
+     ) {}
+
+  ngOnInit(): void {
+    // Dohvati sve dijelove
+    this.partService.getAllParts().subscribe({
+      next: (data) => {
         this.allParts = data;
       },
-      (error) => {
+      error: (error) => {
         console.error('Error fetching parts:', error);
       }
-    );
+    });
+
+    // Ako postoji token
+    const token = this.authService.getTokenUser();
+    if (token) {
+      this.isLoggedIn = true;
+
+      this.authService.getUserProfile().subscribe({
+        next: (user) => {
+          this.userName = `${user.name} ${user.surname}`;
+          this.userProfileImage = user.imageUrl
+            ? 'http://localhost:7000/' + user.imageUrl
+            : 'assets/default-user.png';
+        },
+        error: () => {
+          this.userName = 'User';
+          this.userProfileImage = 'assets/default-user.png';
+        }
+      });
+
+      this.cartService.loadCartItems(); // Učitaj artikle iz baze
+    }
+
+    // Pretplata na login promjenu
+    this.authService.loginStatus$.subscribe((status: boolean) => {
+      this.isLoggedIn = status;
+
+      if (status) {
+        const userInfo = this.authService.getUserInfoFromToken();
+        this.userName = userInfo ? `${userInfo.name} ${userInfo.surname}` : 'User';
+        this.cartService.loadCartItems(); // refresh korpe na login
+      } else {
+        this.userName = null;
+        this.cartItems = [];
+      }
+    });
+
+    // User info promjena (profilna itd.)
+    this.authService.userInfo$.subscribe((user) => {
+      if (user) {
+        this.userName = `${user.name} ${user.surname}`;
+        this.userProfileImage = user.imageUrl
+          ? 'http://localhost:7000/' + user.imageUrl
+          : 'assets/default-user.png';
+      }
+    });
+
+    // Prati promjene u korpi i osvježava lokalni prikaz
+    this.cartService.cartItems$.subscribe(items => {
+      this.cartItems = items.map(item => ({
+        partId: item.partId,
+        name: item.partName || item.name,
+        quantity: item.quantity,
+        price: item.price,
+        image: 'http://localhost:7000' + (item.image || '/images/placeholder.png'),
+      }));
+    });
+
+    // Debug token info
+    const info = this.authService.getUserInfoFromToken();
+    console.log('Podaci iz tokena', info);
+  }
+
+
+
+  closeAllDropdowns() {
+    this.dropdownOpen = false;
+    this.cartOpen = false;
+    this.menuOpen = false;
   }
 
   onSearchChange() {
@@ -52,15 +134,25 @@ export class NavbarComponent implements OnInit {
   }
 
   logout() {
+    localStorage.removeItem('jwtToken');
+    sessionStorage.removeItem('jwtToken');
+
     this.isLoggedIn = false;
+    this.userName = null;
     this.dropdownOpen = false;
+
+    this.router.navigate(['/login']).then(() => {
+      window.location.reload();
+    });
   }
 
   toggleDropdown() {
+    if (!this.dropdownOpen) this.closeAllDropdowns();
     this.dropdownOpen = !this.dropdownOpen;
   }
 
   toggleMenu() {
+    if (!this.menuOpen) this.closeAllDropdowns();
     this.menuOpen = !this.menuOpen;
   }
   closeMenu(): void {
@@ -74,10 +166,70 @@ export class NavbarComponent implements OnInit {
 
   @HostListener('document:click', ['$event'])
   onClickOutside(event: Event) {
-    if (!this.elementRef.nativeElement.contains(event.target)) {
+    const clickedInside = this.elementRef.nativeElement.contains(event.target);
+    const target = event.target as HTMLElement;
+
+    const isLogoClick = target.closest('.navbar-brand');
+    const isNavLinkClick = target.closest('.nav-link');
+    const isSearchClick = target.closest('.search-container');
+
+    if (!clickedInside || isLogoClick || isNavLinkClick || isSearchClick) {
       this.dropdownOpen = false;
       this.menuOpen = false;
       this.searchOpen = false;
+      this.cartOpen = false;
     }
   }
+
+  getCartTotal() {
+    return this.cartItems.reduce((sum, item) => sum + item.quantity * item.price, 0);
+  }
+
+  goToCart() {
+    this.router.navigate(['/cart']);
+  }
+
+  toggleCartDropdown() {
+    if(!this.isLoggedIn)
+    {
+      this.router.navigate(['/login']);
+      return;
+    }
+    if (!this.cartOpen) this.closeAllDropdowns();
+    this.cartOpen = !this.cartOpen;
+  }
+
+  loadCartItems(): void {
+    this.cartService.getCartItems().subscribe({
+      next: (items: any[]) => {
+        console.log('API ANSWER: ',items);
+
+        this.cartItems = items.map(item => ({
+          partId: item.partId,
+          name: item.partName || item.name,
+          quantity: item.quantity,
+          price: item.price,
+          image: 'http://localhost:7000' + (item.image || '/images/placeholder.png'),
+        }));
+      },
+      error: (err: any) => {
+        console.error('Error loading cart:', err);
+      }
+    });
+  }
+
+  removeFromCart(partId:number) {
+    this.cartService.removeItemFromCart(partId).subscribe({
+      next: () => this.cartService.loadCartItems(),
+      error: (err) => console.error('Error deleting from cart:', err)
+    });
+  }
+
+  clearEntireCart(){
+    this.cartService.clearCart().subscribe({
+      next: () => this.loadCartItems(),
+      error: err => console.error('Error clearing cart:', err)
+    });
+  }
+
 }

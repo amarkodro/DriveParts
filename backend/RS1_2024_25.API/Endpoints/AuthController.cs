@@ -8,13 +8,14 @@ using System.Security.Cryptography;
 using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 namespace RS1_2024_25.API.Endpoints
 {
 
     [Route("api/[controller]")]
     [ApiController]
-    public class AuthController(ApplicationDbContext _db) : ControllerBase
+    public class AuthController(ApplicationDbContext _db, IPasswordHasher<UserAccount> _passwordHasher) : ControllerBase
     {
 
         public class RegisterRequest
@@ -28,10 +29,11 @@ namespace RS1_2024_25.API.Endpoints
             public int CityId { get; set; }
             public string PhoneNumber { get; set; }
             public string Address { get; set; }
+            public IFormFile? ProfileImage { get; set; }
         }
 
         [HttpPost("register")]
-        public IActionResult Register(RegisterRequest request)
+        public IActionResult Register([FromForm] RegisterRequest request)
         {
             if (_db.UserAccounts.Any(u => u.Username == request.Username))
                 return BadRequest("Username already exists");
@@ -48,19 +50,42 @@ namespace RS1_2024_25.API.Endpoints
             if (city == null)
                 return BadRequest("Invalid CityId");
 
+            string? imagePath = null;
+
+            if (request.ProfileImage != null)
+            {
+                var folder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "UserImages");
+                if (!Directory.Exists(folder))
+                    Directory.CreateDirectory(folder);
+
+                var fileName = Guid.NewGuid().ToString() + Path.GetExtension(request.ProfileImage.FileName);
+                var fullPath = Path.Combine(folder, fileName);
+
+                using (var stream = new FileStream(fullPath, FileMode.Create))
+                {
+                    request.ProfileImage.CopyTo(stream);
+                }
+
+                imagePath = $"UserImages/{fileName}";
+            }
+
             var user = new User
             {
                 Name = request.Name,
                 Surname = request.Surname,
                 Email = request.Email,
                 Username = request.Username,
-                Password = request.Password,
                 Address = request.Address,
                 PhoneNumber = request.PhoneNumber,
                 GenderId = request.GenderId,
                 CityId = request.CityId,
-                IsAdmin = false
+                isUser =true,
+                IsAdmin = false,
+                ImageUrl = imagePath
+
             };
+
+            user.Password = _passwordHasher.HashPassword(user, request.Password);
 
             _db.Users.Add(user);
             _db.SaveChanges();
@@ -80,19 +105,21 @@ namespace RS1_2024_25.API.Endpoints
         [HttpPost("login")]
         public IActionResult Login(LoginRequest request)
         {
-            var user = _db.UserAccounts.FirstOrDefault(x => x.Username == request.Username && x.Password == request.Password);
+            var user = _db.UserAccounts.FirstOrDefault(x => x.Username == request.Username);
 
             if (user == null)
-            {
                 return Unauthorized("Invalid username or password");
-            }
 
-            var token = CreateJwt(user); // Kreira token za bilo kojeg korisnika
+            var result = _passwordHasher.VerifyHashedPassword(user, user.Password, request.Password);
+
+            if (result == PasswordVerificationResult.Failed)
+                return Unauthorized("Invalid username or password");
+
+            var token = CreateJwt(user);
             var role = user.IsAdmin ? "Admin" : "User";
 
             return Ok(new { Token = token, Role = role });
         }
-
 
         private string CreateJwt(UserAccount user)
         {
@@ -101,9 +128,11 @@ namespace RS1_2024_25.API.Endpoints
             var key = Encoding.UTF8.GetBytes("f8d2eV3r5/8nW1qR4xPqL6zM9xD5u2F8xM0a1pZ3wNk=");
             var identity = new ClaimsIdentity(new Claim[] {
 
+                    new Claim("id", user.Id.ToString()),
                     new Claim(ClaimTypes.Role, $"{role}"),
-                    new Claim(ClaimTypes.Name, $"{user.Username}"),
-                    new Claim(ClaimTypes.Name, $"{user.Name} {user.Surname}"),
+                    new Claim("username", user.Username),
+                    new Claim("name", user.Name),
+                    new Claim("surname", user.Surname),
 
             });
 
@@ -112,12 +141,33 @@ namespace RS1_2024_25.API.Endpoints
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = identity,
-                Expires = DateTime.Now.AddHours(1),
+                Expires = DateTime.Now.AddDays(7),
                 SigningCredentials = credentials
             };
             var token = jwtTokenHandler.CreateToken(tokenDescriptor);
             return jwtTokenHandler.WriteToken(token);
 
+        }
+
+        [HttpGet("check-username")]
+        public IActionResult CheckUsername(string username)
+        {
+            bool exists = _db.UserAccounts.Any(u => u.Username == username);
+            return Ok(new { exists });
+        }
+
+        [HttpGet("check-email")]
+        public IActionResult CheckEmail(string email)
+        {
+            bool exists = _db.UserAccounts.Any(u => u.Email == email);
+            return Ok(new { exists });
+        }
+
+        [HttpGet("check-phone")]
+        public IActionResult CheckPhone(string phoneNumber)
+        {
+            bool exists = _db.UserAccounts.Any(u => u.PhoneNumber == phoneNumber);
+            return Ok(new { exists });
         }
     }
 }

@@ -3,6 +3,7 @@ using RS1_2024_25.API.Data.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace RS1_2024_25.API.Endpoints
 {
@@ -25,6 +26,7 @@ namespace RS1_2024_25.API.Endpoints
             public int GenderId { get; set; }
             public int CityId { get; set; }
             public string AdminLevel { get; set; } // Admin-specific
+
         }
 
         public class UserAccountResponse
@@ -44,6 +46,8 @@ namespace RS1_2024_25.API.Endpoints
             public string GenderName { get; set; }
             public string CityName { get; set; }
             public string AdminLevel { get; set; } // Admin-specific
+
+            public string? ImageUrl { get; set; }
         }
 
         // GET: api/UserAccount
@@ -67,8 +71,9 @@ namespace RS1_2024_25.API.Endpoints
                     isUser = u.isUser,
                     is2FActive = u.is2FActive,
                     GenderName = u.Gender.GenderName,
-                    CityName = u.City.Name 
-                }).ToList();
+                    CityName = u.City.Name,
+                    ImageUrl = u.ImageUrl,
+                    }).ToList();
 
             var admins = _db.UserAccounts.OfType<Admin>()
                 .Select(a => new UserAccountResponse
@@ -85,7 +90,8 @@ namespace RS1_2024_25.API.Endpoints
                     IsAdmin = a.IsAdmin,
                     isUser = a.isUser,
                     is2FActive = a.is2FActive,
-                    AdminLevel = a.AdminLevel
+                    AdminLevel = a.AdminLevel,
+                    ImageUrl = a.ImageUrl,
                 }).ToList();
 
             return users.Concat(admins).ToArray();
@@ -118,7 +124,8 @@ namespace RS1_2024_25.API.Endpoints
                 is2FActive = userAccount.is2FActive,
                 GenderName = userAccount is User u && u.Gender != null ? u.Gender.GenderName : "N/A",
                 CityName = userAccount is User ua && ua.City != null ? ua.City.Name : "N/A",
-                AdminLevel = userAccount is Admin admin ? admin.AdminLevel : null
+                AdminLevel = userAccount is Admin admin ? admin.AdminLevel : null,
+                ImageUrl = userAccount.ImageUrl,
             };
 
             return Ok(response);
@@ -151,7 +158,8 @@ namespace RS1_2024_25.API.Endpoints
                     IsAdmin = true,
                     isUser = false,
                     is2FActive = request.is2FActive,
-                    AdminLevel = request.AdminLevel
+                    AdminLevel = request.AdminLevel,
+                    
                 };
             }
             else
@@ -179,8 +187,30 @@ namespace RS1_2024_25.API.Endpoints
             return GetUserAccount(newUserAccount.Id);
         }
 
+        [HttpGet("profile")]
+        [Authorize]
+        public IActionResult GetProfile()
+        {
+            var userIdClaim = User.FindFirst("id")?.Value;
+            if (string.IsNullOrEmpty(userIdClaim))
+                return Unauthorized();
 
-      
+            int userId = int.Parse(userIdClaim);
+
+            var user = _db.UserAccounts.FirstOrDefault(u => u.Id == userId);
+            if (user == null)
+                return NotFound("User not found.");
+
+            return Ok(new
+            {
+                user.Id,
+                user.Name,
+                user.Surname,
+                user.Username,
+                user.Email,
+                user.ImageUrl
+            });
+        }
 
         // DELETE: api/UserAccount/5
         [HttpDelete("{id}")]

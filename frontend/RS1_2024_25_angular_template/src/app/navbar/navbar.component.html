@@ -22,19 +22,48 @@
     </div>
 
     <div class="icon-links d-flex align-items-center">
-      <a routerLink="/cart">
-        <i class="fas fa-shopping-cart"></i> Cart
-      </a>
+      <div class="cart-wrapper" id="cart-icon" (click)="toggleCartDropdown()">
+        <a class="cart-link">
+          <i class="fas fa-shopping-cart"></i> Cart
+        </a>
+
+        <div class="cart-dropdown" *ngIf="cartOpen">
+          <div class="cart-header">
+            <strong>Your Cart</strong>
+          </div>
+
+          <div class="cart-items">
+            <div class="cart-item" *ngFor="let item of cartItems">
+              <img [src]="item.image" alt="{{ item.name }}" />
+              <div class="item-info">
+                <p class="item-name">{{ item.name }}</p>
+                <p class="item-details">{{ item.quantity }} x {{ item.price}} KM</p>
+              </div>
+              <button (click)="removeFromCart(item.partId); $event.stopPropagation()" class="delete-btn">✖</button>
+            </div>
+          </div>
+
+          <div class="cart-footer">
+            <p class="total">Total: {{ getCartTotal()}} KM</p>
+            <button (click)="clearEntireCart(); $event.stopPropagation()" class="clear-cart-btn">Clear Cart</button>
+            <button class="checkout-btn" (click)="goToCart()">Go to Checkout</button>
+
+          </div>
+        </div>
+      </div>
       <div class="dropdown" (click)="toggleDropdown()">
         <a class="account-link" [class.open]="dropdownOpen">
           <img *ngIf="isLoggedIn" [src]="userProfileImage" class="profile-pic" alt="User Profile">
           <i *ngIf="!isLoggedIn" class="fas fa-user-circle profile-icon"></i>
-          My Account <i class="fas fa-chevron-down" [class.open]="dropdownOpen"></i>
+          {{ userName ? ('Welcome, ' + userName) : 'My Account' }}
+          <i class="fas fa-chevron-down" [class.open]="dropdownOpen"></i>
         </a>
         <ul *ngIf="dropdownOpen" class="dropdown-menu">
           <li><a routerLink="/my-offers">My Offers</a></li>
           <li><a routerLink="/settings">Settings</a></li>
-          <li><a routerLink="/login">Login</a></li>
+          <li *ngIf="!isLoggedIn"><a routerLink="/login">Login</a></li>
+          <li *ngIf="isLoggedIn"><a (click)="logout()">Logout</a></li>
+
         </ul>
       </div>
     </div>
@@ -49,60 +78,61 @@
       </a>
     </div>
 
-    <div class="icon-bar d-flex align-items-center justify-content-center">
-      <a routerLink="/cart">
-        <i class="fas fa-shopping-cart"></i> Cart
-      </a>
+    <div class="icon-bar d-flex justify-content-between align-items-center">
+      <!-- Cart -->
+      <div class="cart-icon-mobile"(click)="toggleCartDropdown()">
+        <i class="fas fa-shopping-cart"></i>
+        <span>Cart</span>
+      </div>
+      <div *ngIf="cartOpen" class="cart-dropdown-mobile">
+        <div class="cart-header" >
+          <strong>Your Cart</strong>
+        </div>
 
+        <div class="cart-items">
+          <div class="cart-item" *ngFor="let item of cartItems">
+            <img [src]="item.image" alt="{{ item.name }}" />
+            <div class="item-info">
+              <p class="item-name">{{ item.name }}</p>
+              <p class="item-details">{{ item.quantity }} x {{ item.price}} KM</p>
+            </div>
+            <button (click)="removeFromCart(item.partId); $event.stopPropagation()" class="delete-btn">✖</button>
+
+          </div>
+
+        </div>
+
+        <div class="cart-footer">
+          <p class="total">Total: {{ getCartTotal()}} KM</p>
+          <button (click)="clearEntireCart(); $event.stopPropagation()" class="clear-cart-btn">Clear Cart</button>
+          <button class="checkout-btn" (click)="goToCart()">Go to Checkout</button>
+        </div>
+      </div>
+
+      <!-- My Account -->
       <div class="dropdown" (click)="toggleDropdown()">
         <a class="account-link" [class.open]="dropdownOpen">
-          <i class="fas fa-user-circle"></i> My Account
+          <i *ngIf="!isLoggedIn" class="fas fa-user-circle"></i>
+          <img *ngIf="isLoggedIn" [src]="userProfileImage" class="profile-pic" alt="User Profile">
+          <span>{{ isLoggedIn && userName ? ('Welcome, ' + userName) : 'My Account' }}</span>
           <i class="fas fa-chevron-down" [class.open]="dropdownOpen"></i>
         </a>
         <ul *ngIf="dropdownOpen" class="dropdown-menu">
           <li><a routerLink="/my-offers">My Offers</a></li>
           <li><a routerLink="/settings">Settings</a></li>
-          <li><a routerLink="/login">Login</a></li>
+          <li *ngIf="!isLoggedIn"><a routerLink="/login">Login</a></li>
+          <li *ngIf="isLoggedIn"><a (click)="logout()">Logout</a></li>
         </ul>
       </div>
 
+      <!-- Menu -->
       <div class="mobile-menu-toggle" (click)="toggleMenu()">
-        <i class="fas fa-bars"></i> Menu
+        <i class="fas fa-bars"></i>
+        <span>Menu</span>
       </div>
     </div>
 
-    <div class="search-wrapper">
-      <div class="search-container">
-        <input type="search" class="search-input" placeholder="Search parts..."
-               [(ngModel)]="searchString" (input)="onSearchChange()" #searchBox>
 
-
-        <ul *ngIf="filteredParts.length > 0" class="search-dropdown">
-          <li *ngFor="let part of filteredParts" (click)="selectPart(part)">
-            <img [src]="'http://localhost:7000' + part.partImage || 'https://via.placeholder.com/50x50'"
-                 alt="{{ part.name }}" />
-            <div>
-              <p class="part-name">{{ part.name }}</p>
-              <p class="part-description">{{ part.description }}</p>
-            </div>
-          </li>
-        </ul>
-      </div>
-    </div>
-
-  </div>
-
-  <nav class="bottom-navbar d-none d-lg-flex">
-    <div class="container">
-      <ul class="navbar-nav">
-        <li class="nav-item"><a class="nav-link" routerLink="/">Home</a></li>
-        <li class="nav-item"><a class="nav-link" routerLink="/parts">Categories</a></li>
-        <li class="nav-item"><a class="nav-link" href="#">Brands</a></li>
-        <li class="nav-item"><a class="nav-link" href="#">FAQ</a></li>
-        <li class="nav-item"><a class="nav-link" href="#">About Us</a></li>
-      </ul>
-    </div>
-  </nav>
 
   <div class="mobile-menu d-lg-none" [ngClass]="{'show': menuOpen}">
     <ul>
@@ -115,4 +145,15 @@
   </div>
 
 </div>
-
+  <nav class="bottom-navbar d-none d-lg-flex">
+    <div class="container">
+      <ul class="navbar-nav">
+        <li class="nav-item"><a class="nav-link" routerLink="/">Home</a></li>
+        <li class="nav-item"><a class="nav-link" routerLink="/parts">Categories</a></li>
+        <li class="nav-item"><a class="nav-link" href="#">Brands</a></li>
+        <li class="nav-item"><a class="nav-link" href="#">FAQ</a></li>
+        <li class="nav-item"><a class="nav-link" href="#">About Us</a></li>
+      </ul>
+    </div>
+  </nav>
+</div>
