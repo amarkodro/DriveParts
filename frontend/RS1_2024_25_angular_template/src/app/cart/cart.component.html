@@ -1,0 +1,87 @@
+<div class="container mt-5 p-3 rounded cart">
+  <div class="row no-gutters">
+    <div class="col-md-8">
+      <div class="product-details mr-2">
+        <div class="d-flex flex-row align-items-center">
+          <i class="fa fa-long-arrow-left"></i>
+          <span class="ml-2">Continue Shopping</span>
+        </div>
+        <hr>
+        <h6 class="mb-0">Shopping cart</h6>
+        <div class="d-flex justify-content-between">
+          <span>You have {{ cartItems.length }} items in your cart</span>
+          <div class="d-flex flex-row align-items-center">
+            <span class="text-black-50">Sort by:</span>
+            <div class="price ml-2">
+              <span class="mr-1">price</span>
+              <i class="fa fa-angle-down"></i>
+            </div>
+          </div>
+        </div>
+
+        <div *ngFor="let item of cartItems" class="cart-row d-flex align-items-center mb-3">
+          <div class="item-img me-3">
+            <img [src]="item.image" alt="Image" class="rounded" width="60" height="60">
+          </div>
+
+          <div class="item-name me-3 flex-grow-1">
+            <strong>{{ item.name }}</strong>
+          </div>
+
+          <div class="item-qty me-3">
+            <input type="number" class="form-control text-center" [(ngModel)]="item.quantity" min="1" style="width: 70px;" />
+          </div>
+
+          <div class="item-price me-3">
+            <strong>{{ item.price }} KM</strong>
+          </div>
+
+          <div class="item-remove">
+            <i class="fa fa-trash text-danger" style="cursor: pointer;" (click)="removeItem(item.partId)"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="payment-info">
+        <div class="d-flex justify-content-between align-items-center">
+          <span>Card details</span>
+          <img class="rounded" src="https://i.imgur.com/WU501C8.jpg" width="30">
+        </div>
+
+        <form [formGroup]="checkoutForm" (ngSubmit)="submitOrder()">
+          <div>
+            <label class="credit-card-label">Full Name</label>
+            <input type="text" class="form-control credit-inputs" formControlName="fullName">
+          </div>
+
+          <div>
+            <label class="credit-card-label">Address</label>
+            <input type="text" class="form-control credit-inputs" formControlName="address">
+          </div>
+
+          <div>
+            <label class="credit-card-label">Note</label>
+            <textarea class="form-control credit-inputs" formControlName="note"></textarea>
+          </div>
+
+          <hr class="line">
+          <div class="d-flex justify-content-between information">
+            <span>Subtotal</span><span>{{ totalPrice }} KM</span>
+          </div>
+          <div class="d-flex justify-content-between information">
+            <span>Shipping</span><span>{{ shipping }} KM</span>
+          </div>
+          <div class="d-flex justify-content-between information">
+            <span>Total (Incl. taxes)</span><span>{{ totalPrice + shipping }} KM</span>
+          </div>
+
+          <button class="btn btn-primary btn-block d-flex justify-content-between mt-3" type="submit" [disabled]="checkoutForm.invalid || cartItems.length === 0">
+            <span>Checkout<i class="fa fa-long-arrow-right ml-1"></i></span>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

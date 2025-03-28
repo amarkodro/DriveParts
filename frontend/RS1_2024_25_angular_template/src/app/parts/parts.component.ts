@@ -1,6 +1,9 @@
 import {Component, OnInit, AfterViewInit, ElementRef, Renderer2, HostListener} from '@angular/core';
 import { DropdownService } from '../services/dropdown.service';
 import { Router } from '@angular/router';
+import {AuthService} from '../services/auth-services/auth.service';
+import {CartService} from '../services/cart.service';
+import {ToastrService} from 'ngx-toastr';
 
 interface DropdownItem {
   id: number;
@@ -43,12 +46,14 @@ export class PartsComponent implements OnInit, AfterViewInit {
   showVehicleTypeDropdown: boolean = false;
   frontCategoryId: number = 11;
   selectedPart: any = null;
-
   constructor(
     private dropdownService: DropdownService,
     private router: Router,
     private renderer: Renderer2,
-    private el: ElementRef
+    private el: ElementRef,
+    private authService: AuthService,
+    private cartService: CartService,
+    private toastr: ToastrService,
   ) {}
 
   ngOnInit(): void {
@@ -130,7 +135,7 @@ export class PartsComponent implements OnInit, AfterViewInit {
     this.dropdownService.filterParts(params).subscribe({
       next: (data) => {
         this.filteredParts = data;
-        setTimeout(() => this.checkVisibility(), 300); // Dodajemo odgodu kako bi animacija radila na novim karticama
+        setTimeout(() => this.checkVisibility(), 300);
       },
       error: (err) => {
         console.error('Error fetching filtered parts:', err);
@@ -145,9 +150,7 @@ export class PartsComponent implements OnInit, AfterViewInit {
     this.selectedPartId = null;
     this.selectedModelId = null;
     this.selectedTypeId = null;
-
     this.filteredParts = [];
-
     this.showVehicleTypeDropdown = false;
     this.loadDropdowns();
   }
@@ -156,7 +159,34 @@ export class PartsComponent implements OnInit, AfterViewInit {
     this.selectedPart = { ...part, quantity: this.selectedPart?.quantity || 1 };
   }
 
-  addToCart(part: any) {}
+  addToCart(part: any, event: MouseEvent): void {
+    const token = this.authService.getTokenUser();
+
+    if (!token) {
+      this.toastr.warning('Please login to add item to cart.', 'Not logged in');
+      this.router.navigate(['/login']);
+      return;
+    }
+
+    const quantity = part.quantity || 1;
+
+    this.cartService.addToCart(part.partId, quantity).subscribe({
+      next: (res) => {
+        this.toastr.success(`${part.name} added to cart`, 'Success');
+        this.cartService.loadCartItems();  // Refresh cart items across components
+        if (this.selectedPart) {
+          this.flyToCartFromModal('http://localhost:7000' + part.partImage);
+          this.closeProductModal();
+        } else {
+          this.flyToCart(event);
+        }
+      },
+      error: (err) => {
+        console.error('Add to cart failed: ', err);
+        this.toastr.error('Could not add to cart', 'Error');
+      }
+    });
+  }
 
   increaseQuantity() {
     if (this.selectedPart && this.selectedPart.quantity < 10) {
@@ -182,8 +212,6 @@ export class PartsComponent implements OnInit, AfterViewInit {
     });
   }
 
-
-
   toggleDropdown(key: string) {
     Object.keys(this.dropdownState).forEach(k => {
       this.dropdownState[k] = k === key ? !this.dropdownState[k] : false;
@@ -198,15 +226,14 @@ export class PartsComponent implements OnInit, AfterViewInit {
 
   selectCar(carId: number) {
     this.selectedCarId = carId;
-    this.selectedModelId = null; // Resetuje model kad se auto promijeni
-    this.models = []; // Reset modela
+    this.selectedModelId = null;
+    this.models = [];
     this.toggleDropdown('car');
-    this.onCarChange(); // Učitava modele na osnovu odabranog auta
+    this.onCarChange();
   }
 
-
   getSelectedModelName() {
-    if (!this.selectedCarId) return 'Select Model'; // Ako auto nije odabran, vraća default tekst
+    if (!this.selectedCarId) return 'Select Model';
     const model = this.models.find(m => m.id === this.selectedModelId);
     return model ? model.name : 'Select Model';
   }
@@ -216,7 +243,6 @@ export class PartsComponent implements OnInit, AfterViewInit {
     this.toggleDropdown('model');
   }
 
-
   getSelectedCategoryName() {
     const category = this.categories.find(c => c.id === this.selectedCategoryId);
     return category ? category.name : 'Select Category';
@@ -225,7 +251,6 @@ export class PartsComponent implements OnInit, AfterViewInit {
   selectCategory(categoryId: number) {
     this.selectedCategoryId = categoryId;
     this.toggleDropdown('category');
-
 
     if (categoryId === this.frontCategoryId) {
       this.showVehicleTypeDropdown = true;
@@ -255,5 +280,71 @@ export class PartsComponent implements OnInit, AfterViewInit {
   selectType(typeId: number) {
     this.selectedTypeId = typeId;
     this.toggleDropdown('type');
+  }
+
+  flyToCart(event: MouseEvent) {
+    const image = (event.target as HTMLElement).closest('.part-card')?.querySelector('.product-main-image') as HTMLImageElement;
+    const cart = document.getElementById('cart-icon');
+
+    if (!image || !cart) return;
+
+    const imgClone = image.cloneNode(true) as HTMLImageElement;
+    const imgRect = image.getBoundingClientRect();
+    const cartRect = cart.getBoundingClientRect();
+
+    imgClone.style.position = 'fixed';
+    imgClone.style.left = imgRect.left + 'px';
+    imgClone.style.top = imgRect.top + 'px';
+    imgClone.style.width = imgRect.width + 'px';
+    imgClone.style.height = imgRect.height + 'px';
+    imgClone.style.zIndex = '1000';
+    imgClone.style.transition = 'all 0.8s ease-in-out';
+    imgClone.style.borderRadius = '50%';
+    document.body.appendChild(imgClone);
+
+    requestAnimationFrame(() => {
+      imgClone.style.left = cartRect.left + 'px';
+      imgClone.style.top = cartRect.top + 'px';
+      imgClone.style.width = '0px';
+      imgClone.style.height = '0px';
+      imgClone.style.opacity = '0.5';
+    });
+
+    setTimeout(() => imgClone.remove(), 900);
+  }
+
+  flyToCartFromModal(imageUrl: string) {
+    const cart = document.getElementById('cart-icon');
+    if (!cart) return;
+
+    const imgClone = document.createElement('img');
+    imgClone.src = imageUrl;
+
+    const modalImage = document.querySelector('.modal-product-image') as HTMLElement;
+    const imgRect = modalImage?.getBoundingClientRect();
+    const cartRect = cart.getBoundingClientRect();
+
+    if (!imgRect) return;
+
+    imgClone.style.position = 'fixed';
+    imgClone.style.left = imgRect.left + 'px';
+    imgClone.style.top = imgRect.top + 'px';
+    imgClone.style.width = imgRect.width + 'px';
+    imgClone.style.height = imgRect.height + 'px';
+    imgClone.style.zIndex = '1000';
+    imgClone.style.transition = 'all 0.8s ease-in-out';
+    imgClone.style.borderRadius = '50%';
+    imgClone.style.pointerEvents = 'none';
+    document.body.appendChild(imgClone);
+
+    requestAnimationFrame(() => {
+      imgClone.style.left = cartRect.left + 'px';
+      imgClone.style.top = cartRect.top + 'px';
+      imgClone.style.width = '0px';
+      imgClone.style.height = '0px';
+      imgClone.style.opacity = '0.5';
+    });
+
+    setTimeout(() => imgClone.remove(), 900);
   }
 }

@@ -40,7 +40,7 @@ export class FooterComponent implements AfterViewInit {
       if (element) {
         element.scrollIntoView({ behavior: 'smooth', block: 'start' });
       } else {
-        console.warn(`Element sa id="${fragment}" nije pronađen.`);
+        console.warn(`Element with id="${fragment}" not found.`);
       }
     });
   }

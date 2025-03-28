@@ -17,6 +17,10 @@ import { PartsComponent } from './parts/parts.component';
 import { PartDetailComponent } from './part-detail/part-detail.component';
 import { ViewPartsComponent } from './view-parts/view-parts.component';
 import {RouterModule} from '@angular/router';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ToastrModule } from 'ngx-toastr';
+import { CartComponent } from './cart/cart.component';
+
 
 @NgModule({
   declarations: [
@@ -29,7 +33,8 @@ import {RouterModule} from '@angular/router';
     FooterComponent,
     PartsComponent,
     PartDetailComponent,
-    ViewPartsComponent
+    ViewPartsComponent,
+    CartComponent
   ],
     imports: [
         BrowserModule,
@@ -38,6 +43,12 @@ import {RouterModule} from '@angular/router';
         SharedModule,
         NgOptimizedImage,
         ReactiveFormsModule,
+        BrowserAnimationsModule,
+      ToastrModule.forRoot({
+        positionClass: 'toast-top-center', // 👈 Prikazuje toast na vrhu (centrirano)
+        timeOut: 3000,
+        progressBar: true
+      }),
         RouterModule.forRoot([], {
          anchorScrolling: 'enabled',
          scrollPositionRestoration: 'enabled'

@@ -87,7 +87,7 @@
 <!-- Parts Section -->
 <div class="product-section" *ngIf="filteredParts.length>0">
   <div class="product-grid">
-    <div class="product-card" *ngFor="let part of filteredParts">
+    <div class="product-card part-card" *ngFor="let part of filteredParts">
       <!-- Wishlist & Details Container -->
       <div class="product-icons">
         <div class="product-detail-box" (click)="openProductModal(part)"> <img src="/assets/zoom-in.png"></div>
@@ -97,7 +97,7 @@
       <!-- Product Image -->
       <img [src]="'http://localhost:7000' + part.partImage || 'https://via.placeholder.com/300x200'"
            alt="{{ part.name }}"
-           class="product-image" />
+           class="product-image product-main-image" />
 
       <!-- Product Info -->
       <div class="product-info">
@@ -106,7 +106,7 @@
 
         <div class="product-bottom">
           <p class="product-price">{{ part.price }} KM</p>
-          <button class="cart-btn" (click)="addToCart(part); $event.stopPropagation();">🛒</button>
+          <button class="cart-btn" (click)="addToCart(part, $event); $event.stopPropagation();">🛒</button>
         </div>
       </div>
     </div>
@@ -125,7 +125,7 @@
         <img
           [src]="'http://localhost:7000' + selectedPart.partImage || 'https://via.placeholder.com/300x200'"
           alt="{{ selectedPart.name }}"
-          class="modal-image" />
+          class="modal-image modal-product-image" />
       </div>
 
       <!-- Informacije o proizvodu -->
@@ -149,7 +149,7 @@
                   <img
                     [src]="'http://localhost:7000' + selectedPart.partImage || 'https://via.placeholder.com/300x200'"
                     alt="{{ selectedPart.name }}"
-                    class="modal-image" />
+                    class="modal-image modal-product-image" />
                 </div>
 
                 <!-- Information of product -->
@@ -191,7 +191,7 @@
                       </button>
                     </div>
 
-                    <button class="btn add-to-cart-btn" (click)="addToCart(selectedPart)">Add to Cart</button>
+                    <button class="btn add-to-cart-btn" (click)="addToCart(selectedPart, $event)">Add to Cart</button>
                   </div>
                 </div>
               </div>

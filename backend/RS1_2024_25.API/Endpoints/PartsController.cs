@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RS1_2024_25.API.Data;
 using RS1_2024_25.API.Data.Models;
@@ -205,6 +206,15 @@ namespace RS1_2024_25.API.Endpoints
 
             return parts;
         }
+
+        public class AddToCartRequest
+        {
+            public int ProductId { get; set; }
+            public int Quantity { get; set; }
+        }
+
+       
+
 
     }
 }

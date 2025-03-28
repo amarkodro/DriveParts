@@ -22,7 +22,7 @@
             <p class="product-description">{{ part.description }}</p>
             <div class="product-bottom">
               <p class="product-price">{{ part.price }} KM</p>
-              <button class="cart-btn" (click)="addToCart(part); $event.stopPropagation();">🛒</button>
+              <button class="cart-btn" (click)="addToCart(part,$event); $event.stopPropagation();">🛒</button>
             </div>
           </div>
         </div>
@@ -52,7 +52,7 @@
             <p class="product-description">{{ part.description }}</p>
             <div class="product-bottom">
               <p class="product-price">{{ part.price }} KM</p>
-              <button class="cart-btn" (click)="addToCart(part); $event.stopPropagation();">🛒</button>
+              <button class="cart-btn" (click)="addToCart(part,$event); $event.stopPropagation();">🛒</button>
             </div>
           </div>
         </div>
@@ -81,7 +81,7 @@
             <p class="product-description">{{ part.description }}</p>
             <div class="product-bottom">
               <p class="product-price">{{ part.price }} KM</p>
-              <button class="cart-btn" (click)="addToCart(part); $event.stopPropagation();">🛒</button>
+              <button class="cart-btn" (click)="addToCart(part,$event); $event.stopPropagation();">🛒</button>
             </div>
           </div>
         </div>
@@ -171,7 +171,7 @@
                       </button>
                     </div>
 
-                    <button class="btn add-to-cart-btn" (click)="addToCart(selectedProduct)">Add to Cart</button>
+                    <button class="btn add-to-cart-btn" (click)="addToCart(selectedProduct, $event)">Add to Cart</button>
                   </div>
                 </div>
               </div>

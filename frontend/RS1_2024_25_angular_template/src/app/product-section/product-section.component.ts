@@ -1,6 +1,9 @@
 import {Component, ElementRef, OnInit} from '@angular/core';
 import { PartsService } from '../services/parts.service';
 import { Router } from '@angular/router';
+import {CartService} from '../services/cart.service';
+import {AuthService} from '../services/auth-services/auth.service';
+import {ToastrService} from 'ngx-toastr';
 
 @Component({
   selector: 'app-product-section',
@@ -20,7 +23,13 @@ export class ProductSectionComponent implements OnInit {
   selectedQuantity: any;
 
 
-  constructor(private partsService: PartsService, private router: Router, private elRef: ElementRef) {}
+  constructor(private partsService: PartsService,
+              private router: Router,
+              private elRef: ElementRef,
+              private cartService : CartService,
+              private authService: AuthService,
+              private toastr: ToastrService,
+              ) {}
 
   ngOnInit(): void {
     this.loadFeaturedParts();
@@ -71,19 +80,37 @@ export class ProductSectionComponent implements OnInit {
   closeProductModal(): void {
     this.selectedProduct = null;
   }
+  addToCart(part: any, event: MouseEvent): void {
+    const token = this.authService.getTokenUser();
 
-  addToCart(part: any): void {
-    const itemExists = this.cartItems.find(item => item.id === part.id);
-    if (!itemExists) {
-      this.cartItems.push({ ...part, quantity: this.selectedProduct.quantity });
-      this.saveCartToStorage();
-      console.log(`Added to cart: ${part.name}, Quantity: ${this.selectedProduct.quantity}`);
-    } else {
-      itemExists.quantity += this.selectedProduct.quantity; // Ako već postoji, samo povećaj količinu
-      this.saveCartToStorage();
-      console.log(`Updated cart: ${part.name}, Quantity: ${itemExists.quantity}`);
+    if (!token) {
+      this.toastr.warning('Please login to add item to cart.', 'Not logged in');
+      this.router.navigate(['/login']);
+      return;
     }
+
+    const quantity = part.quantity || this.selectedProduct?.quantity || 1;
+
+    this.cartService.addToCart(part.partId, quantity).subscribe({
+      next: () => {
+        this.toastr.success(`${part.name} added to cart`, 'Success');
+        this.cartService.notifyCartUpdate();
+
+        if (this.selectedProduct) {
+          this.flyToCartFromModal('http://localhost:7000' + part.partImage);
+          this.closeProductModal();
+        } else if (event) {
+          this.flyToCart(event);
+        }
+      },
+      error: (err) => {
+        console.error('Add to cart failed:', err);
+        this.toastr.error('Could not add to cart', 'Error');
+      }
+    });
   }
+
+
 
   removeFromCart(part: any): void {
     this.cartItems = this.cartItems.filter(item => item.id !== part.id);
@@ -147,6 +174,75 @@ export class ProductSectionComponent implements OnInit {
 
   viewAllParts(category: string) {
     this.router.navigate(['view-parts'],{queryParams: {category}});
-
   }
+
+  flyToCart(event: MouseEvent) {
+    const image = (event.target as HTMLElement)
+      .closest('.product-card')
+      ?.querySelector('.product-image') as HTMLImageElement;
+
+    const cart = document.getElementById('cart-icon');
+
+    if (!image || !cart) return;
+
+    const imgClone = image.cloneNode(true) as HTMLImageElement;
+    const imgRect = image.getBoundingClientRect();
+    const cartRect = cart.getBoundingClientRect();
+
+    imgClone.style.position = 'fixed';
+    imgClone.style.left = imgRect.left + 'px';
+    imgClone.style.top = imgRect.top + 'px';
+    imgClone.style.width = imgRect.width + 'px';
+    imgClone.style.height = imgRect.height + 'px';
+    imgClone.style.zIndex = '1000';
+    imgClone.style.transition = 'all 0.8s ease-in-out';
+    imgClone.style.borderRadius = '50%';
+    imgClone.style.pointerEvents = 'none';
+    document.body.appendChild(imgClone);
+
+    requestAnimationFrame(() => {
+      imgClone.style.left = cartRect.left + 'px';
+      imgClone.style.top = cartRect.top + 'px';
+      imgClone.style.width = '0px';
+      imgClone.style.height = '0px';
+      imgClone.style.opacity = '0.5';
+    });
+
+    setTimeout(() => imgClone.remove(), 900);
+  }
+
+  flyToCartFromModal(imageUrl: string) {
+    const cart = document.getElementById('cart-icon');
+    const modalImage = document.querySelector('.modal-image') as HTMLElement;
+
+    if (!modalImage || !cart) return;
+
+    const imgClone = document.createElement('img');
+    imgClone.src = imageUrl;
+
+    const imgRect = modalImage.getBoundingClientRect();
+    const cartRect = cart.getBoundingClientRect();
+
+    imgClone.style.position = 'fixed';
+    imgClone.style.left = imgRect.left + 'px';
+    imgClone.style.top = imgRect.top + 'px';
+    imgClone.style.width = imgRect.width + 'px';
+    imgClone.style.height = imgRect.height + 'px';
+    imgClone.style.zIndex = '1000';
+    imgClone.style.transition = 'all 0.8s ease-in-out';
+    imgClone.style.borderRadius = '50%';
+    imgClone.style.pointerEvents = 'none';
+    document.body.appendChild(imgClone);
+
+    requestAnimationFrame(() => {
+      imgClone.style.left = cartRect.left + 'px';
+      imgClone.style.top = cartRect.top + 'px';
+      imgClone.style.width = '0px';
+      imgClone.style.height = '0px';
+      imgClone.style.opacity = '0.5';
+    });
+
+    setTimeout(() => imgClone.remove(), 900);
+  }
+
 }

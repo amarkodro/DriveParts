@@ -1,9 +1,8 @@
-
 .section {
   opacity: 0;
   transform: translateY(30px);
   transition: opacity 0.8s ease-out, transform 0.8s ease-out;
-  scroll-margin-top: 100px; /* Pomaže kod navigacije */
+  scroll-margin-top: 100px;
 }
 
 .section.visible {
@@ -11,7 +10,6 @@
   transform: translateY(0);
 }
 
-/* Sekcija proizvoda */
 .products {
   padding: 20px 0 40px 0 ;
   text-align: center;
@@ -21,15 +19,16 @@
 .footer {
   scroll-margin-top: 80px;
 }
+
 .container{
   padding-top: 30px;
 }
-/* Naslov sekcije */
+
 .section-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: #cc6320; /* Tamnija narančasta za bolji kontrast */
+  background: #cc6320;
   color: white;
   padding: 15px 25px;
   border-radius: 10px;
@@ -56,11 +55,10 @@
 }
 
 .view-all-btn:hover {
-  background: #b25518; /* Tamnija boja na hover */
+  background: #b25518;
   color: white;
 }
 
-/* Grid za kartice proizvoda */
 .product-grid {
   display: flex;
   gap: 25px;
@@ -68,7 +66,6 @@
   flex-wrap: wrap;
 }
 
-/* Kartica proizvoda */
 .product-card {
   background-color: #ffffff;
   padding: 15px;
@@ -85,13 +82,11 @@
   justify-content: space-between;
 }
 
-/* Efekat hovera na kartici */
 .product-card:hover {
   transform: scale(1.02);
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
 }
 
-/* Slika proizvoda */
 .product-image {
   width: 100%;
   height: 140px;
@@ -101,7 +96,6 @@
   margin: 0 auto;
 }
 
-/* Kontejner za wishlist i dugme za detalje */
 .product-icons {
   position: absolute;
   top: 10px;
@@ -112,7 +106,6 @@
   gap: 8px;
 }
 
-/* Kvadratić za detalje (uvijek vidljiv) */
 .product-detail-box {
   width: 28px;
   height: 28px;
@@ -126,18 +119,18 @@
   cursor: pointer;
   transition: background 0.3s ease, transform 0.2s;
 }
+
 .product-detail-box img{
   width: 100%;
   height: auto;
 }
-/* Hover efekat na kvadratić */
+
 .product-detail-box:hover {
   background: #ff6200;
   color: #fff;
   transform: scale(1.1);
 }
 
-/* Wishlist ikona (skrivena dok se ne hovera kartica) */
 .wishlist-icon {
   width: 28px;
   height: 28px;
@@ -152,24 +145,20 @@
   transition: opacity 0.3s ease, background 0.3s ease, transform 0.2s;
 }
 
-/* Prikaz wishlist ikone samo na hover kartice */
 .product-card:hover .wishlist-icon {
   opacity: 1;
 }
 
-/* Hover efekat na wishlist */
 .wishlist-icon:hover {
   background: #ff6000;
   transform: scale(1.1);
 }
 
-/* Informacije o proizvodu */
 .product-info {
   padding: 10px;
   flex-grow: 1;
 }
 
-/* Naziv proizvoda */
 .product-name {
   font-size: 16px;
   font-weight: bold;
@@ -177,28 +166,24 @@
   margin-bottom: 5px;
 }
 
-/* Opis proizvoda */
 .product-description {
   font-size: 14px;
   color: #555;
   margin-bottom: 10px;
 }
 
-/* Sekcija ispod proizvoda (cijena i dugme za dodavanje u korpu) */
 .product-bottom {
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
-/* Cijena proizvoda */
 .product-price {
   font-size: 18px;
   color: #cc6320;
   font-weight: bold;
 }
 
-/* Dugme za dodavanje u korpu */
 .cart-btn {
   background: none;
   border: none;
@@ -210,13 +195,13 @@
   justify-content: center;
 }
 
-/* Hover efekat na dugmetu za dodavanje u korpu */
 .product-card:hover .cart-btn {
   background: rgba(255, 98, 0, 0.15);
   border-radius: 50%;
   padding: 6px;
   transform: scale(1.1);
 }
+
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -230,7 +215,6 @@
   z-index: 1000;
 }
 
-/* Modal container */
 .modal-content {
   background: white;
   padding: 25px;
@@ -242,7 +226,6 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
-/* Dugme za zatvaranje */
 .close-btn {
   position: absolute;
   top: 15px;
@@ -257,14 +240,12 @@
   color: #ff6200;
 }
 
-/* Layout unutar modala */
 .modal-body {
   display: flex;
   gap: 25px;
   align-items: flex-start;
 }
 
-/* Slika proizvoda */
 .modal-image-container {
   flex: 0 0 250px;
   display: flex;
@@ -281,13 +262,11 @@
   padding: 30px;
 }
 
-/* Informacije o proizvodu */
 .modal-info {
   flex: 1;
   text-align: left;
 }
 
-/* Naslov proizvoda */
 .modal-title {
   font-size: 24px;
   font-weight: bold;
@@ -295,10 +274,8 @@
   margin-bottom: 10px;
 }
 
-/* Red sa Manufacturer i Category */
 .modal-info-row {
   display: flex;
-
   gap: 5px;
   font-size: 15px;
   color: #444;
@@ -317,20 +294,17 @@
   border-radius: 6px;
 }
 
-
 .modal-info-row span {
   font-weight: normal;
   color: #666;
 }
 
-/* Opis proizvoda */
 .modal-description {
   font-size: 18px;
   color: #555;
   margin-bottom: 10px;
 }
 
-/* Istaknuta cijena */
 .modal-price {
   font-size: 20px;
   font-weight: bold;
@@ -339,12 +313,11 @@
 }
 
 .highlighted-price {
-  font-size: 28px; /* Povećana veličina */
-  color: #ff4d00; /* Topla, naglašena boja */
+  font-size: 28px;
+  color: #ff4d00;
   font-weight: bold;
 }
 
-/* Kontejner za količinu i dugme */
 .modal-actions {
   display: flex;
   align-items: center;
@@ -352,7 +325,6 @@
   margin-top: 15px;
 }
 
-/* Dugmad za količinu */
 .quantity-selector {
   display: flex;
   align-items: center;
@@ -380,7 +352,6 @@
   font-weight: bold;
 }
 
-/* Dugmad za + i - */
 .quantity-btn {
   background: #ff6200;
   color: white;
@@ -395,7 +366,6 @@
   background: #cc4e00;
 }
 
-/* Dugme za dodavanje u korpu */
 .add-to-cart-btn {
   background: #ff6200;
   color: white;
@@ -412,14 +382,12 @@
   background: #e05500;
 }
 
-/* Uklanja strelice iz input[type="number"] u Chrome, Safari, Edge */
 .quantity-input::-webkit-outer-spin-button,
 .quantity-input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
 
-/* Uklanja strelice iz input[type="number"] u Firefox */
 .quantity-input {
   -moz-appearance: textfield;
 }

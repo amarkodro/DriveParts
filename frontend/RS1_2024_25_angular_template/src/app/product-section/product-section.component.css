@@ -10,17 +10,18 @@
   transform: translateY(0);
 }
 
-
 .products {
   padding: 20px 0 40px 0 ;
   text-align: center;
   background-color: #e6e6e6;
   width: 100%;
 }
+
 .register-container,
 .footer {
   scroll-margin-top: 80px;
 }
+
 .container{
   padding-top: 30px;
 }
@@ -120,6 +121,7 @@
   cursor: pointer;
   transition: background 0.3s ease, transform 0.2s;
 }
+
 .product-detail-box img{
   width: 100%;
   height: auto;
@@ -201,6 +203,7 @@
   padding: 6px;
   transform: scale(1.1);
 }
+
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -275,7 +278,6 @@
 
 .modal-info-row {
   display: flex;
-
   gap: 5px;
   font-size: 15px;
   color: #444;
@@ -293,7 +295,6 @@
   padding: 4px 8px;
   border-radius: 6px;
 }
-
 
 .modal-info-row span {
   font-weight: normal;

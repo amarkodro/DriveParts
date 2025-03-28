@@ -1,0 +1,108 @@
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing.Constraints;
+using Microsoft.EntityFrameworkCore;
+using RS1_2024_25.API.Data;
+using RS1_2024_25.API.Data.Models;
+namespace RS1_2024_25.API.Endpoints
+{
+    [Route("api/cart")]
+    [ApiController]
+    public class CartItemController(ApplicationDbContext _db) : ControllerBase
+    {
+        [HttpPost("add")]
+        [Authorize]
+        public IActionResult AddToCart([FromBody] CartItemRequests requests)
+        {
+            var userId = int.Parse(User.FindFirst("id")?.Value ?? "0");
+
+            var cartItem = new CartItem
+            {
+                UserId = userId,
+                PartId = requests.PartId,
+                Quantity = requests.Quantity,
+            };
+
+            _db.CartItems.Add(cartItem);
+            _db.SaveChanges();
+
+            return Ok(new { message = "Item added to cart. " });
+        }
+
+
+
+        [HttpGet("getAll")]
+        [Authorize]
+        public IActionResult GetCart()
+        {
+            var userId = int.Parse(User.FindFirst("id")?.Value ?? "0");
+
+            var items = _db.CartItems
+                .Include(c => c.Part)
+                .Where(c => c.UserId == userId)
+                .ToList();
+
+            var result = items
+                .Where(c => c.Part != null)
+                .Select(c => new CartItemResponse
+                {
+                    PartId = c.PartId,
+                    PartName = c.Part.Name,
+                    Image = c.Part.PartImage,
+                    Price = c.Part.Price,
+                    Quantity = c.Quantity
+                });
+
+            return Ok(result);
+        }
+
+        [HttpDelete("remove/{partId}")]
+        [Authorize]
+        public IActionResult RemoveFromCart(int partId)
+        {
+            var userId = int.Parse(User.FindFirst("id")?.Value ?? "0");
+
+            var item = _db.CartItems.FirstOrDefault(c => c.UserId == userId && c.PartId == partId);
+            if (item == null) return NotFound(new { message = "Item not fount in cart." });
+
+            _db.CartItems.Remove(item);
+            _db.SaveChanges();
+
+            return Ok(new { message = "Item removed from cart." });
+        }
+
+        [Authorize]
+        [HttpDelete("clear")]
+        public IActionResult ClearCart()
+        {
+            var userId = int.Parse(User.FindFirst("id")?.Value ?? "0");
+
+            var items = _db.CartItems.Where(c => c.UserId == userId).ToList();
+
+            if (!items.Any()) return BadRequest(new { message = "Cart is already empty" });
+
+            _db.CartItems.RemoveRange(items);
+            _db.SaveChanges();
+
+            return Ok(new { message = "Cart cleared successfully. " });
+           
+        }
+
+    }
+
+    public class CartItemResponse
+    {
+        public int PartId { get; set; }
+        public string PartName { get; set; }
+        public string Image { get; set; }
+        public double Price { get; set; }
+        public int Quantity { get; set; }
+    }
+
+
+    public class CartItemRequests
+    {
+        public int PartId { get; set; }
+        public int Quantity { get; set; }
+    }
+}

@@ -10,6 +10,7 @@ import {RegisterComponent} from './register/register.component';
 import {PartsComponent} from './parts/parts.component';
 import { PartDetailComponent } from './part-detail/part-detail.component';
 import {ViewPartsComponent} from './view-parts/view-parts.component';
+import {CartComponent} from './cart/cart.component';
 
 
 const routes: Routes = [
@@ -26,6 +27,7 @@ const routes: Routes = [
   },
   {
     path: 'client',
+    canActivate: [AuthGuard],
     loadChildren: () => import('./modules/client/client.module').then(m => m.ClientModule)  // Lazy load  modula
   },
   {
@@ -35,12 +37,13 @@ const routes: Routes = [
 
   {path: '', component: HeroSectionComponent},
   {path: 'parts', component: PartsComponent},
-  {path: 'part-detail/:id', component: PartDetailComponent},
+  {path: 'part-detail/:id' , component: PartDetailComponent },
   {path: 'login', component: LoginComponent},
   {path: 'register', component: RegisterComponent},
   {path: 'product-section', component: ProductSectionComponent},
   {path: 'navbar', component: NavbarComponent},
-  {path: 'view-parts', component: ViewPartsComponent},
+  {path: 'view-parts', component: ViewPartsComponent,},
+  {path: 'cart', component: CartComponent,},
   {path: '**', redirectTo: 'public', pathMatch: 'full'},
 
 

@@ -578,6 +578,13 @@ input[type="number"] {
   width: 25px;
   height: auto;
 }
+
+.part-card {
+  position: relative;
+  overflow: hidden;
+}
+
+
 @media (max-width: 1300px) {
   .filter-overlay {
     height: 75%;

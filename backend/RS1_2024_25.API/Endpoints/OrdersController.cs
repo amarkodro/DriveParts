@@ -19,7 +19,8 @@ namespace RS1_2024_25.API.Endpoints
             public int UserId { get; set; }         
             public int SupplierId { get; set; }                      
             public int PaymentId { get; set; }
-            
+            public List<OrderItemRequest> Items { get; set; }
+
         }
 
         public class OrderResponse
@@ -30,6 +31,13 @@ namespace RS1_2024_25.API.Endpoints
             public string Username { get; set; }
             public string SupplierName { get; set; }
             public string PaymentMethod { get; set; }
+        }
+        
+        public class OrderItemRequest
+        {
+            public int PartId { get; set; }
+            public int Quantity { get; set; }
+            public float Price { get; set; }
         }
 
         [HttpGet]
@@ -92,6 +100,20 @@ namespace RS1_2024_25.API.Endpoints
             _db.Orders.Add(order);
             _db.SaveChanges();
 
+            foreach(var item in request.Items)
+            {
+                var orderItem = new OrderItem
+                {
+                    OrderId = order.OrderId,
+                    PartId = item.PartId,
+                    Quantity = item.Quantity,
+                    Price = item.Price
+                };
+
+                _db.OrderItems.Add(orderItem);
+            }
+
+            _db.SaveChanges();
             var response = new OrderResponse
             { 
                 Date = order.Date,
