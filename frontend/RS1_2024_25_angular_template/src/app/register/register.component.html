@@ -16,7 +16,7 @@
       <div class="form-container">
 
         <!-- Step 1: Personal Details -->
-        <div *ngIf="currentStep === 1">
+        <div *ngIf="currentStep === 1" class="step-transition">
           <h4>Step 1: Personal Details</h4>
 
           <div class="form-group">
@@ -61,7 +61,7 @@
         </div>
 
         <!-- Step 2: Contact Details -->
-        <div *ngIf="currentStep === 2">
+        <div *ngIf="currentStep === 2" class="step-transition">
           <h4>Step 2: Contact Details</h4>
 
           <!-- Email -->
@@ -90,7 +90,7 @@
                 Phone number is required.
               </ng-container>
               <ng-container *ngIf="registerForm.get('phoneNumber')?.hasError('pattern')">
-                Phone must match the format +387 60 000 000 or +387 60 000 00 00.
+                Phone must match the format +387 60 000 000 or +387 60 000 0000.
               </ng-container>
               <ng-container *ngIf="registerForm.get('phoneNumber')?.hasError('exists')">
                 Phone number already exists.
@@ -136,7 +136,7 @@
         </div>
 
         <!-- Step 3: Account Details -->
-        <div *ngIf="currentStep === 3">
+        <div *ngIf="currentStep === 3" class="step-transition">
           <h4>Step 3: Account Details</h4>
 
           <div class="form-group">
@@ -220,7 +220,7 @@
         </div>
 
         <!-- Step 4: Review & Submit -->
-        <div *ngIf="currentStep === 4">
+        <div *ngIf="currentStep === 4" class="step-transition">
           <h4>Step 4: Review & Submit</h4>
           <p><strong>Name:</strong> {{ registerForm.get('name')?.value }}</p>
           <p><strong>Surname:</strong> {{ registerForm.get('surname')?.value }}</p>
@@ -247,4 +247,25 @@
       Already have an account? <a href="/login">Login here</a>
     </p>
   </div>
+
+  <div class="overlay" *ngIf="showVerificationOverlay">
+    <div class="overlay-content">
+      <h3>Email Verification</h3>
+      <p>Please enter the 6-digit code sent to your email.</p>
+
+      <input
+        type="text"
+        maxlength="6"
+        [(ngModel)]="userEnteredCode"
+        placeholder="Enter code"
+        class="code-input"
+      />
+
+      <div class="overlay-buttons">
+        <button class="cancel-btn" (click)="cancelVerification()">Cancel</button>
+        <button class="verify-btn" (click)="verifyCode()">Verify</button>
+      </div>
+    </div>
+  </div>
+
 </div>

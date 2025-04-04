@@ -6,6 +6,8 @@ import {AuthService} from '../services/auth-services/auth.service';
 import {Router} from '@angular/router';
 import {ToastrService} from 'ngx-toastr';
 import {GenderService} from '../services/gender.service';
+import emailjs from '@emailjs/browser';
+
 
 @Component({
   selector: 'app-register',
@@ -28,7 +30,9 @@ export class RegisterComponent implements OnInit {
   };
   selectedGenderId: number | null = null;
   selectedCityId:number | null = null;
-
+  generatedCode: string = '';
+  showVerificationOverlay: boolean = false;
+  userEnteredCode: string = '';
 
 
   constructor(private fb: FormBuilder,
@@ -93,12 +97,18 @@ export class RegisterComponent implements OnInit {
       this.registerForm.get('phoneNumber')?.markAsTouched();
       this.registerForm.get('address')?.markAsTouched();
       this.registerForm.get('cityId')?.markAsTouched();
+
       if (
         this.registerForm.get('email')?.invalid ||
         this.registerForm.get('phoneNumber')?.invalid ||
         this.registerForm.get('address')?.invalid ||
         this.registerForm.get('cityId')?.invalid
       ) return;
+
+
+      const email = this.registerForm.get('email')?.value;
+      this.sendVerificationCode(email);
+      return;
     }
 
     if (this.currentStep === 3) {
@@ -135,7 +145,6 @@ export class RegisterComponent implements OnInit {
     const city = this.cities.find(c => c.id == cityId);
     return city ? city.name : 'Unknown city';
   }
-
 
   onSubmit() {
     if (this.registerForm.valid) {
@@ -312,5 +321,47 @@ export class RegisterComponent implements OnInit {
     this.selectedCityId = cityId;
     this.registerForm.patchValue({ cityId });
     this.dropdownState['city'] = false;
+  }
+
+
+  sendVerificationCode(email: string) {
+    const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
+
+    this.generatedCode = verificationCode;
+
+    const templateParams = {
+      verification_code: verificationCode,
+      to_email: email
+    };
+
+    emailjs.send(
+      'service_xh0d98k',
+      'template_tdwpnbe',
+      templateParams,
+      'B8xPgvirRSkYNmw9g'
+    )
+      .then(() => {
+        console.log('Email sent!');
+
+        this.showVerificationOverlay = true;
+      })
+      .catch((error) => {
+        console.error('Error sending email:', error);
+      });
+  }
+
+  verifyCode() {
+    if (this.userEnteredCode === this.generatedCode) {
+      this.toastr.success("Code verified!");
+      this.showVerificationOverlay = false;
+      this.currentStep++;
+    } else {
+      this.toastr.error("Incorrect code. Please try again.");
+    }
+  }
+
+  cancelVerification() {
+    this.showVerificationOverlay = false;
+    this.userEnteredCode = '';
   }
 }

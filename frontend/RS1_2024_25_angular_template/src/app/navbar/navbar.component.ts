@@ -34,7 +34,6 @@ export class NavbarComponent implements OnInit {
      ) {}
 
   ngOnInit(): void {
-    // Dohvati sve dijelove
     this.partService.getAllParts().subscribe({
       next: (data) => {
         this.allParts = data;
@@ -44,7 +43,7 @@ export class NavbarComponent implements OnInit {
       }
     });
 
-    // Ako postoji token
+
     const token = this.authService.getTokenUser();
     if (token) {
       this.isLoggedIn = true;
@@ -52,44 +51,44 @@ export class NavbarComponent implements OnInit {
       this.authService.getUserProfile().subscribe({
         next: (user) => {
           this.userName = `${user.name} ${user.surname}`;
-          this.userProfileImage = user.imageUrl
-            ? 'http://localhost:7000/' + user.imageUrl
-            : 'assets/default-user.png';
+          this.userProfileImage = user.imageUrl?.startsWith('http')
+            ? user.imageUrl
+            : 'http://localhost:7000/' + user.imageUrl;
         },
         error: () => {
           this.userName = 'User';
-          this.userProfileImage = 'assets/default-user.png';
+          this.userProfileImage = 'assets/user.png';
         }
       });
 
-      this.cartService.loadCartItems(); // Učitaj artikle iz baze
+      this.cartService.loadCartItems();
     }
 
-    // Pretplata na login promjenu
+
     this.authService.loginStatus$.subscribe((status: boolean) => {
       this.isLoggedIn = status;
 
       if (status) {
         const userInfo = this.authService.getUserInfoFromToken();
         this.userName = userInfo ? `${userInfo.name} ${userInfo.surname}` : 'User';
-        this.cartService.loadCartItems(); // refresh korpe na login
+        this.cartService.loadCartItems();
       } else {
         this.userName = null;
         this.cartItems = [];
       }
     });
 
-    // User info promjena (profilna itd.)
+
     this.authService.userInfo$.subscribe((user) => {
       if (user) {
         this.userName = `${user.name} ${user.surname}`;
-        this.userProfileImage = user.imageUrl
-          ? 'http://localhost:7000/' + user.imageUrl
-          : 'assets/default-user.png';
+        this.userProfileImage = user.imageUrl?.startsWith('http')
+          ? user.imageUrl
+          : 'http://localhost:7000/' + user.imageUrl;
       }
     });
 
-    // Prati promjene u korpi i osvježava lokalni prikaz
+
     this.cartService.cartItems$.subscribe(items => {
       this.cartItems = items.map(item => ({
         partId: item.partId,
@@ -102,7 +101,7 @@ export class NavbarComponent implements OnInit {
 
     // Debug token info
     const info = this.authService.getUserInfoFromToken();
-    console.log('Podaci iz tokena', info);
+    console.log('Data from tokens', info);
   }
 
 

@@ -79,6 +79,8 @@ export class AuthService {
     return this.http.get(`${this.apiUrl}/check-phone?phoneNumber=${phone}`);
   }
 
+  googleLogin(token: string) {
+    return this.http.post(`${this.apiUrl}/google-login`, { IdToken: token });
+  }
 
-
-}
+  }

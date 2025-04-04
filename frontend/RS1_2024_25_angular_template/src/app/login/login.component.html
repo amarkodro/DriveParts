@@ -1,5 +1,5 @@
 <section class="login-page">
-  <div class="login-container">
+  <div class="login-container animate-entry">
 
     <!-- Left Side - Login Form -->
     <div class="login-form">
@@ -18,12 +18,10 @@
           />
           <label for="username">Enter your username</label>
 
-
           <div class="error-message" *ngIf="loginForm.get('username')?.invalid && loginForm.get('username')?.touched">
             Username is required
           </div>
         </div>
-
 
         <div class="input-group">
           <input
@@ -45,8 +43,6 @@
           </div>
         </div>
 
-
-
         <div class="options">
           <label>
             <input type="checkbox" formControlName="rememberMe">
@@ -64,10 +60,14 @@
           </ng-template>
         </button>
 
-
-        <button class="btn-google">
-          <img src="https://img.icons8.com/color/48/000000/google-logo.png"/> Sign in with Google
+        <button type="button" class="btn-google" (click)="triggerGoogleLogin()">
+          <img src="assets/icons8-google-50.png" alt="Google icon" />
+          Sign in with Google
         </button>
+
+        <div style="visibility: hidden; position: absolute; top: -9999px;">
+          <div id="hidden-google-btn"></div>
+        </div>
 
         <p class="register-text">Don't have an account? <a routerLink="/register">Sign up for free!</a></p>
       </form>
@@ -80,3 +80,5 @@
 
   </div>
 </section>
+
+

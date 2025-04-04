@@ -60,7 +60,7 @@ namespace RS1_2024_25.API.Endpoints
                        Password = c.Password,
                        IsAdmin = c.IsAdmin,
                        isUser = c.isUser,
-                       is2FActive = c.is2FActive,
+                       is2FActive = c.is2FActive ?? false,
                        AdminLevel = c.AdminLevel,
                    }).ToArray();
 
@@ -83,7 +83,7 @@ namespace RS1_2024_25.API.Endpoints
                      Password = c.Password,
                      IsAdmin = c.IsAdmin,
                      isUser = c.isUser,
-                     is2FActive = c.is2FActive,
+                     is2FActive = c.is2FActive ?? false,
                      AdminLevel= c.AdminLevel,
                  }).First();
 
@@ -122,7 +122,7 @@ namespace RS1_2024_25.API.Endpoints
                 Password = admin.Password,
                 IsAdmin = admin.IsAdmin,
                 isUser = admin.isUser,
-                is2FActive = admin.is2FActive,
+                is2FActive = admin.is2FActive ?? false,
                 AdminLevel= admin.AdminLevel,
             };
 

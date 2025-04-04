@@ -20,6 +20,8 @@ import {RouterModule} from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
 import { CartComponent } from './cart/cart.component';
+import {SocialLoginModule , SocialAuthServiceConfig} from '@abacritt/angularx-social-login';
+import {GoogleLoginProvider} from '@abacritt/angularx-social-login';
 
 
 @NgModule({
@@ -44,6 +46,7 @@ import { CartComponent } from './cart/cart.component';
         NgOptimizedImage,
         ReactiveFormsModule,
         BrowserAnimationsModule,
+        SocialLoginModule,
       ToastrModule.forRoot({
         positionClass: 'toast-top-center', // 👈 Prikazuje toast na vrhu (centrirano)
         timeOut: 3000,
@@ -56,12 +59,24 @@ import { CartComponent } from './cart/cart.component';
     ],
   providers: [
     {
-
+      provide: 'SocialAuthServiceConfig',
+      useValue: {
+        autoLogin: false,
+        providers: [
+          {
+            id: GoogleLoginProvider.PROVIDER_ID,
+            provider: new GoogleLoginProvider('609510374900-m9pfd5u7gvek04q0kr3f8g02spsn45ir.apps.googleusercontent.com'),
+          },
+        ],
+      } as SocialAuthServiceConfig
+    },
+    {
       provide: HTTP_INTERCEPTORS,
       useClass: MyAuthInterceptor,
-      multi: true
+      multi: true,
     }
   ],
+
   bootstrap: [AppComponent]
 })
 export class AppModule { }

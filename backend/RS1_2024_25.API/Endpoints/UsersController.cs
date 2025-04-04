@@ -68,7 +68,7 @@ namespace RS1_2024_25.API.Endpoints
                        Password = c.Password,
                        IsAdmin = c.IsAdmin,
                        isUser = c.isUser,
-                       is2FActive = c.is2FActive,
+                       is2FActive = c.is2FActive ?? false,
                        GenderName = c.Gender != null ? c.Gender.GenderName : "Unknown",
                        CityName = c.City != null ? c.City.Name : "Unknown"
                    }).ToArray();
@@ -95,7 +95,7 @@ namespace RS1_2024_25.API.Endpoints
                      Password = c.Password,
                      IsAdmin = c.IsAdmin,
                      isUser = c.isUser,
-                     is2FActive = c.is2FActive,
+                     is2FActive = c.is2FActive ?? false,
                      GenderName = c.Gender != null ? c.Gender.GenderName : "Unknown",
                      CityName = c.City != null ? c.City.Name : "Unknown"
 
@@ -138,7 +138,7 @@ namespace RS1_2024_25.API.Endpoints
                 Password = user.Password,
                 IsAdmin = user.IsAdmin,
                 isUser = user.isUser,
-                is2FActive = user.is2FActive,
+                is2FActive = user.is2FActive ?? false,
                 GenderName = _db.Genders.Find(user.CityId)?.GenderName ?? "Unknown",
                 CityName = _db.Users.Find(user.CityId)?.Name ?? "Unknown"
             };

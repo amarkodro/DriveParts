@@ -169,5 +169,89 @@ namespace RS1_2024_25.API.Endpoints
             bool exists = _db.UserAccounts.Any(u => u.PhoneNumber == phoneNumber);
             return Ok(new { exists });
         }
+
+
+
+        public class GoogleLoginRequest
+        {
+            public string IdToken { get; set; }
+        }
+
+        [HttpPost("google-login")]
+        public async Task<IActionResult> GoogleLogin([FromBody] GoogleLoginRequest request)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(request.IdToken))
+                    return BadRequest("IdToken is required");
+
+                var client = new HttpClient();
+                var response = await client.GetAsync($"https://oauth2.googleapis.com/tokeninfo?id_token={request.IdToken}");
+
+                if (!response.IsSuccessStatusCode)
+                    return BadRequest("Invalid Google token");
+
+                var content = await response.Content.ReadAsStringAsync();
+                var payload = System.Text.Json.JsonDocument.Parse(content).RootElement;
+
+                if (!payload.TryGetProperty("email", out var emailProp))
+                    return BadRequest("Email not found in token");
+
+                var email = emailProp.GetString();
+                var name = payload.TryGetProperty("given_name", out var n) ? n.GetString() : "";
+                var surname = payload.TryGetProperty("family_name", out var s) ? s.GetString() : "";
+                var picture = payload.TryGetProperty("picture", out var pic) ? pic.GetString() : null;
+
+                var user = _db.Users.FirstOrDefault(u => u.Email == email);
+
+                if (user == null)
+                {
+                    var baseUsername = email.Split('@')[0];
+                    var uniqueUsername = GenerateUniqueUsername(baseUsername);
+
+                    user = new User
+                    {
+                        Email = email ?? "no-email@google.com",
+                        Username = uniqueUsername,
+                        Name = name ?? "",
+                        Surname = surname ?? "",
+                        isUser = true,
+                        IsAdmin = false,
+                        is2FActive = false,
+                        PhoneNumber = null,
+                        CityId = null,
+                        GenderId = null,
+                        Address = null,
+                        Password = Guid.NewGuid().ToString(),
+                        ImageUrl = picture
+                    };
+
+                    _db.Users.Add(user);
+                    await _db.SaveChangesAsync();
+                }
+
+                var token = CreateJwt(user);
+
+                return Ok(new { Token = token, Message = "Google login successful" });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        private string GenerateUniqueUsername(string baseUsername)
+        {
+            var username = baseUsername;
+            int counter = 1;
+
+            while (_db.Users.Any(u => u.Username == username))
+            {
+                username = $"{baseUsername}-{counter}";
+                counter++;
+            }
+
+            return username;
+        }
     }
 }
