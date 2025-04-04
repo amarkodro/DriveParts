@@ -6,12 +6,13 @@ using RS1_2024_25.API.Data;
 using RS1_2024_25.API.Data.Models;
 namespace RS1_2024_25.API.Endpoints
 {
-    [Route("api/cart")]
     [ApiController]
+    [Route("api/cart")]
+    [Authorize]
     public class CartItemController(ApplicationDbContext _db) : ControllerBase
     {
         [HttpPost("add")]
-        [Authorize]
+        
         public IActionResult AddToCart([FromBody] CartItemRequests requests)
         {
             var userId = int.Parse(User.FindFirst("id")?.Value ?? "0");
@@ -32,7 +33,7 @@ namespace RS1_2024_25.API.Endpoints
 
 
         [HttpGet("getAll")]
-        [Authorize]
+       
         public IActionResult GetCart()
         {
             var userId = int.Parse(User.FindFirst("id")?.Value ?? "0");
@@ -57,7 +58,7 @@ namespace RS1_2024_25.API.Endpoints
         }
 
         [HttpDelete("remove/{partId}")]
-        [Authorize]
+      
         public IActionResult RemoveFromCart(int partId)
         {
             var userId = int.Parse(User.FindFirst("id")?.Value ?? "0");
@@ -71,7 +72,7 @@ namespace RS1_2024_25.API.Endpoints
             return Ok(new { message = "Item removed from cart." });
         }
 
-        [Authorize]
+        
         [HttpDelete("clear")]
         public IActionResult ClearCart()
         {
@@ -87,6 +88,22 @@ namespace RS1_2024_25.API.Endpoints
             return Ok(new { message = "Cart cleared successfully. " });
            
         }
+
+        [HttpPut("update")]
+        public IActionResult UpdateQuantity([FromBody] CartItemRequests requests)
+        {
+
+            var userId = int.Parse(User.FindFirst("id").Value ?? "0");
+
+            var item = _db.CartItems.FirstOrDefault(c => c.UserId == userId && c.PartId == requests.PartId);
+            if (item == null) return NotFound(new { message = "Item not found in cart." });
+
+            item.Quantity = requests.Quantity;
+            _db.SaveChanges();
+
+            return Ok(new { message = "Quantity update successfully. " });
+        }
+
 
     }
 

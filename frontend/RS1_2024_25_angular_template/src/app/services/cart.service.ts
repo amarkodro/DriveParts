@@ -53,4 +53,8 @@ export class CartService {
   getItems(): any[] {
     return this.cartItemsSubject.value;
   }
+
+  updateQuantity(partId: number, quantity: number) {
+    return this.http.put(`${this.apiUrl}/update`, { partId, quantity });
+  }
 }

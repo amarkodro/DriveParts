@@ -61,17 +61,16 @@ export class PartsComponent implements OnInit, AfterViewInit {
   }
 
   @HostListener('document:click', ['$event'])
-  onClick(event: MouseEvent) {
-    // Provjeri je li klik izvan dropdown-a
-    if (!this.el.nativeElement.contains(event.target)) {
-      // Zatvori sve dropdown-ove
-      this.dropdownState = {
-        car: false,
-        model: false,
-        category: false,
-        part: false,
-        type: false
-      };
+  onClickOutside(event: MouseEvent) {
+    const target = event.target as HTMLElement;
+    if (!target.closest('.filter-item')) {
+      this.closeAllDropdowns();
+    }
+  }
+
+  closeAllDropdowns(): void {
+    for (const key in this.dropdownState) {
+      this.dropdownState[key] = false;
     }
   }
 
@@ -217,7 +216,6 @@ export class PartsComponent implements OnInit, AfterViewInit {
       this.dropdownState[k] = k === key ? !this.dropdownState[k] : false;
     });
   }
-
 
   getSelectedCarName() {
     const car = this.cars.find(c => c.id === this.selectedCarId);

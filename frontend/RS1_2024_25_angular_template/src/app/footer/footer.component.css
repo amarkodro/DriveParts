@@ -453,6 +453,8 @@
   .footer-terms {
     font-size: 14px;
     gap: 8px;
+    flex-direction: column;
+    align-items: center;
   }
 
   .footer-payments {

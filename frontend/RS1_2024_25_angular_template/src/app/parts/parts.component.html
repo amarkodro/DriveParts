@@ -7,7 +7,7 @@
     <div class="filter-box">
       <!-- Car Dropdown -->
       <div class="filter-item" [ngClass]="{'open': dropdownState['car']}" (click)="toggleDropdown('car'); $event.stopPropagation()">
-        <div class="dropdown-container">
+        <div class="dropdown-container"  >
           <div class="selected-option">{{ getSelectedCarName() || 'Select Car' }}</div>
           <div class="dropdown-arrow"><i class="fas fa-chevron-down"></i></div>
         </div>
@@ -18,7 +18,6 @@
         </div>
       </div>
 
-      <!-- Model Dropdown (uvijek vidljiv, ali opcije dolaze tek nakon izbora auta) -->
       <div class="filter-item" [ngClass]="{'open': dropdownState['model']}" (click)="toggleDropdown('model');$event.stopPropagation()">
         <div class="dropdown-container">
           <div class="selected-option">{{ getSelectedModelName() || 'Select Model' }}</div>
@@ -71,8 +70,6 @@
         </div>
       </div>
 
-
-
     <div class="filter-buttons">
       <!-- Search Button -->
       <button class="search-btn" (click)="applyFilter()">Search</button>
@@ -120,7 +117,6 @@
     <span class="close-btn" (click)="closeProductModal()">&times;</span>
 
     <div class="modal-body">
-      <!-- Slika proizvoda -->
       <div class="modal-image-container">
         <img
           [src]="'http://localhost:7000' + selectedPart.partImage || 'https://via.placeholder.com/300x200'"
@@ -128,7 +124,6 @@
           class="modal-image modal-product-image" />
       </div>
 
-      <!-- Informacije o proizvodu -->
       <div class="modal-info">
         <h2 class="modal-title">{{ selectedPart.name }}</h2>
 
@@ -137,7 +132,6 @@
           <p><strong>Manufacturer:</strong> {{ selectedPart.manufacturerName || 'N/A' }}</p>
           <p><strong>Category:</strong> {{ selectedPart.categoryName || 'N/A' }}</p>
           <p class="modal-price"><strong>Price:</strong> <span>{{ selectedPart.price }} KM</span></p>
-
 
           <div class="modal-overlay" *ngIf="selectedPart">
             <div class="modal-content">
@@ -197,7 +191,6 @@
               </div>
             </div>
           </div>
-
         </div>
       </div>
     </div>
