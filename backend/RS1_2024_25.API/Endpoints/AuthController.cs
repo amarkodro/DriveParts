@@ -9,6 +9,7 @@ using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.Data;
 
 namespace RS1_2024_25.API.Endpoints
 {
@@ -252,6 +253,30 @@ namespace RS1_2024_25.API.Endpoints
             }
 
             return username;
+        }
+
+
+        public class ResetPasswordReq()
+        {
+            public string Email { get; set; }
+            public string NewPassword { get; set; }
+        }
+
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordReq resetPassword)
+        {
+            var user = await _db.Users.FirstOrDefaultAsync(u => u.Email == resetPassword.Email);
+            if(user == null)
+            {
+                return NotFound(new {message = "User not found."});
+            }
+
+            user.Password = _passwordHasher.HashPassword(user, resetPassword.NewPassword);
+
+            await _db.SaveChangesAsync();
+
+
+            return Ok(new {meesage = "Password has been successfully updated. "});
         }
     }
 }

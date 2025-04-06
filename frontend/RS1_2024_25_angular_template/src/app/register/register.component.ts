@@ -7,6 +7,7 @@ import {Router} from '@angular/router';
 import {ToastrService} from 'ngx-toastr';
 import {GenderService} from '../services/gender.service';
 import emailjs from '@emailjs/browser';
+import {debounceTime} from 'rxjs/operators';
 
 
 @Component({
@@ -33,7 +34,16 @@ export class RegisterComponent implements OnInit {
   generatedCode: string = '';
   showVerificationOverlay: boolean = false;
   userEnteredCode: string = '';
-
+  enteredResetCode: any;
+  codeError: any;
+  codeAttemptCount: number = 0;
+  codeTimer: any;
+  timeLeft: number = 300;
+  timerExpired: boolean = false;
+  overlayLoading: boolean = false;
+  isNextLoading: boolean = false;
+  isSubmitLoading: boolean = false;
+  lastCheckedPhone: string | null = null;
 
   constructor(private fb: FormBuilder,
               private http: HttpClient,
@@ -70,9 +80,14 @@ export class RegisterComponent implements OnInit {
     this.registerForm.get('password')?.valueChanges.subscribe(value => {
       this.evaluatePasswordStrength(value);
     });
+
+    this.registerForm.get('phoneNumber')?.valueChanges
+      .pipe(debounceTime(800)) // 800ms nakon što korisnik prestane kucati
+      .subscribe(() => {
+        this.checkPhone();
+      });
   }
 
-  // Učitavanje gradova iz API-ja
   loadCities() {
    this.cityService.getCity().subscribe({
      next: (data) => (this.cities = data),
@@ -85,55 +100,73 @@ export class RegisterComponent implements OnInit {
   }
 
   nextStep() {
-    if (this.currentStep === 1) {
-      this.registerForm.get('name')?.markAsTouched();
-      this.registerForm.get('surname')?.markAsTouched();
-      this.registerForm.get('genderId')?.markAsTouched();
-      if (this.registerForm.get('name')?.invalid || this.registerForm.get('surname')?.invalid || this.registerForm.get('genderId')?.invalid) return;
-    }
+    if (this.isNextLoading) return; // spriječi dupli klik
+    this.isNextLoading = true;
 
-    if (this.currentStep === 2) {
-      this.registerForm.get('email')?.markAsTouched();
-      this.registerForm.get('phoneNumber')?.markAsTouched();
-      this.registerForm.get('address')?.markAsTouched();
-      this.registerForm.get('cityId')?.markAsTouched();
-
-      if (
-        this.registerForm.get('email')?.invalid ||
-        this.registerForm.get('phoneNumber')?.invalid ||
-        this.registerForm.get('address')?.invalid ||
-        this.registerForm.get('cityId')?.invalid
-      ) return;
-
-
-      const email = this.registerForm.get('email')?.value;
-      this.sendVerificationCode(email);
-      return;
-    }
-
-    if (this.currentStep === 3) {
-      this.registerForm.get('username')?.markAsTouched();
-      this.registerForm.get('password')?.markAsTouched();
-      this.registerForm.get('confirmPassword')?.markAsTouched();
-
-      const password = this.registerForm.get('password')?.value;
-      const confirmPassword = this.registerForm.get('confirmPassword')?.value;
-
-      if (
-        this.registerForm.get('username')?.invalid ||
-        this.registerForm.get('password')?.invalid ||
-        this.registerForm.get('confirmPassword')?.invalid ||
-        password !== confirmPassword
-      ) {
-        if (password !== confirmPassword) {
-          this.toastr.error('Passwords do not match', 'Validation Error');
+    setTimeout(() => {
+      if (this.currentStep === 1) {
+        this.registerForm.get('name')?.markAsTouched();
+        this.registerForm.get('surname')?.markAsTouched();
+        this.registerForm.get('genderId')?.markAsTouched();
+        if (
+          this.registerForm.get('name')?.invalid ||
+          this.registerForm.get('surname')?.invalid ||
+          this.registerForm.get('genderId')?.invalid
+        ) {
+          this.isNextLoading = false;
+          return;
         }
+      }
+
+      if (this.currentStep === 2) {
+        this.registerForm.get('email')?.markAsTouched();
+        this.registerForm.get('phoneNumber')?.markAsTouched();
+        this.registerForm.get('address')?.markAsTouched();
+        this.registerForm.get('cityId')?.markAsTouched();
+
+        if (
+          this.registerForm.get('email')?.invalid ||
+          this.registerForm.get('phoneNumber')?.invalid ||
+          this.registerForm.get('address')?.invalid ||
+          this.registerForm.get('cityId')?.invalid
+        ) {
+          this.isNextLoading = false;
+          return;
+        }
+
+        const email = this.registerForm.get('email')?.value;
+        this.sendVerificationCode(email);
+        this.isNextLoading = false;
         return;
       }
-    }
 
-    this.currentStep++;
+      if (this.currentStep === 3) {
+        this.registerForm.get('username')?.markAsTouched();
+        this.registerForm.get('password')?.markAsTouched();
+        this.registerForm.get('confirmPassword')?.markAsTouched();
+
+        const password = this.registerForm.get('password')?.value;
+        const confirmPassword = this.registerForm.get('confirmPassword')?.value;
+
+        if (
+          this.registerForm.get('username')?.invalid ||
+          this.registerForm.get('password')?.invalid ||
+          this.registerForm.get('confirmPassword')?.invalid ||
+          password !== confirmPassword
+        ) {
+          if (password !== confirmPassword) {
+            this.toastr.error('Passwords do not match', 'Validation Error');
+          }
+          this.isNextLoading = false;
+          return;
+        }
+      }
+
+      this.currentStep++;
+      this.isNextLoading = false;
+    }, 2000);
   }
+
 
   prevStep() {
     if (this.currentStep > 1) {
@@ -147,11 +180,13 @@ export class RegisterComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.registerForm.valid) {
-      console.log('Form Submitted', this.registerForm.value);
-    } else {
+    if (!this.registerForm.valid) {
       console.log('Form is invalid');
+      this.toastr.error("Please fill out the form correctly.");
+      return;
     }
+
+    this.isSubmitLoading = true;
 
     if (this.registerForm.value.cityId) {
       this.registerForm.patchValue({ cityId: parseInt(this.registerForm.value.cityId, 10) });
@@ -170,16 +205,20 @@ export class RegisterComponent implements OnInit {
     }
 
     this.authService.registerUser(formData).subscribe({
-      next: (response) => {
+      next: () => {
         this.toastr.success("Registration successful!");
         this.router.navigate(['/login']);
+        this.isSubmitLoading = false;
       },
       error: (error) => {
+        console.error("Registration error:", error);
         this.toastr.error("Registration failed");
-        console.error(error);
+        this.isSubmitLoading = false;
       }
     });
   }
+
+
 
   onFileSelected(event: any) {
     const file: File = event.target.files[0];
@@ -227,12 +266,20 @@ export class RegisterComponent implements OnInit {
 
   checkPhone() {
     const phone = this.registerForm.get('phoneNumber')?.value;
-    if (!phone) return;
+    console.log("Checking phone number:", phone);
+    if (!phone || phone === this.lastCheckedPhone) return;
+
+    this.lastCheckedPhone = phone;
 
     this.authService.checkPhone(phone).subscribe((res: any) => {
       if (res.exists) {
         this.registerForm.get('phoneNumber')?.setErrors({ exists: true });
+        this.registerForm.get('phoneNumber')?.markAsTouched();
         this.toastr.error('Phone number already exists');
+      } else {
+        if (this.registerForm.get('phoneNumber')?.hasError('exists')) {
+          this.registerForm.get('phoneNumber')?.setErrors(null);
+        }
       }
     });
   }
@@ -328,6 +375,8 @@ export class RegisterComponent implements OnInit {
     const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
 
     this.generatedCode = verificationCode;
+    this.codeAttemptCount = 0;
+    this.startCodeTimer();
 
     const templateParams = {
       verification_code: verificationCode,
@@ -351,12 +400,60 @@ export class RegisterComponent implements OnInit {
   }
 
   verifyCode() {
-    if (this.userEnteredCode === this.generatedCode) {
-      this.toastr.success("Code verified!");
-      this.showVerificationOverlay = false;
-      this.currentStep++;
+    if (this.timerExpired) {
+      this.toastr.error("Verification code has expired!");
+      return;
+    }
+
+    this.validateEnteredCode();
+    if (this.codeError) {
+      this.toastr.error(this.codeError);
+      return;
+    }
+
+    this.overlayLoading = true;
+
+    setTimeout(() => {
+      if (this.enteredResetCode === this.generatedCode) {
+        this.toastr.success("The code has been successfully verified!!");
+        this.showVerificationOverlay = false;
+        this.currentStep++;
+        this.codeAttemptCount = 0;
+      } else {
+        this.codeAttemptCount++;
+        this.codeError = 'Incorrect code. Try again.';
+        this.toastr.error(`Incorrect code. Attempt ${this.codeAttemptCount}/3`);
+        this.enteredResetCode = '';
+
+        if (this.codeAttemptCount >= 3) {
+          this.toastr.error("3 incorrect attempts. Please try again.");
+          this.closeVerificationOverlay();
+        }
+      }
+
+      this.overlayLoading = false;
+    }, 2000);
+  }
+
+
+
+  closeVerificationOverlay() {
+    this.showVerificationOverlay = false;
+    this.enteredResetCode = '';
+    this.codeError = '';
+    this.codeAttemptCount = 0;
+  }
+
+
+
+  validateEnteredCode() {
+    const codeRegex = /^\d{6}$/;
+    if (!this.enteredResetCode) {
+      this.codeError = 'Verification code is required.';
+    } else if (!codeRegex.test(this.enteredResetCode)) {
+      this.codeError = 'Code must be exactly 6 digits.';
     } else {
-      this.toastr.error("Incorrect code. Please try again.");
+      this.codeError = '';
     }
   }
 
@@ -364,4 +461,34 @@ export class RegisterComponent implements OnInit {
     this.showVerificationOverlay = false;
     this.userEnteredCode = '';
   }
+
+  startCodeTimer() {
+    this.timeLeft = 300;
+    this.timerExpired = false;
+
+    this.codeTimer = setInterval(() => {
+      if (this.timeLeft > 0) {
+        this.timeLeft--;
+      } else {
+        this.timerExpired = true;
+        clearInterval(this.codeTimer);
+        this.closeVerificationOverlay();
+        this.toastr.error("Verification code expired. Please try again.");
+      }
+    }, 1000);
+  }
+
+  get formattedTimeLeft(): string {
+    const minutes = Math.floor(this.timeLeft / 60);
+    const seconds = this.timeLeft % 60;
+    return `${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
+  }
+
+
+
+
+
+
+
+
 }

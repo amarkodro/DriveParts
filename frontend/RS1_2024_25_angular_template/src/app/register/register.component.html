@@ -56,7 +56,10 @@
 
 
           <div class="button-group center">
-            <button type="button" class="btn btn-next full-width" (click)="nextStep()">Next</button>
+            <button type="button" class="btn btn-next full-width" [disabled]="isNextLoading" (click)="nextStep()">
+              <span *ngIf="isNextLoading" class="spinner"></span>
+              {{ isNextLoading ? 'Loading...' : 'Next' }}
+            </button>
           </div>
         </div>
 
@@ -83,7 +86,7 @@
           </div>
 
           <div class="form-group">
-            <input type="text" id="phone" formControlName="phoneNumber" placeholder=" " (blur)="checkPhone()">
+            <input type="text" id="phone" formControlName="phoneNumber" placeholder=" ">
             <label for="phone">Phone Number</label>
             <div class="text-danger" *ngIf="registerForm.get('phoneNumber')?.touched">
               <ng-container *ngIf="registerForm.get('phoneNumber')?.hasError('required')">
@@ -131,7 +134,10 @@
 
           <div class="button-group">
             <button type="button" class="btn btn-back" (click)="prevStep()">Back</button>
-            <button type="button" class="btn btn-next" (click)="nextStep()">Next</button>
+            <button type="button" class="btn btn-next" [disabled]="isNextLoading" (click)="nextStep()">
+              <span *ngIf="isNextLoading" class="spinner"></span>
+              {{ isNextLoading ? 'Loading...' : 'Next' }}
+            </button>
           </div>
         </div>
 
@@ -215,7 +221,10 @@
 
           <div class="button-group">
             <button type="button" class="btn btn-back" (click)="prevStep()">Back</button>
-            <button type="button" class="btn btn-next" (click)="nextStep()">Next</button>
+            <button type="button" class="btn btn-next" [disabled]="isNextLoading" (click)="nextStep()">
+              <span *ngIf="isNextLoading" class="spinner"></span>
+              {{ isNextLoading ? 'Loading...' : 'Next' }}
+            </button>
           </div>
         </div>
 
@@ -236,7 +245,10 @@
           </div>
           <div class="button-group">
             <button type="button" class="btn btn-back" (click)="prevStep()">Back</button>
-            <button type="submit" class="btn btn-submit">Submit</button>
+            <button type="submit" class="btn btn-submit" [disabled]="isSubmitLoading">
+              <span *ngIf="isSubmitLoading" class="spinner"></span>
+              {{ isSubmitLoading ? 'Submitting...' : 'Submit' }}
+            </button>
           </div>
         </div>
 
@@ -249,21 +261,41 @@
   </div>
 
   <div class="overlay" *ngIf="showVerificationOverlay">
-    <div class="overlay-content">
+    <div class="overlay-content animate-overlay">
       <h3>Email Verification</h3>
       <p>Please enter the 6-digit code sent to your email.</p>
 
-      <input
-        type="text"
-        maxlength="6"
-        [(ngModel)]="userEnteredCode"
-        placeholder="Enter code"
-        class="code-input"
-      />
+      <div class="code-timer" *ngIf="!timerExpired">
+        ⏳ Time left: {{ formattedTimeLeft }}
+      </div>
+
+
+      <div class="form-group">
+        <input
+          type="text"
+          id="resetCode"
+          [(ngModel)]="enteredResetCode"
+          maxlength="6"
+          placeholder=" "
+          [class.invalid]="codeError"
+        />
+        <label for="resetCode">Verification Code</label>
+
+        <div class="error-message" *ngIf="codeError">
+          {{ codeError }}
+        </div>
+      </div>
+
+      <div class="attempt-counter" *ngIf="codeAttemptCount > 0 && codeAttemptCount < 3">
+        Attempt: {{ codeAttemptCount }}/3
+      </div>
 
       <div class="overlay-buttons">
         <button class="cancel-btn" (click)="cancelVerification()">Cancel</button>
-        <button class="verify-btn" (click)="verifyCode()">Verify</button>
+        <button class="verify-btn" (click)="verifyCode()" [disabled]="overlayLoading">
+          <span *ngIf="overlayLoading" class="spinner"></span>
+          {{ overlayLoading ? 'Verifying...' : 'Verify' }}
+        </button>
       </div>
     </div>
   </div>

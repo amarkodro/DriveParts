@@ -48,7 +48,7 @@
             <input type="checkbox" formControlName="rememberMe">
             Remember me
           </label>
-          <a href="#">Forgot password?</a>
+          <a href="#" (click)="openForgotPasswordOVerlay($event)">Forgot password?</a>
         </div>
 
         <button type="submit" class="btn-signin" [disabled]="isLoading">
@@ -80,5 +80,130 @@
 
   </div>
 </section>
+
+<div class="overlay" *ngIf="showForgotPasswordOverlay">
+  <div class="overlay-content" [ngClass]="{ 'closing': isClosingOverlay }">
+    <h3>Reset Password</h3>
+    <p>Please enter your registered email.</p>
+
+    <div class="input-group">
+      <input
+        type="email"
+        id="forgotEmail"
+        name="forgotEmail"
+        [(ngModel)]="forgotPasswordEmail"
+        placeholder=" "
+        required
+        #emailInput="ngModel"
+        (blur)="validateEmail()"
+        [class.invalid]="emailError !== ''"
+      />
+      <label for="forgotEmail">Enter your email</label>
+
+      <div class="error-message" *ngIf="emailError">
+        {{ emailError }}
+      </div>
+    </div>
+
+    <div class="overlay-buttons">
+      <button class="cancel-btn" (click)="closeOverlay('email')">Cancel</button>
+      <button class="verify-btn" [disabled]="overlayLoading" (click)="sendResetCode()">
+        <ng-container *ngIf="!overlayLoading; else loadingSend">
+          Send Code
+        </ng-container>
+        <ng-template #loadingSend>
+          <span class="spinner"></span> Sending...
+        </ng-template>
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" *ngIf="showCodeVerificationOverlay">
+  <div class="overlay-content" [ngClass]="{ 'closing': isClosingOverlay }">
+    <h3>Email Verification</h3>
+    <p>Enter the 6-digit code sent to your email.</p>
+
+    <div class="code-timer" *ngIf="!timerExpired">
+      ⏳ Time left: {{ formattedTimeLeft }}
+    </div>
+
+    <div class="input-group">
+      <input
+        type="text"
+        maxlength="6"
+        [(ngModel)]="enteredResetCode"
+        placeholder=" "
+        id="resetCode"
+        [class.invalid]="codeError"
+        (input)="validateCode()"
+      />
+      <label for="resetCode">Enter code</label>
+      <div class="error-message" *ngIf="codeError">{{ codeError }}</div>
+    </div>
+
+    <div class="attempt-counter" *ngIf="codeAttemptCount > 0 && codeAttemptCount < 3">
+      Attempt: {{ codeAttemptCount }}/3
+    </div>
+
+    <div class="overlay-buttons">
+      <button class="cancel-btn" (click)="closeOverlay('code')">Cancel</button>
+      <button class="verify-btn" [disabled]="overlayLoading" (click)="verifyResetCode()">
+        <span *ngIf="overlayLoading" class="spinner"></span>
+        {{ overlayLoading ? 'Verifying...' : 'Verify' }}
+      </button>
+    </div>
+  </div>
+</div>
+
+
+<div class="overlay" *ngIf="showResetPasswordOverlay">
+  <div class="overlay-content" [ngClass]="{'closing': isClosingOverlay}">
+    <h3>Set New Password</h3>
+    <p>Enter and confirm your new password.</p>
+
+    <div class="input-group">
+      <input
+        [type]="showNewPasswordOverlay ? 'text' : 'password'"
+        id="newPassword"
+        [(ngModel)]="newPassword"
+        placeholder=" "
+        [class.invalid]="passwordMismatchError"
+      />
+      <label for="newPassword">New password</label>
+
+      <span class="toggle-password" (click)="showNewPasswordOverlay = !showNewPasswordOverlay">
+    {{ showNewPasswordOverlay ? '🙈' : '👁️' }}
+     </span>
+
+      <div class="error-message" *ngIf="passwordMismatchError">
+        {{ passwordMismatchError }}
+      </div>
+    </div>
+
+    <div class="input-group">
+      <input
+        [type]="showConfirmNewPasswordOverlay ? 'text' : 'password'"
+        id="confirmNewPassword"
+        [(ngModel)]="confirmNewPassword"
+        placeholder=" "
+        [class.invalid]="passwordMismatchError"
+      />
+      <label for="confirmNewPassword">Confirm new password</label>
+
+      <span class="toggle-password" (click)="showConfirmNewPasswordOverlay = !showConfirmNewPasswordOverlay">
+    {{ showConfirmNewPasswordOverlay ? '🙈' : '👁️' }}
+  </span>
+    </div>
+
+    <div class="overlay-buttons">
+      <button class="cancel-btn" (click)="closeOverlay('reset')">Cancel</button>
+      <button class="verify-btn" [disabled]="overlayLoading" (click)="submitNewPassword()">
+        <span *ngIf="overlayLoading" class="spinner"></span>
+        {{ overlayLoading ? 'Saving...' : 'Apply' }}
+      </button>
+    </div>
+  </div>
+</div>
 
 

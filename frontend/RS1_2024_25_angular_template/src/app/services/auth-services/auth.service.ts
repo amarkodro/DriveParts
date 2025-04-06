@@ -76,11 +76,18 @@ export class AuthService {
   }
 
   checkPhone(phone: string) {
-    return this.http.get(`${this.apiUrl}/check-phone?phoneNumber=${phone}`);
+    const encodedPhone = encodeURIComponent(phone);
+    return this.http.get(`${this.apiUrl}/check-phone?phoneNumber=${encodedPhone}`);
   }
 
   googleLogin(token: string) {
     return this.http.post(`${this.apiUrl}/google-login`, { IdToken: token });
   }
 
+  resetPassword(data: { email: string, newPassword: string }) {
+    return this.http.post(`${this.apiUrl}/reset-password`, data);
   }
+
+
+
+}

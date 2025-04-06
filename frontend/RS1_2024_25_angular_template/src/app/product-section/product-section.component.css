@@ -400,6 +400,17 @@ input[type="number"] {
   font-size: 16px;
 }
 
+@media (max-width: 1400px) {
+ .product-card {
+   width: 230px !important;
+ }
+}
+
+@media (max-width: 1201px) {
+  .product-card {
+    width: 280px !important;
+  }
+}
 
 @media (max-width: 991px) {
   .product-grid {
