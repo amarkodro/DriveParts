@@ -133,6 +133,16 @@ export class NavbarComponent implements OnInit {
   }
 
   logout() {
+
+    const userId = this.authService.getUserId();
+
+    localStorage.removeItem(`promoCodeId-${userId}`);
+    localStorage.removeItem(`usedCode-${userId}`);
+    localStorage.removeItem(`discount-${userId}`);
+    localStorage.removeItem(`supplierId-${userId}`);
+    localStorage.removeItem(`paymentId-${userId}`);
+
+
     localStorage.removeItem('jwtToken');
     sessionStorage.removeItem('jwtToken');
 
@@ -167,6 +177,7 @@ export class NavbarComponent implements OnInit {
   onClickOutside(event: Event) {
     const clickedInside = this.elementRef.nativeElement.contains(event.target);
     const target = event.target as HTMLElement;
+
 
     const isLogoClick = target.closest('.navbar-brand');
     const isNavLinkClick = target.closest('.nav-link');

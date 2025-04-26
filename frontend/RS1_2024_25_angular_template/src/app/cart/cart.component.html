@@ -1,14 +1,14 @@
-<div class="container mt-5 p-3 rounded cart">
+<div *ngIf="cartItems.length > 0" class="container mt-5 p-3 rounded cart cart-enter-animation">
   <div class="row no-gutters">
     <div class="col-md-8">
       <div class="product-details mr-2">
-        <div class="d-flex flex-row align-items-center">
+        <div class="d-flex flex-row align-items-center continue-shopping" (click)="goBack()">
           <i class="fa fa-long-arrow-left"></i>
           <span class="ml-2">Continue Shopping</span>
         </div>
         <hr>
         <h6 class="mb-0">Shopping cart</h6>
-        <div class="d-flex justify-content-between">
+        <div class="d-flex justify-content-between items-cart">
           <span>You have {{ cartItems.length }} items in your cart</span>
         </div>
 
@@ -40,8 +40,8 @@
       <div class="payment-info">
         <form [formGroup]="checkoutForm" (ngSubmit)="submitOrder()">
 
-          <!-- Kupon input sa lebdećom labelom -->
           <div class="form-group floating-label">
+
             <input
               type="text"
               class="form-control"
@@ -52,35 +52,44 @@
 
             <button
               type="button"
-              class="btn btn-sm btn-secondary mt-2"
+              class="btn btn-secondary apply-btn"
+              [disabled]="isApplyingCoupon"
               (click)="applyCoupon()">
-              Apply
+              <span *ngIf="isApplyingCoupon" class="spinner"></span>
+              {{ isApplyingCoupon ? 'Applying...' : 'Apply' }}
             </button>
 
-            <div *ngIf="discount > 0" class="mt-2 text-success">
-              Discount applied: -{{ discount }} KM
+            <div *ngIf="discount > 0 && usedCode" class="coupon-box d-flex justify-content-between align-items-center mt-2">
+              <span class="coupon-text">Discount "<strong>{{ usedCode }}</strong>" applied: -{{ discount | number:'1.2-2' }} KM</span>
+              <button class="btn-close-custom" (click)="removeCoupon()" aria-label="Remove coupon">×</button>
             </div>
           </div>
 
           <hr class="line">
 
-          <!-- Subtotal, shipping, total -->
           <div class="d-flex justify-content-between information">
             <span>Subtotal</span><span>{{ totalPrice }} KM</span>
           </div>
           <div class="d-flex justify-content-between information">
             <span>Total (Incl. taxes)</span><span>{{ finalTotal }} KM</span>
           </div>
-
-          <!-- Submit dugme -->
-          <button
-            class="btn btn-primary btn-block d-flex justify-content-between mt-3"
-            type="submit"
-            [disabled]="checkoutForm.invalid || cartItems.length === 0">
-            <span>Checkout<i class="fa fa-long-arrow-right ml-1"></i></span>
-          </button>
         </form>
+        <button
+          class="btn btn-primary apply-btn mt-3"
+          (click)="goToCheckout()"
+          [disabled]="cartItems.length === 0 || isCheckingOut">
+          <span *ngIf="isCheckingOut" class="spinner"></span>
+          {{ isCheckingOut ? 'Processing...' : 'Checkout' }}
+        </button>
       </div>
     </div>
   </div>
+</div>
+
+<div *ngIf="cartItems.length === 0" class="container mt-5 p-5 text-center cart-empty">
+  <img src="assets/shopping.png" alt="Empty Cart" width="130" class="mb-4" />
+  <h4>Your cart is empty</h4>
+  <p class="text-muted">You haven’t added anything yet.</p>
+  <button class="browse-btn" [routerLink]="'/parts'">Browse Parts</button>
+
 </div>

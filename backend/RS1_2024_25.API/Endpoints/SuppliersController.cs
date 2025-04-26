@@ -25,7 +25,7 @@ namespace RS1_2024_25.API.Endpoints
             public string Address { get; set; }
         }
 
-        [HttpGet]
+        [HttpGet("all")]
         public ActionResult<SupplierResponse[]> GetSupplier()
         {
             var supplier = _db.Suppliers

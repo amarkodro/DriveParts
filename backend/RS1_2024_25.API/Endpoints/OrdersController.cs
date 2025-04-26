@@ -19,8 +19,9 @@ namespace RS1_2024_25.API.Endpoints
             public int UserId { get; set; }         
             public int SupplierId { get; set; }                      
             public int PaymentId { get; set; }
+            public int? PromoCodeId { get; set; }
+            public decimal? TotalAmount { get; set; }
             public List<OrderItemRequest> Items { get; set; }
-
         }
 
         public class OrderResponse
@@ -31,13 +32,17 @@ namespace RS1_2024_25.API.Endpoints
             public string Username { get; set; }
             public string SupplierName { get; set; }
             public string PaymentMethod { get; set; }
+            public string? PromoCode { get; set; }
+            public float? Discount { get; set; }
+            public decimal? TotalAmount { get; set; }
+
         }
-        
+
         public class OrderItemRequest
         {
             public int PartId { get; set; }
             public int Quantity { get; set; }
-            public float Price { get; set; }
+            public long Price { get; set; }
         }
 
         [HttpGet]
@@ -56,6 +61,8 @@ namespace RS1_2024_25.API.Endpoints
                                 Username = x.User != null ? x.User.Username : "Unknown",
                                 SupplierName = x.Supplier != null ? x.Supplier.Name : "Unknown",
                                 PaymentMethod = x.Payment != null ? x.Payment.PaymentMethod : "Unknown",
+                                PromoCode = x.PromoCode != null ? x.PromoCode.Code : "Unknown",
+                                Discount = x.PromoCode != null ? x.PromoCode.Discount : 0,
                             }).ToArray();
 
             return orders;
@@ -79,22 +86,34 @@ namespace RS1_2024_25.API.Endpoints
                                 Username = x.User != null ? x.User.Username : "Unknown",
                                 SupplierName = x.Supplier != null ? x.Supplier.Name : "Unknown",
                                 PaymentMethod = x.Payment != null ? x.Payment.PaymentMethod : "Unknown",
+                                PromoCode = x.PromoCode != null ? x.PromoCode.Code : "Unknown",
+                                Discount = x.PromoCode != null ? x.PromoCode.Discount : 0,
                             }).First();
 
             return order;
 
         }
 
-        [HttpPost]
+        [HttpPost("add")]
         public ActionResult<OrderResponse> PostOrder(OrderRequest request)
         {
+
+            if (request.PromoCodeId.HasValue)
+            {
+                var promo = _db.PromoCodes.Find(request.PromoCodeId.Value);
+                if (promo == null)
+                    return BadRequest("Invalid promo code.");
+            }
+
             var order = new Order
             {
                 Date = DateTime.Now,
-                StatusId = request.StatusId,
+                StatusId = 1,
                 UserId = request.UserId,
                 SupplierId = request.SupplierId,
-                PaymentId = request.PaymentId,
+                PaymentId = 1,
+                PromoCodeId = request.PromoCodeId,
+                TotalAmount = request.TotalAmount,
             };
 
             _db.Orders.Add(order);
@@ -107,10 +126,17 @@ namespace RS1_2024_25.API.Endpoints
                     OrderId = order.OrderId,
                     PartId = item.PartId,
                     Quantity = item.Quantity,
-                    Price = item.Price
+                    Price = (long)item.Price,               
                 };
 
                 _db.OrderItems.Add(orderItem);
+            }
+
+            var cartItems = _db.CartItems.Where(x => x.UserId == request.UserId).ToList();
+
+            if (cartItems.Any())
+            {
+                _db.CartItems.RemoveRange(cartItems);
             }
 
             _db.SaveChanges();
@@ -135,7 +161,8 @@ namespace RS1_2024_25.API.Endpoints
             order.SupplierId = request.SupplierId;
             order.StatusId = request.StatusId;
             order.PaymentId = request.PaymentId;
-             
+            order.PromoCodeId = request.PromoCodeId;
+
             _db.SaveChanges();
 
             return Ok("Order updated successfully");

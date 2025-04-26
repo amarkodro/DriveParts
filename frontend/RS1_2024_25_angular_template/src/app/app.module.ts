@@ -22,6 +22,8 @@ import { ToastrModule } from 'ngx-toastr';
 import { CartComponent } from './cart/cart.component';
 import {SocialLoginModule , SocialAuthServiceConfig} from '@abacritt/angularx-social-login';
 import {GoogleLoginProvider} from '@abacritt/angularx-social-login';
+import { CheckoutComponent } from './checkout/checkout.component';
+import { OrderSuccessComponent } from './order-success/order-success.component';
 
 
 @NgModule({
@@ -36,7 +38,9 @@ import {GoogleLoginProvider} from '@abacritt/angularx-social-login';
     PartsComponent,
     PartDetailComponent,
     ViewPartsComponent,
-    CartComponent
+    CartComponent,
+    CheckoutComponent,
+    OrderSuccessComponent
   ],
     imports: [
         BrowserModule,
@@ -48,7 +52,7 @@ import {GoogleLoginProvider} from '@abacritt/angularx-social-login';
         BrowserAnimationsModule,
         SocialLoginModule,
       ToastrModule.forRoot({
-        positionClass: 'toast-top-center', // 👈 Prikazuje toast na vrhu (centrirano)
+        positionClass: 'toast-top-center',
         timeOut: 3000,
         progressBar: true
       }),

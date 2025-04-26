@@ -20,13 +20,15 @@ namespace RS1_2024_25.API.Endpoints
                 Email = "amar.kodro@edu.fit.ba",
                 Name = "Amar",
                 Surname = "Kodro",
-                PhoneNumber = "0623331233",
+                PhoneNumber = "+387 62 111 111",
                 Address = "Masline-Kocine bb",
                 IsAdmin = true,
                 isUser = false,
                 is2FActive = true,
                 AdminLevel = "Moderator",
-                ImageUrl = "UserImages/EFOJ7431.png"
+                ImageUrl = "UserImages/EFOJ7431.png",
+                CityId = 18,
+                
             };
 
             admin1.Password = _passwordHasher.HashPassword(admin1, "admin123");
@@ -38,13 +40,14 @@ namespace RS1_2024_25.API.Endpoints
                 Email = "ammar.puce@edu.fit.ba",
                 Name = "Ammar",
                 Surname = "Puce",
-                PhoneNumber = "0623331233",
+                PhoneNumber = "+387 62 111 112",
                 Address = "Masline-Kocine bb",
                 IsAdmin = true,
                 isUser = false,
                 is2FActive = true,
                 AdminLevel = "Moderator",
-                ImageUrl = "UserImages/istockphoto-871752462-612x612.jpg"
+                ImageUrl = "UserImages/istockphoto-871752462-612x612.jpg",
+                CityId = 18,
             };
 
             admin2.Password = _passwordHasher.HashPassword(admin2, "admin123");
@@ -55,14 +58,15 @@ namespace RS1_2024_25.API.Endpoints
                 Email = "testuser@example.com",
                 Name = "Test",
                 Surname = "User",
-                PhoneNumber = "0602213312",
+                PhoneNumber = "+387 62 111 113",
                 Address = "useraddress",
                 IsAdmin = false,
                 isUser = true,
                 is2FActive = false,
                 CityId = 18,
                 GenderId = 1,
-                ImageUrl = "UserImages/istockphoto-871752462-612x612.jpg"
+                ImageUrl = "UserImages/istockphoto-871752462-612x612.jpg",
+                
             };
 
             user1.Password = _passwordHasher.HashPassword(user1, "driveparts123");
@@ -74,22 +78,22 @@ namespace RS1_2024_25.API.Endpoints
                 Email = "testuser2@example.com",
                 Name = "Test2",
                 Surname = "User2",
-                PhoneNumber = "0602234312",
+                PhoneNumber = "+387 62 111 114",
                 Address = "useraddress2",
                 IsAdmin = false,
                 isUser = true,
                 is2FActive = false,
                 CityId = 16,
                 GenderId = 2,
-                ImageUrl = "UserImages/istockphoto-871752462-612x612.jpg"
+                ImageUrl = "UserImages/istockphoto-871752462-612x612.jpg",
             };
 
             user2.Password = _passwordHasher.HashPassword(user2, "driveparts123");
 
-            _db.AddAsync(admin1);
-            _db.AddAsync(admin2);
-            _db.AddAsync(user1);
-            _db.AddAsync(user2);
+            await _db.AddAsync(admin1);
+            await _db.AddAsync(admin2);
+            await _db.AddAsync(user1);
+            await _db.AddAsync(user2);
 
             await _db.SaveChangesAsync();
             
@@ -170,7 +174,19 @@ namespace RS1_2024_25.API.Endpoints
             await _db.Reviews.AddRangeAsync(reviews);
             await _db.SaveChangesAsync();
 
-            return Ok("Admins, users, orders, order items, FAQ-s, review have been successfully added.");
+            var promoCodes = new List<PromoCode>
+            {
+                new PromoCode {Code = "DRIVEPARTS5" , Discount = 5},
+                new PromoCode {Code = "DRIVEPARTS10" , Discount = 10},
+                new PromoCode {Code = "DRIVEPARTS15" , Discount = 15}
+            };
+
+            await _db.PromoCodes.AddRangeAsync(promoCodes);
+            await _db.SaveChangesAsync();
+
+            return Ok("Admins, users, orders, order items, FAQ-s, review, promoCodes have been successfully added.");
+
+            
 
         }
     }

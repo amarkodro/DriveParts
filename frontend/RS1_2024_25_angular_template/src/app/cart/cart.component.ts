@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import { CartService } from '../services/cart.service';
 import {ToastrService} from 'ngx-toastr';
+import {PromoCodeService} from '../services/promo-code.service';
+import {Router} from '@angular/router';
+import {AuthService} from '../services/auth-services/auth.service';
 
 @Component({
   selector: 'app-cart',
@@ -13,19 +16,28 @@ export class CartComponent implements OnInit {
   discount: number = 0;
   invalidCoupon: boolean = false;
   checkoutForm!: FormGroup;
-
+  usedCode: string = '';
+  isApplyingCoupon: boolean = false;
+  isCheckingOut: boolean = false;
 
 
   constructor(
     private fb: FormBuilder,
     private cartService: CartService,
     private toastr: ToastrService,
+    private promoService: PromoCodeService,
+    private router: Router,
+    private authService: AuthService,
   ) {}
 
   ngOnInit(): void {
     this.checkoutForm = this.fb.group({
       couponCode: ['', Validators.required]
     });
+
+    const userId = this.authService.getUserId();
+    this.discount = this.cartService.getDiscount(userId);
+    this.usedCode = this.cartService.getUsedCode(userId);
 
     this.cartService.loadCartItems();
 
@@ -50,15 +62,45 @@ export class CartComponent implements OnInit {
 
   applyCoupon(): void {
     const code = this.checkoutForm.get('couponCode')?.value?.trim().toUpperCase();
-    if (code === 'DRIVEPARTS10' && this.totalPrice > 500) {
-      this.discount = this.totalPrice * 0.15;
-      this.invalidCoupon = false;
-      this.toastr.success('Coupon successfully redeemed');
-    } else {
-      this.discount = 0;
-      this.invalidCoupon = !!code;
-      this.toastr.info('Total price must be over 500 KM');
+    const userId = this.authService.getUserId();
+
+    if (!code) {
+      this.toastr.warning('Please enter a promo code');
+      return;
     }
+
+    this.isApplyingCoupon = true;
+
+    this.promoService.checkCode(code).subscribe({
+      next: res => {
+        const discount = res.discount;
+        const promoId = res.id;
+
+        this.discount = this.totalPrice * (discount / 100);
+        this.cartService.setDiscount(this.discount, userId);
+        this.cartService.setUsedCode(code, userId);
+        this.cartService.setPromoCodeId(promoId, userId);
+        this.invalidCoupon = false;
+        this.usedCode = code;
+        setTimeout(() => {
+          this.toastr.success(`Coupon applied: ${discount}%`);
+          this.isApplyingCoupon = false;
+        }, 2000);
+      },
+      error: err => {
+        this.discount = 0;
+        this.cartService.setDiscount(0, userId);
+        this.cartService.setUsedCode('', userId);
+        this.cartService.setPromoCodeId(0, userId);
+        this.invalidCoupon = true;
+
+
+        setTimeout(() => {
+          this.toastr.error('Invalid promo code');
+          this.isApplyingCoupon = false;
+        }, 2000);
+      }
+    });
   }
 
   removeItem(partId: number): void {
@@ -82,15 +124,16 @@ export class CartComponent implements OnInit {
     console.log(order);
   }
 
-  onQuantityChanged(item:any): void {
+  onQuantityChanged(item: any): void {
+    const userId = this.authService.getUserId();
 
-    if(item.quantity > 10) {
+    if (item.quantity > 10) {
       item.quantity = 10;
       this.toastr.warning('Maximum quantity is 10');
       return;
     }
 
-    if(item.quantity < 1 ){
+    if (item.quantity < 1) {
       item.quantity = 1;
       this.toastr.warning('Minimum quantity is 1');
       return;
@@ -99,10 +142,52 @@ export class CartComponent implements OnInit {
     this.cartService.updateQuantity(item.partId, item.quantity).subscribe({
       next: () => {
         this.cartService.loadCartItems();
-          this.toastr.success('Quantity updated' , 'Success')
+        this.toastr.success('Quantity updated', 'Success');
+
+
+        if (this.usedCode) {
+          this.promoService.checkCode(this.usedCode).subscribe({
+            next: res => {
+              const discount = res.discount;
+              this.discount = this.totalPrice * (discount / 100);
+              this.cartService.setDiscount(this.discount, userId);
+            },
+            error: err => {
+              this.discount = 0;
+              this.cartService.setDiscount(0, userId);
+              this.invalidCoupon = true;
+              this.toastr.error('Promo code is no longer valid');
+            }
+          });
+        }
       },
-      error: err => {console.error('Error updating quantity',err), this.toastr.error('Error updating quantity',err)}
+      error: err => {
+        console.error('Error updating quantity', err);
+        this.toastr.error('Error updating quantity', err);
+      }
     });
+  }
+
+  goBack() {
+    this.router.navigate(['/']);
+  }
+
+  removeCoupon() {
+    const userId = this.authService.getUserId();
+    this.discount = 0;
+    this.usedCode = '';
+    this.invalidCoupon = false;
+    this.cartService.setDiscount(0, userId);
+    this.cartService.setPromoCodeId(0, userId);
+    this.cartService.setUsedCode('', userId);
+  }
+
+  goToCheckout(): void {
+    this.isCheckingOut = true;
+
+    setTimeout(() => {
+      this.router.navigate(['/checkout']);
+    }, 2000);
   }
 
 }

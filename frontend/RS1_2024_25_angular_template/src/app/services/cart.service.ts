@@ -12,9 +12,19 @@ export class CartService {
   cartUpdated$ = this.cartUpdatedSoruce.asObservable();
   private cartItemsSubject = new BehaviorSubject<any[]>([]);
   cartItems$ = this.cartItemsSubject.asObservable();
+  private discount: number = 0;
 
+  constructor(private http: HttpClient, ) {
+    const savedItems = localStorage.getItem('cartItems');
+    if (savedItems) {
+      this.cartItemsSubject.next(JSON.parse(savedItems));
+    }
 
-  constructor(private http: HttpClient) {}
+    const savedDiscount = localStorage.getItem('discount');
+    if (savedDiscount) {
+      this.discount = parseFloat(savedDiscount);
+    }
+  }
 
   addToCart(partId: number, quantity: number) {
     const body = { partId, quantity };
@@ -27,7 +37,10 @@ export class CartService {
   }
   loadCartItems() {
     this.http.get<any[]>(`${this.apiUrl}/getAll`).subscribe({
-      next: (items) => this.cartItemsSubject.next(items),
+      next: (items) => {
+        this.cartItemsSubject.next(items);
+        localStorage.setItem('cartItems', JSON.stringify(items)); // ✅ dodano
+      },
       error: (err) => console.error('Error loading cart items', err)
     });
   }
@@ -42,6 +55,8 @@ export class CartService {
   }
 
   clearCart(){
+    localStorage.removeItem('cartItems');
+    localStorage.removeItem('discount');
     return this.http.delete(`${this.apiUrl}/clear`);
   }
 
@@ -57,4 +72,37 @@ export class CartService {
   updateQuantity(partId: number, quantity: number) {
     return this.http.put(`${this.apiUrl}/update`, { partId, quantity });
   }
+
+  setDiscount(value: number, userId: number) {
+    localStorage.setItem(`discount-${userId.toString()}`, value.toString());
+  }
+
+  getDiscount(userId: number): number {
+    const saved = localStorage.getItem(`discount-${userId.toString()}`);
+    return saved ? parseFloat(saved) : 0;
+  }
+
+  setUsedCode(code: string, userId: number) {
+    localStorage.setItem(`usedCode-${userId.toString()}`, code);
+  }
+
+  getUsedCode(userId: number): string {
+    return localStorage.getItem(`usedCode-${userId.toString()}`) || '';
+  }
+
+  clearCouponData(userId: number): void {
+    localStorage.removeItem(`discount-${userId.toString()}`);
+    localStorage.removeItem(`usedCode-${userId.toString()}`);
+  }
+
+  setPromoCodeId(id: number, userId: number): void {
+    localStorage.setItem(`promoCodeId-${userId}`, id.toString());
+  }
+
+  getPromoCodeId(userId: number): number | null {
+    const id = localStorage.getItem(`promoCodeId-${userId}`);
+    return id ? parseInt(id, 10) : null;
+  }
+
+
 }

@@ -333,6 +333,9 @@ namespace RS1_2024_25.API.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<long?>("PostalCode")
+                        .HasColumnType("bigint");
+
                     b.HasKey("ID");
 
                     b.HasIndex("CountryId");
@@ -344,205 +347,218 @@ namespace RS1_2024_25.API.Migrations
                         {
                             ID = 1,
                             CountryId = 1,
-                            Name = "Banja Luka"
+                            Name = "Banja Luka",
+                            PostalCode = 78000L
                         },
                         new
                         {
                             ID = 2,
                             CountryId = 1,
-                            Name = "Bihać"
+                            Name = "Bihać",
+                            PostalCode = 77000L
                         },
                         new
                         {
                             ID = 3,
                             CountryId = 1,
-                            Name = "Bijeljina"
+                            Name = "Bijeljina",
+                            PostalCode = 76300L
                         },
                         new
                         {
                             ID = 4,
                             CountryId = 1,
-                            Name = "Bosanska Krupa"
+                            Name = "Bosanska Krupa",
+                            PostalCode = 77240L
                         },
                         new
                         {
                             ID = 5,
                             CountryId = 1,
-                            Name = "Cazin"
+                            Name = "Cazin",
+                            PostalCode = 77220L
                         },
                         new
                         {
                             ID = 6,
                             CountryId = 1,
-                            Name = "Čapljina"
+                            Name = "Čapljina",
+                            PostalCode = 88300L
                         },
                         new
                         {
                             ID = 7,
                             CountryId = 1,
-                            Name = "Drventa"
+                            Name = "Derventa",
+                            PostalCode = 74400L
                         },
                         new
                         {
                             ID = 8,
                             CountryId = 1,
-                            Name = "Doboj"
+                            Name = "Doboj",
+                            PostalCode = 74000L
                         },
                         new
                         {
                             ID = 9,
                             CountryId = 1,
-                            Name = "Goražde"
+                            Name = "Goražde",
+                            PostalCode = 73000L
                         },
                         new
                         {
                             ID = 10,
                             CountryId = 1,
-                            Name = "Gračanica"
+                            Name = "Gračanica",
+                            PostalCode = 75320L
                         },
                         new
                         {
                             ID = 11,
                             CountryId = 1,
-                            Name = "Cityačac"
+                            Name = "Konjic",
+                            PostalCode = 88400L
                         },
                         new
                         {
                             ID = 12,
                             CountryId = 1,
-                            Name = "Cityiška"
+                            Name = "Laktaši",
+                            PostalCode = 78250L
                         },
                         new
                         {
                             ID = 13,
                             CountryId = 1,
-                            Name = "Konjic"
+                            Name = "Livno",
+                            PostalCode = 80101L
                         },
                         new
                         {
                             ID = 14,
                             CountryId = 1,
-                            Name = "Laktaši"
+                            Name = "Lukavac",
+                            PostalCode = 75300L
                         },
                         new
                         {
                             ID = 15,
                             CountryId = 1,
-                            Name = "Livno"
+                            Name = "Ljubuški",
+                            PostalCode = 88320L
                         },
                         new
                         {
                             ID = 16,
                             CountryId = 1,
-                            Name = "Lukavac"
+                            Name = "Mostar",
+                            PostalCode = 88000L
                         },
                         new
                         {
                             ID = 17,
                             CountryId = 1,
-                            Name = "Ljubuški"
+                            Name = "Orašje",
+                            PostalCode = 76270L
                         },
                         new
                         {
                             ID = 18,
                             CountryId = 1,
-                            Name = "Mostar"
+                            Name = "Prijedor",
+                            PostalCode = 79101L
                         },
                         new
                         {
                             ID = 19,
                             CountryId = 1,
-                            Name = "Orašje"
+                            Name = "Prnjavor",
+                            PostalCode = 78430L
                         },
                         new
                         {
                             ID = 20,
                             CountryId = 1,
-                            Name = "Prijedor"
+                            Name = "Sarajevo",
+                            PostalCode = 71000L
                         },
                         new
                         {
                             ID = 21,
                             CountryId = 1,
-                            Name = "Prnjavor"
+                            Name = "Srebrenik",
+                            PostalCode = 75350L
                         },
                         new
                         {
                             ID = 22,
                             CountryId = 1,
-                            Name = "Sarajevo"
+                            Name = "Stolac",
+                            PostalCode = 88360L
                         },
                         new
                         {
                             ID = 23,
                             CountryId = 1,
-                            Name = "Srebrenik"
+                            Name = "Široki Brijeg",
+                            PostalCode = 88220L
                         },
                         new
                         {
                             ID = 24,
                             CountryId = 1,
-                            Name = "Stolac"
+                            Name = "Travnik",
+                            PostalCode = 72270L
                         },
                         new
                         {
                             ID = 25,
                             CountryId = 1,
-                            Name = "Široki Brijeg"
+                            Name = "Tuzla",
+                            PostalCode = 75000L
                         },
                         new
                         {
                             ID = 26,
                             CountryId = 1,
-                            Name = "Travnik"
+                            Name = "Visoko",
+                            PostalCode = 71300L
                         },
                         new
                         {
                             ID = 27,
                             CountryId = 1,
-                            Name = "Tuzla"
+                            Name = "Zavidovići",
+                            PostalCode = 72220L
                         },
                         new
                         {
                             ID = 28,
                             CountryId = 1,
-                            Name = "Visoko"
+                            Name = "Zenica",
+                            PostalCode = 72000L
                         },
                         new
                         {
                             ID = 29,
                             CountryId = 1,
-                            Name = "Zavidovići"
+                            Name = "Zvornik",
+                            PostalCode = 75400L
                         },
                         new
                         {
                             ID = 30,
                             CountryId = 1,
-                            Name = "Zenica"
+                            Name = "Živinice",
+                            PostalCode = 75270L
                         },
                         new
                         {
                             ID = 31,
                             CountryId = 1,
-                            Name = "Zvornik"
-                        },
-                        new
-                        {
-                            ID = 32,
-                            CountryId = 1,
-                            Name = "Živinice"
-                        },
-                        new
-                        {
-                            ID = 33,
-                            CountryId = 1,
-                            Name = "Donji Vakuf"
-                        },
-                        new
-                        {
-                            ID = 34,
-                            CountryId = 1,
-                            Name = "Zavidovići"
+                            Name = "Donji Vakuf",
+                            PostalCode = 70220L
                         });
                 });
 
@@ -1291,11 +1307,17 @@ namespace RS1_2024_25.API.Migrations
                     b.Property<int>("PaymentId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("PromoCodeId")
+                        .HasColumnType("int");
+
                     b.Property<int>("StatusId")
                         .HasColumnType("int");
 
                     b.Property<int>("SupplierId")
                         .HasColumnType("int");
+
+                    b.Property<decimal?>("TotalAmount")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
@@ -1303,6 +1325,8 @@ namespace RS1_2024_25.API.Migrations
                     b.HasKey("OrderId");
 
                     b.HasIndex("PaymentId");
+
+                    b.HasIndex("PromoCodeId");
 
                     b.HasIndex("StatusId");
 
@@ -1998,6 +2022,25 @@ namespace RS1_2024_25.API.Migrations
                         });
                 });
 
+            modelBuilder.Entity("RS1_2024_25.API.Data.Models.PromoCode", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Code")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<float?>("Discount")
+                        .HasColumnType("real");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PromoCodes");
+                });
+
             modelBuilder.Entity("RS1_2024_25.API.Data.Models.Review", b =>
                 {
                     b.Property<int>("ReviewId")
@@ -2247,6 +2290,9 @@ namespace RS1_2024_25.API.Migrations
                     b.Property<string>("Address")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("CityId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Discriminator")
                         .IsRequired()
                         .HasMaxLength(13)
@@ -2284,6 +2330,8 @@ namespace RS1_2024_25.API.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CityId");
+
                     b.ToTable("UserAccounts");
 
                     b.HasDiscriminator().HasValue("UserAccount");
@@ -2306,13 +2354,8 @@ namespace RS1_2024_25.API.Migrations
                 {
                     b.HasBaseType("RS1_2024_25.API.Data.Models.UserAccount");
 
-                    b.Property<int?>("CityId")
-                        .HasColumnType("int");
-
                     b.Property<int?>("GenderId")
                         .HasColumnType("int");
-
-                    b.HasIndex("CityId");
 
                     b.HasIndex("GenderId");
 
@@ -2436,6 +2479,11 @@ namespace RS1_2024_25.API.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
+                    b.HasOne("RS1_2024_25.API.Data.Models.PromoCode", "PromoCode")
+                        .WithMany()
+                        .HasForeignKey("PromoCodeId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
                     b.HasOne("RS1_2024_25.API.Data.Models.Status", "Status")
                         .WithMany()
                         .HasForeignKey("StatusId")
@@ -2455,6 +2503,8 @@ namespace RS1_2024_25.API.Migrations
                         .IsRequired();
 
                     b.Navigation("Payment");
+
+                    b.Navigation("PromoCode");
 
                     b.Navigation("Status");
 
@@ -2546,19 +2596,22 @@ namespace RS1_2024_25.API.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("RS1_2024_25.API.Data.Models.User", b =>
+            modelBuilder.Entity("RS1_2024_25.API.Data.Models.UserAccount", b =>
                 {
                     b.HasOne("RS1_2024_25.API.Data.Models.City", "City")
                         .WithMany()
                         .HasForeignKey("CityId")
                         .OnDelete(DeleteBehavior.NoAction);
 
+                    b.Navigation("City");
+                });
+
+            modelBuilder.Entity("RS1_2024_25.API.Data.Models.User", b =>
+                {
                     b.HasOne("RS1_2024_25.API.Data.Models.Gender", "Gender")
                         .WithMany()
                         .HasForeignKey("GenderId")
                         .OnDelete(DeleteBehavior.NoAction);
-
-                    b.Navigation("City");
 
                     b.Navigation("Gender");
                 });

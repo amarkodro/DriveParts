@@ -13,9 +13,13 @@ export interface CityResponse {
 export class CitiesService {
   private apiUrl: string = 'http://localhost:7000/api/City';
 
-  constructor(private http: HttpClient) {}  // ✅ Sada HttpClient radi
+  constructor(private http: HttpClient) {}
 
   getCity(): Observable<CityResponse[]> {
     return this.http.get<CityResponse[]>(this.apiUrl);
+  }
+
+  getCityWithCountry(id: number){
+    return this.http.get<any>(`${this.apiUrl}/${id}`);
   }
 }

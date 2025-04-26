@@ -16,5 +16,9 @@ namespace RS1_2024_25.API.Data.Models
         public bool isUser {  get; set; }
         public bool? is2FActive { get; set; }
         public string? ImageUrl { get; set; }
+
+        [ForeignKey(nameof(City))]
+        public int? CityId { get; set; }
+        public City City { get; set; }
     }
 }

@@ -15,18 +15,18 @@ namespace RS1_2024_25.API.Endpoints
     {
         public class UserRequest
         {
-            public string Name { get; set; }
-            public string Surname { get; set; }
-            public string Email { get; set; }
-            public string PhoneNumber { get; set; }
-            public string Address { get; set; }
-            public string Username { get; set; }
-            public string Password { get; set; }
+            public string? Name { get; set; }
+            public string? Surname { get; set; }
+            public string? Email { get; set; }
+            public string? PhoneNumber { get; set; }
+            public string? Address { get; set; }
+            public string? Username { get; set; }
+            public string? Password { get; set; }
             public bool IsAdmin { get; set; }
             public bool isUser { get; set; }
             public bool is2FActive { get; set; }
-            public int GenderId { get; set; }
-            public int CityId { get; set; }
+            public int? GenderId { get; set; }
+            public int? CityId { get; set; }
         }
 
         public class UserResponse
@@ -152,18 +152,34 @@ namespace RS1_2024_25.API.Endpoints
         {
             var user = _db.Users.Find(id) ?? throw new KeyNotFoundException("User not found");
 
+            if (request.CityId.HasValue)
+            {
+                bool cityExists = _db.Cities.Any(c=>c.ID == request.CityId.Value);
+                if (!cityExists) return BadRequest("Invalid City ID.");
+
+                user.CityId = request.CityId.Value;
+            }
+
+            if (request.GenderId.HasValue)
+            {
+                bool genderExists = _db.Genders.Any(c => c.GenderId == request.GenderId.Value);
+                if (!genderExists) return BadRequest("Invalid Gender ID.");
+
+                user.GenderId = request.GenderId.Value;
+            }
+
+
             user.Name = request.Name;
             user.Surname = request.Surname;
             user.Email = request.Email;
             user.PhoneNumber = request.PhoneNumber;
             user.Address = request.Address;
             user.Username = request.Username;
-            user.Password = request.Password;
             user.is2FActive = request.is2FActive;
            
             _db.SaveChanges();
 
-            return Ok("User updated successfully");
+            return Ok(new { message = "User updated successfully" });
         }
 
 

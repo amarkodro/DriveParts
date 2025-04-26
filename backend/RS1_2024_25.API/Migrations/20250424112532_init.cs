@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace RS1_2024_25.API.Migrations
 {
     /// <inheritdoc />
-    public partial class InitalCreate : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -128,6 +128,20 @@ namespace RS1_2024_25.API.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "PromoCodes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Code = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Discount = table.Column<float>(type: "real", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PromoCodes", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Statuses",
                 columns: table => new
                 {
@@ -175,7 +189,8 @@ namespace RS1_2024_25.API.Migrations
                     ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CountryId = table.Column<int>(type: "int", nullable: false)
+                    CountryId = table.Column<int>(type: "int", nullable: false),
+                    PostalCode = table.Column<long>(type: "bigint", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -313,10 +328,10 @@ namespace RS1_2024_25.API.Migrations
                     isUser = table.Column<bool>(type: "bit", nullable: false),
                     is2FActive = table.Column<bool>(type: "bit", nullable: true),
                     ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CityId = table.Column<int>(type: "int", nullable: true),
                     Discriminator = table.Column<string>(type: "nvarchar(13)", maxLength: 13, nullable: false),
                     AdminLevel = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    GenderId = table.Column<int>(type: "int", nullable: true),
-                    CityId = table.Column<int>(type: "int", nullable: true)
+                    GenderId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -437,7 +452,9 @@ namespace RS1_2024_25.API.Migrations
                     StatusId = table.Column<int>(type: "int", nullable: false),
                     UserId = table.Column<int>(type: "int", nullable: false),
                     SupplierId = table.Column<int>(type: "int", nullable: false),
-                    PaymentId = table.Column<int>(type: "int", nullable: false)
+                    PaymentId = table.Column<int>(type: "int", nullable: false),
+                    PromoCodeId = table.Column<int>(type: "int", nullable: true),
+                    TotalAmount = table.Column<decimal>(type: "decimal(18,2)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -447,6 +464,11 @@ namespace RS1_2024_25.API.Migrations
                         column: x => x.PaymentId,
                         principalTable: "Payments",
                         principalColumn: "PaymentId");
+                    table.ForeignKey(
+                        name: "FK_Orders_PromoCodes_PromoCodeId",
+                        column: x => x.PromoCodeId,
+                        principalTable: "PromoCodes",
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Orders_Statuses_StatusId",
                         column: x => x.StatusId,
@@ -674,43 +696,40 @@ namespace RS1_2024_25.API.Migrations
 
             migrationBuilder.InsertData(
                 table: "Cities",
-                columns: new[] { "ID", "CountryId", "Name" },
+                columns: new[] { "ID", "CountryId", "Name", "PostalCode" },
                 values: new object[,]
                 {
-                    { 1, 1, "Banja Luka" },
-                    { 2, 1, "Bihać" },
-                    { 3, 1, "Bijeljina" },
-                    { 4, 1, "Bosanska Krupa" },
-                    { 5, 1, "Cazin" },
-                    { 6, 1, "Čapljina" },
-                    { 7, 1, "Drventa" },
-                    { 8, 1, "Doboj" },
-                    { 9, 1, "Goražde" },
-                    { 10, 1, "Gračanica" },
-                    { 11, 1, "Cityačac" },
-                    { 12, 1, "Cityiška" },
-                    { 13, 1, "Konjic" },
-                    { 14, 1, "Laktaši" },
-                    { 15, 1, "Livno" },
-                    { 16, 1, "Lukavac" },
-                    { 17, 1, "Ljubuški" },
-                    { 18, 1, "Mostar" },
-                    { 19, 1, "Orašje" },
-                    { 20, 1, "Prijedor" },
-                    { 21, 1, "Prnjavor" },
-                    { 22, 1, "Sarajevo" },
-                    { 23, 1, "Srebrenik" },
-                    { 24, 1, "Stolac" },
-                    { 25, 1, "Široki Brijeg" },
-                    { 26, 1, "Travnik" },
-                    { 27, 1, "Tuzla" },
-                    { 28, 1, "Visoko" },
-                    { 29, 1, "Zavidovići" },
-                    { 30, 1, "Zenica" },
-                    { 31, 1, "Zvornik" },
-                    { 32, 1, "Živinice" },
-                    { 33, 1, "Donji Vakuf" },
-                    { 34, 1, "Zavidovići" }
+                    { 1, 1, "Banja Luka", 78000L },
+                    { 2, 1, "Bihać", 77000L },
+                    { 3, 1, "Bijeljina", 76300L },
+                    { 4, 1, "Bosanska Krupa", 77240L },
+                    { 5, 1, "Cazin", 77220L },
+                    { 6, 1, "Čapljina", 88300L },
+                    { 7, 1, "Derventa", 74400L },
+                    { 8, 1, "Doboj", 74000L },
+                    { 9, 1, "Goražde", 73000L },
+                    { 10, 1, "Gračanica", 75320L },
+                    { 11, 1, "Konjic", 88400L },
+                    { 12, 1, "Laktaši", 78250L },
+                    { 13, 1, "Livno", 80101L },
+                    { 14, 1, "Lukavac", 75300L },
+                    { 15, 1, "Ljubuški", 88320L },
+                    { 16, 1, "Mostar", 88000L },
+                    { 17, 1, "Orašje", 76270L },
+                    { 18, 1, "Prijedor", 79101L },
+                    { 19, 1, "Prnjavor", 78430L },
+                    { 20, 1, "Sarajevo", 71000L },
+                    { 21, 1, "Srebrenik", 75350L },
+                    { 22, 1, "Stolac", 88360L },
+                    { 23, 1, "Široki Brijeg", 88220L },
+                    { 24, 1, "Travnik", 72270L },
+                    { 25, 1, "Tuzla", 75000L },
+                    { 26, 1, "Visoko", 71300L },
+                    { 27, 1, "Zavidovići", 72220L },
+                    { 28, 1, "Zenica", 72000L },
+                    { 29, 1, "Zvornik", 75400L },
+                    { 30, 1, "Živinice", 75270L },
+                    { 31, 1, "Donji Vakuf", 70220L }
                 });
 
             migrationBuilder.InsertData(
@@ -907,6 +926,11 @@ namespace RS1_2024_25.API.Migrations
                 column: "PaymentId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Orders_PromoCodeId",
+                table: "Orders",
+                column: "PromoCodeId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Orders_StatusId",
                 table: "Orders",
                 column: "StatusId");
@@ -1014,6 +1038,9 @@ namespace RS1_2024_25.API.Migrations
 
             migrationBuilder.DropTable(
                 name: "Payments");
+
+            migrationBuilder.DropTable(
+                name: "PromoCodes");
 
             migrationBuilder.DropTable(
                 name: "Statuses");

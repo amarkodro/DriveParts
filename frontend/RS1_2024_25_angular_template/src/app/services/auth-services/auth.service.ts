@@ -48,6 +48,10 @@ export class AuthService {
       username: payload['username'],
       name: payload['name'],
       surname: payload['surname'],
+      email: payload['email'],
+      phone: payload['phone'],
+      cityId: payload['cityId'],
+      address: payload['address'],
       role: payload['role']
     };
   }
@@ -75,9 +79,13 @@ export class AuthService {
     return this.http.get(`${this.apiUrl}/check-email?email=${email}`);
   }
 
-  checkPhone(phone: string) {
+  checkPhone(phone: string, userId?: number) {
     const encodedPhone = encodeURIComponent(phone);
-    return this.http.get(`${this.apiUrl}/check-phone?phoneNumber=${encodedPhone}`);
+    let url = `${this.apiUrl}/check-phone?phoneNumber=${encodedPhone}`;
+    if (userId !== undefined) {
+      url += `&userId=${userId}`;
+    }
+    return this.http.get(url);
   }
 
   googleLogin(token: string) {
@@ -86,6 +94,13 @@ export class AuthService {
 
   resetPassword(data: { email: string, newPassword: string }) {
     return this.http.post(`${this.apiUrl}/reset-password`, data);
+  }
+
+  getUserId(): number {
+    const token = this.getTokenUser();
+    if (!token) return 0;
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    return Number(payload['sub'] || payload['userId'] || payload['id'] || 0);
   }
 
 

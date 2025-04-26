@@ -1,0 +1,33 @@
+@keyframes fadeSlideIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.96) translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.order-success-container{
+  animation: fadeSlideIn 2s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.order-success-container {
+  max-width: 600px;
+  margin: 100px auto;
+  text-align: center;
+  background-color: #f6fff4;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.order-success-container h1 {
+  color: #28a745;
+}
+
+.order-success-container p {
+  margin-top: 10px;
+  font-size: 18px;
+}

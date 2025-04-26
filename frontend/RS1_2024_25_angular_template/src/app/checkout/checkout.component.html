@@ -1,0 +1,236 @@
+<div class="container">
+  <div class="row checkout-flex-row">
+    <div class="col-xl-8">
+      <div class="card">
+        <div class="card-body">
+          <ol class="activity-checkout mb-0 px-4 mt-3">
+
+            <li class="checkout-item">
+              <div class="feed-item-list">
+                <div>
+                  <div class="section-title d-flex align-items-center gap-2">
+                    <i class="fas fa-user-check text-primary"></i>
+                    <h5 class="mb-0">Billing Info</h5>
+                    <button type="button" class="btn btn-sm btn-outline-primary ms-auto" (click)="toggleEdit()">
+                      {{ isEditable ? 'Lock fields' : 'Edit information' }}
+                    </button>
+                  </div>
+
+                  <p class="text-muted text-truncate mb-4">Enter your billing details</p>
+                  <div class="mb-3">
+                    <form [formGroup]="checkoutForm">
+                      <div class="row">
+                        <div class="col-lg-4">
+                          <div class="form-group floating-label">
+                            <input type="text" class="form-control" id="fullName" formControlName="fullName" placeholder=" " readonly />
+                            <label for="fullName">Full Name</label>
+                          </div>
+                          <div *ngIf="checkoutForm.get('fullName')?.invalid && checkoutForm.get('fullName')?.touched" class="text-danger small mt-1">
+                            Full Name is required.
+                          </div>
+                        </div>
+                        <div class="col-lg-4">
+                          <div class="form-group floating-label">
+                            <input type="email" class="form-control" id="email" formControlName="email" placeholder=" " readonly />
+                            <label for="email">Email</label>
+                          </div>
+                        </div>
+                        <div class="col-lg-4">
+                          <div class="form-group floating-label">
+                            <input type="text" class="form-control" id="phoneNumber" formControlName="phoneNumber" placeholder=" " [readonly]="!isEditable" />
+                            <label for="phoneNumber">Phone (optional)</label>
+                          </div>
+
+                          <div *ngIf="phoneExists" class="error-message">
+                            This phone number is already registered
+                          </div>
+
+                          <div *ngIf="checkoutForm.get('phoneNumber')?.touched">
+                            <div *ngIf="checkoutForm.get('phoneNumber')?.hasError('required')" class="error-message">
+                              Phone Number is required.
+                            </div>
+                            <div *ngIf="checkoutForm.get('phoneNumber')?.hasError('pattern')" class="error-message">
+                              Phone must match the format +387 60 000 000 or +387 60 000 0000.
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="form-group floating-label">
+                        <textarea class="form-control" id="address" formControlName="address" placeholder=" " rows="2" [readonly]="!isEditable"></textarea>
+                        <label for="address">Address</label>
+                        <div *ngIf="checkoutForm.get('address')?.invalid && checkoutForm.get('address')?.touched" class="error-message">
+                          Address is required.
+                        </div>
+                      </div>
+
+                      <div class="row">
+                        <div class="col-lg-4">
+                          <div class="form-group floating-label">
+                            <input type="text" class="form-control" id="country" formControlName="country" placeholder=" " readonly />
+                            <label for="country">Country</label>
+                          </div>
+                          <div class="error-message" *ngIf="checkoutForm.get('country')?.invalid && checkoutForm.get('country')?.touched">
+                            Country is required.
+                          </div>
+                        </div>
+                        <div class="col-lg-4">
+                          <div class="form-group floating-label dropdown" [ngClass]="{'open': dropdownState['city']}">
+                            <label class="floating-dropdown-label" [class.active]="checkoutForm.get('city')?.value"></label>
+                            <div class="dropdown-container"
+                                 (click)="toggleDropdown('city'); $event.stopPropagation();"
+                                 [ngClass]="{'selected': selectedCityId,'dropdown-invalid': checkoutForm.get('city')?.invalid && checkoutForm.get('city')?.touched}">
+                              <div class="selected-option">
+                                {{ getSelectedCityName() }}
+                              </div>
+                              <div class="dropdown-arrow" [ngClass]="{'rotated': dropdownState['city']}">
+                                <i class="fas fa-chevron-down"></i>
+                              </div>
+                            </div>
+
+                            <div class="dropdown-options" *ngIf="dropdownState['city']">
+                              <div *ngFor="let city of cities" (click)="selectCity(city); $event.stopPropagation();">
+                                {{ city.name }}
+                              </div>
+                            </div>
+                          </div>
+                          <div class="error-message" *ngIf="checkoutForm.get('city')?.invalid && checkoutForm.get('city')?.touched">
+                            City is required.
+                          </div>
+                        </div>
+
+                        <div class="col-lg-4">
+                          <div class="form-group floating-label">
+                            <input type="text" class="form-control" id="postalCode" formControlName="postalCode" placeholder=" " readonly />
+                            <label for="postalCode">Postal Code</label>
+                          </div>
+                            <div class="error-message" *ngIf="checkoutForm.get('postalCode')?.invalid && checkoutForm.get('postalCode')?.touched">
+                              Postal Code is required.
+                            </div>
+                        </div>
+                      </div>
+                    </form>
+
+                    <div class="col-lg-4">
+                      <div class="form-group floating-label dropdown" [ngClass]="{'open': dropdownState['supplier']}">
+                        <label class="floating-dropdown-label" [class.active]="selectedSupplierId"></label>
+                        <div class="dropdown-container"
+                             (click)="toggleDropdown('supplier'); $event.stopPropagation();">
+                          <div class="selected-option">
+                            {{ getSelectedSupplierName() }}
+                          </div>
+                          <div class="dropdown-arrow" [ngClass]="{'rotated': dropdownState['supplier']}">
+                            <i class="fas fa-chevron-down"></i>
+                          </div>
+                        </div>
+                        <div class="dropdown-options" *ngIf="dropdownState['supplier']">
+                          <div *ngFor="let supplier of suppliers" (click)="selectSupplier(supplier)">
+                            {{ supplier.name }}
+                          </div>
+                        </div>
+                      </div>
+                      <div class="error-message" *ngIf="!selectedSupplierId && triedSubmit">
+                        Supplier selection is required.
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+            </li>
+
+            <li class="checkout-item">
+              <div class="feed-item-list">
+                <div>
+                  <div class="section-title d-flex align-items-center gap-2 mt-4">
+                    <i class="fas fa-wallet text-primary"></i>
+                    <h5 class="mb-0">Payment Info</h5>
+                  </div>
+                  <p class="text-muted text-truncate mb-4">Choose your payment method</p>
+                  <div class="row">
+                    <div class="col-lg-4 col-sm-6">
+                      <label class="card-radio-label">
+                        <input type="radio" name="pay-method" id="pay-stripe" class="card-radio-input"
+                               [(ngModel)]="selectedPaymentMethod" [value]="1">
+                        <span class="card-radio d-flex align-items-center gap-2 px-3 py-2">
+                          <i class="fas fa-credit-card h4 mb-0"></i>
+                          <span class="text-nowrap">Stripe / Card</span>
+                        </span>
+                      </label>
+                    </div>
+                    <div class="col-lg-4 col-sm-6">
+                      <label class="card-radio-label">
+                        <input type="radio" name="pay-method" id="pay-cash" class="card-radio-input"
+                               [(ngModel)]="selectedPaymentMethod" [value]="2">
+                        <span class="card-radio d-flex align-items-center gap-2 px-3 py-2">
+                          <i class="fas fa-money-bill-wave h4 mb-0"></i>
+                          <span class="text-nowrap">Cash on Delivery</span>
+                        </span>
+                      </label>
+                    </div>
+                  </div>
+                  <div class="error-message mt-2" *ngIf="!selectedPaymentMethod && triedSubmit">
+                    Payment method selection is required.
+                  </div>
+                </div>
+              </div>
+            </li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="row my-4 responsive-actions">
+        <div class="col back-btn-col">
+          <a routerLink="/cart" class="btn back-to-cart-btn">
+            <i class="mdi mdi-arrow-left me-1"></i> Back to Cart
+          </a>
+        </div>
+        <div class="col proceed-btn-col">
+          <button
+            class="btn btn-success proceed-btn"
+            [disabled]="isPlacingOrder || cartItems.length === 0"
+            (click)="placeOrder()">
+            <span *ngIf="isPlacingOrder" class="spinner"></span>
+            {{ isPlacingOrder ? 'Processing...' : 'Proceed to Payment' }}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-xl-4">
+      <div class="card checkout-order-summary">
+        <div class="card-body">
+          <div class="p-3 bg-light mb-3">
+            <h5 class="font-size-16 mb-0">
+              Order Summary <span class="text-muted fs-6">({{ cartItems.length }} items)</span>
+            </h5>
+          </div>
+          <ul class="list-group mb-3">
+            <li *ngFor="let item of cartItems" class="list-group-item d-flex justify-content-between align-items-center">
+            <span>
+              {{ item.partName }} <span class="text-muted">(x{{ item.quantity }})</span>
+            </span>
+              <strong>{{ item.price * item.quantity | number:'1.2-2' }} KM</strong>
+            </li>
+
+            <li class="list-group-item d-flex justify-content-between">
+              <span>Subtotal</span>
+              <strong>{{ total | number:'1.2-2' }} KM</strong>
+            </li>
+
+            <li *ngIf="discount > 0" class="list-group-item d-flex justify-content-between">
+              <span class="text-success">Discount ({{ usedCode }})</span>
+              <strong class="text-success">-{{ discount | number:'1.2-2' }} KM</strong>
+            </li>
+
+            <li class="list-group-item d-flex justify-content-between">
+              <span class="fw-bold fs-6 text-dark">Total</span>
+              <strong class="fw-bold fs-6 text-dark">{{ total - discount | number:'1.2-2' }} KM</strong>
+            </li>
+          </ul>
+          <p *ngIf="cartItems.length === 0" class="text-muted">No items in cart.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

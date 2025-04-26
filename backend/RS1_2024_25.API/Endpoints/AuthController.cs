@@ -129,11 +129,16 @@ namespace RS1_2024_25.API.Endpoints
             var key = Encoding.UTF8.GetBytes("f8d2eV3r5/8nW1qR4xPqL6zM9xD5u2F8xM0a1pZ3wNk=");
             var identity = new ClaimsIdentity(new Claim[] {
 
-                    new Claim("id", user.Id.ToString()),
-                    new Claim(ClaimTypes.Role, $"{role}"),
-                    new Claim("username", user.Username),
-                    new Claim("name", user.Name),
-                    new Claim("surname", user.Surname),
+                   new Claim("id", user.Id.ToString()),
+                   new Claim(ClaimTypes.Role, role),
+                   new Claim("username", user.Username ?? ""),
+                   new Claim("name", user.Name ?? ""),
+                   new Claim("surname", user.Surname ?? ""),
+                   new Claim("email", user.Email ?? ""),
+                   new Claim("phone", user.PhoneNumber ?? ""),
+                   new Claim("cityId", user.CityId?.ToString() ?? "0"),
+                   new Claim("address", user.Address ?? "")
+
 
             });
 
@@ -165,9 +170,19 @@ namespace RS1_2024_25.API.Endpoints
         }
 
         [HttpGet("check-phone")]
-        public IActionResult CheckPhone(string phoneNumber)
+        public IActionResult CheckPhone(string phoneNumber, int? userId = null)
         {
-            bool exists = _db.UserAccounts.Any(u => u.PhoneNumber == phoneNumber);
+            bool exists;
+
+            if(userId.HasValue)
+            {
+                exists = _db.UserAccounts.Any(x => x.PhoneNumber == phoneNumber && x.Id != userId.Value);
+            }
+            else
+            {
+                exists = _db.UserAccounts.Any(x=>x.PhoneNumber == phoneNumber);
+            }
+
             return Ok(new { exists });
         }
 
@@ -210,6 +225,24 @@ namespace RS1_2024_25.API.Endpoints
                     var baseUsername = email.Split('@')[0];
                     var uniqueUsername = GenerateUniqueUsername(baseUsername);
 
+                    string? localImageUrl = null;
+
+                    if (!string.IsNullOrEmpty(picture))
+                    {
+                        using var httpClient = new HttpClient();
+                        var imageBytes = await httpClient.GetByteArrayAsync(picture);
+
+                        var folder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "UserImages");
+                        if (!Directory.Exists(folder))
+                            Directory.CreateDirectory(folder);
+
+                        var fileName = Guid.NewGuid().ToString() + ".jpg";
+                        var filePath = Path.Combine(folder, fileName);
+                        await System.IO.File.WriteAllBytesAsync(filePath, imageBytes);
+
+                        localImageUrl = $"UserImages/{fileName}";
+                    }
+
                     user = new User
                     {
                         Email = email ?? "no-email@google.com",
@@ -223,8 +256,8 @@ namespace RS1_2024_25.API.Endpoints
                         CityId = null,
                         GenderId = null,
                         Address = null,
-                        Password = Guid.NewGuid().ToString(),
-                        ImageUrl = picture
+                        Password = _passwordHasher.HashPassword(null, Guid.NewGuid().ToString()),
+                        ImageUrl = localImageUrl
                     };
 
                     _db.Users.Add(user);

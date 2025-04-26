@@ -11,6 +11,8 @@ import {PartsComponent} from './parts/parts.component';
 import { PartDetailComponent } from './part-detail/part-detail.component';
 import {ViewPartsComponent} from './view-parts/view-parts.component';
 import {CartComponent} from './cart/cart.component';
+import {CheckoutComponent} from './checkout/checkout.component';
+import {OrderSuccessComponent} from './order-success/order-success.component';
 
 
 const routes: Routes = [
@@ -40,10 +42,12 @@ const routes: Routes = [
   {path: 'part-detail/:id' , component: PartDetailComponent },
   {path: 'login', component: LoginComponent},
   {path: 'register', component: RegisterComponent},
+  {path: 'checkout', component: CheckoutComponent},
   {path: 'product-section', component: ProductSectionComponent},
   {path: 'navbar', component: NavbarComponent},
   {path: 'view-parts', component: ViewPartsComponent,},
   {path: 'cart', component: CartComponent,},
+  {path: 'order-success', component: OrderSuccessComponent,},
   {path: '**', redirectTo: 'public', pathMatch: 'full'},
 
 
