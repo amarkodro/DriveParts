@@ -1,0 +1,179 @@
+<div class="container-xl px-4 mt-4 fade-in">
+  <nav class="nav nav-borders">
+    <a class="nav-link ms-0" routerLink="/edit-profile" routerLinkActive="active">Profile</a>
+    <a class="nav-link" routerLink="/security" routerLinkActive="active">Security</a>
+  </nav>
+  <hr class="mt-0 mb-4">
+  <div class="row">
+    <div class="col-xl-4">
+      <div class="card mb-4 mb-xl-0">
+        <div class="card-header">Profile Picture</div>
+        <div class="card-body text-center">
+          <img class="img-account-profile rounded-circle mb-2"
+               [src]="previewUrl || 'http://bootdey.com/img/Content/avatar/avatar1.png'"
+               alt="Profile image">
+
+          <div class="small font-italic text-muted mb-4">JPG or PNG no larger than 5 MB</div>
+          <input type="file" #fileInput style="display: none;" (change)="onFileSelected($event)" accept="image/*">
+          <button class="btn btn-upload" type="button" (click)="triggerFileUpload()">Upload new image</button>
+        </div>
+      </div>
+    </div>
+    <div class="col-xl-8">
+      <div class="card mb-4">
+        <div class="card-header">Account Details</div>
+        <div class="card-body">
+          <form #dropdownWrapper [formGroup]="editProfileForm" (ngSubmit)="onSubmit()">
+
+            <div class="form-group">
+              <input type="text" id="inputUsername" formControlName="username" placeholder=" ">
+              <label for="inputUsername">Username</label>
+
+              <div class="text-danger" *ngIf="editProfileForm.get('username')?.touched">
+                <ng-container *ngIf="editProfileForm.get('username')?.hasError('required')">
+                  Username is required.
+                </ng-container>
+                <ng-container *ngIf="editProfileForm.get('username')?.hasError('exists')">
+                  Username already exists.
+                </ng-container>
+              </div>
+            </div>
+
+            <div class="row gx-3">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <input type="text" id="inputName" formControlName="name" placeholder=" ">
+                  <label for="inputName">First Name</label>
+
+                  <div class="text-danger" *ngIf="editProfileForm.get('name')?.touched">
+                    <ng-container *ngIf="editProfileForm.get('name')?.hasError('required')">
+                      Name is required.
+                    </ng-container>
+                  </div>
+
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <input type="text" id="inputSurname" formControlName="surname" placeholder=" ">
+                  <label for="inputSurname">Last Name</label>
+
+                  <div class="text-danger" *ngIf="editProfileForm.get('surname')?.touched">
+                    <ng-container *ngIf="editProfileForm.get('surname')?.hasError('required')">
+                      Surname is required.
+                    </ng-container>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+
+            <div class="row gx-3">
+              <div class="col-md-6">
+                <div class="form-group dropdown" [ngClass]="{'open': dropdownState['city']}">
+                  <div class="dropdown-container" (click)="toggleDropdown('city'); $event.stopPropagation();" [ngClass]="{'selected': selectedCityId}">
+                    <div class="selected-option">
+                      {{ getSelectedCityName() || 'Select City' }}
+                    </div>
+                    <div class="dropdown-arrow">
+                      <i class="fas fa-chevron-down"></i>
+                    </div>
+                  </div>
+                  <div class="dropdown-options" [class.show]="dropdownState['city']" [hidden]="!dropdownState['city']">
+                    <div *ngFor="let city of cities" (click)="selectCity(city.id); $event.stopPropagation();">
+                      {{ city.name }}
+                    </div>
+                  </div>
+                </div>
+
+                <div class="text-danger" *ngIf="editProfileForm.get('city')?.touched">
+                  <ng-container *ngIf="editProfileForm.get('city')?.hasError('required')">
+                    City is required.
+                  </ng-container>
+                </div>
+
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <input type="text" id="inputAddress" formControlName="address" placeholder=" ">
+                  <label for="inputAddress">Address</label>
+
+                  <div class="text-danger" *ngIf="editProfileForm.get('address')?.touched">
+                    <ng-container *ngIf="editProfileForm.get('address')?.hasError('required')">
+                      Address is required.
+                    </ng-container>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <input type="email" id="inputEmailAddress" formControlName="email" placeholder=" ">
+              <label for="inputEmailAddress">Email Address</label>
+
+              <div class="text-danger" *ngIf="editProfileForm.get('email')?.touched">
+                <ng-container *ngIf="editProfileForm.get('email')?.hasError('required')">
+                  Email is required.
+                </ng-container>
+                <ng-container *ngIf="editProfileForm.get('email')?.hasError('exists')">
+                  Email already exists.
+                </ng-container>
+              </div>
+
+            </div>
+
+            <div class="row gx-3">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <input type="tel" id="inputPhone" formControlName="phoneNumber" placeholder=" ">
+                  <label for="inputPhone">Phone Number</label>
+
+                  <div class="text-danger" *ngIf="editProfileForm.get('phoneNumber')?.touched">
+                    <ng-container *ngIf="editProfileForm.get('phoneNumber')?.hasError('required')">
+                      Phone Number is required.
+                    </ng-container>
+                    <ng-container *ngIf="editProfileForm.get('phoneNumber')?.hasError('exists')">
+                      Phone Number already exists.
+                    </ng-container>
+                  </div>
+
+
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group dropdown" [ngClass]="{'open': dropdownState['gender']}">
+                  <div class="dropdown-container" (click)="toggleDropdown('gender'); $event.stopPropagation();" [ngClass]="{'selected': selectedGenderId}">
+                    <div class="selected-option">
+                      {{ getSelectedGenderName() || 'Select Gender' }}
+                    </div>
+                    <div class="dropdown-arrow">
+                      <i class="fas fa-chevron-down"></i>
+                    </div>
+                  </div>
+                  <div class="dropdown-options" [class.show]="dropdownState['gender']" [hidden]="!dropdownState['gender']">
+                    <div *ngFor="let gender of genders" (click)="selectGender(gender.id); $event.stopPropagation();">
+                      {{ gender.genderName }}
+                    </div>
+                  </div>
+                </div>
+
+                <div class="text-danger" *ngIf="editProfileForm.get('gender')?.touched">
+                  <ng-container *ngIf="editProfileForm.get('gender')?.hasError('required')">
+                    Gender is required.
+                  </ng-container>
+                </div>
+
+              </div>
+            </div>
+
+            <button class="btn btn-primary" type="submit" [disabled]="isSubmitting">
+              <span *ngIf="isSubmitting" class="spinner"></span>
+              {{ isSubmitting ? 'Saving...' : 'Save changes' }}
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

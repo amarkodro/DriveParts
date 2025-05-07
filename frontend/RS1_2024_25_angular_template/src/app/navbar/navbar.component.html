@@ -60,7 +60,7 @@
         </a>
         <ul *ngIf="dropdownOpen" class="dropdown-menu">
           <li><a routerLink="/my-offers">My Offers</a></li>
-          <li><a routerLink="/settings">Settings</a></li>
+          <li><a (click)="openSettings(); $event.stopPropagation()">Settings</a></li>
           <li *ngIf="!isLoggedIn"><a routerLink="/login">Login</a></li>
           <li *ngIf="isLoggedIn"><a (click)="logout()">Logout</a></li>
 

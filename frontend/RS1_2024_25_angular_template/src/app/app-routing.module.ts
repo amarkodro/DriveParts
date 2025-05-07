@@ -13,6 +13,8 @@ import {ViewPartsComponent} from './view-parts/view-parts.component';
 import {CartComponent} from './cart/cart.component';
 import {CheckoutComponent} from './checkout/checkout.component';
 import {OrderSuccessComponent} from './order-success/order-success.component';
+import {EditProfileComponent} from './edit-profile/edit-profile.component';
+import {SecurityComponent} from './security/security.component';
 
 
 const routes: Routes = [
@@ -47,6 +49,8 @@ const routes: Routes = [
   {path: 'navbar', component: NavbarComponent},
   {path: 'view-parts', component: ViewPartsComponent,},
   {path: 'cart', component: CartComponent,},
+  {path: 'edit-profile', component: EditProfileComponent, canActivate: [AuthGuard] },
+  {path: 'security', component: SecurityComponent,},
   {path: 'order-success', component: OrderSuccessComponent,},
   {path: '**', redirectTo: 'public', pathMatch: 'full'},
 

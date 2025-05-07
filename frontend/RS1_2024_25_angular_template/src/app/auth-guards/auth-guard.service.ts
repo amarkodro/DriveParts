@@ -18,10 +18,13 @@ export class AuthGuard implements CanActivate {
   canActivate(route: ActivatedRouteSnapshot): boolean {
     const guardData = route.data as AuthGuardData;  // Cast to AuthGuardData
 
+    console.log('🔐 AuthGuard aktivan');
+    console.log('Token:', this.authService.getLoginToken());
+    console.log('isLoggedIn:', this.authService.isLoggedIn());
 
 
     if (!this.authService.isLoggedIn()) {
-      this.router.navigate(['/auth/login']);
+      this.router.navigate(['/login']);
       return false;
     }
 

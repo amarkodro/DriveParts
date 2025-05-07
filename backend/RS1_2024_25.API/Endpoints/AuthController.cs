@@ -33,6 +33,13 @@ namespace RS1_2024_25.API.Endpoints
             public IFormFile? ProfileImage { get; set; }
         }
 
+        public class ChangePasswordRequest
+        {
+            public int UserId { get; set; }
+            public string CurrentPassword { get; set; }
+            public string NewPassword { get; set; }
+        }
+
         [HttpPost("register")]
         public IActionResult Register([FromForm] RegisterRequest request)
         {
@@ -289,27 +296,56 @@ namespace RS1_2024_25.API.Endpoints
         }
 
 
-        public class ResetPasswordReq()
+        [Authorize]
+        [HttpPost("change-password")]
+        public async Task<ActionResult> ChangePassword([FromBody] ChangePasswordRequest request)
         {
-            public string Email { get; set; }
-            public string NewPassword { get; set; }
+            var userId = int.Parse(User.FindFirst("id")?.Value ?? "0");
+            var user = await _db.UserAccounts.FirstOrDefaultAsync(u => u.Id == userId);
+            if (user == null) return NotFound("User not found");
+
+            var result = _passwordHasher.VerifyHashedPassword(user, user.Password, request.CurrentPassword);
+            if (result == PasswordVerificationResult.Failed) return Unauthorized("Current password is incorrect");
+
+            user.Password = _passwordHasher.HashPassword(user, request.NewPassword);
+            await _db.SaveChangesAsync();
+
+            return Ok(new {message = "Password changed successfully"});
         }
 
-        [HttpPost("reset-password")]
-        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordReq resetPassword)
+        public class TwoFactorRequest
         {
-            var user = await _db.Users.FirstOrDefaultAsync(u => u.Email == resetPassword.Email);
-            if(user == null)
-            {
-                return NotFound(new {message = "User not found."});
-            }
+            public string PhoneNumber { get; set; }
+        }
 
-            user.Password = _passwordHasher.HashPassword(user, resetPassword.NewPassword);
+
+        [Authorize]
+        [HttpPost("enable-2fa")]
+        public async Task<IActionResult> EnableTwoFActive([FromBody] TwoFactorRequest request)
+        {
+            if (string.IsNullOrWhiteSpace(request.PhoneNumber))
+                return BadRequest("Phone number is required.");
+
+            var userId = int.Parse(User.FindFirst("id")?.Value ?? "0");
+
+            
+            var phoneExists = _db.UserAccounts
+                .Any(x => x.PhoneNumber == request.PhoneNumber && x.Id != userId);
+
+            if (phoneExists)
+                return BadRequest("Phone number already in use.");
+
+            var user = await _db.UserAccounts.FirstOrDefaultAsync(u => u.Id == userId);
+            if (user == null) return NotFound("User not found in UserAccounts.");
+
+            user.PhoneNumber = request.PhoneNumber;
+            user.is2FActive = true;
 
             await _db.SaveChangesAsync();
 
-
-            return Ok(new {meesage = "Password has been successfully updated. "});
+            return Ok(new { message = "Two-factor authentication enabled and phone number updated." });
         }
+
+
     }
 }

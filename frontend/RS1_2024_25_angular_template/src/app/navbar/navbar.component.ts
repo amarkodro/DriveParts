@@ -242,4 +242,7 @@ export class NavbarComponent implements OnInit {
     });
   }
 
+  openSettings() {
+    this.router.navigate(['/edit-profile']);
+  }
 }

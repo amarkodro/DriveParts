@@ -1,0 +1,185 @@
+<div class="container-xl px-4 mt-4 fade-in">
+  <!-- Account page navigation-->
+  <nav class="nav nav-borders">
+    <a class="nav-link ms-0" routerLink="/edit-profile" routerLinkActive="active">Profile</a>
+    <a class="nav-link" routerLink="/security" routerLinkActive="active">Security</a>
+  </nav>
+  <hr class="mt-0 mb-4">
+  <div class="row">
+    <div class="col-lg-8">
+      <!-- Change password card-->
+      <div class="card mb-4">
+        <div class="card-header">Change Password</div>
+        <div class="card-body px-4 py-3">
+          <form [formGroup]="securityForm" (ngSubmit)="onSubmit()">
+            <div class="form-group">
+              <div class="form-group">
+                <div class="password-toggle-wrapper">
+                  <input
+                    [type]="showCurrentPassword ? 'text' : 'password'"
+                    id="currentPassword"
+                    formControlName="currentPassword"
+                    placeholder=" ">
+                  <label for="currentPassword">Current Password</label>
+                  <button type="button" class="toggle-eye" (click)="showCurrentPassword = !showCurrentPassword">
+                    {{ showCurrentPassword ? '🙈' : '👁️' }}
+                  </button>
+                  <div class="text-danger"
+                       *ngIf="securityForm.get('currentPassword')?.touched && securityForm.get('currentPassword')?.hasError('required')">
+                    Current password is required.
+                  </div>
+                  <div class="text-danger"
+                       *ngIf="securityForm.get('currentPassword')?.hasError('invalid') && !securityForm.get('currentPassword')?.hasError('required')">
+                    Current password is incorrect.
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <div class="password-toggle-wrapper">
+                <input
+                  #passwordInput
+                  [type]="showNewPassword ? 'text' : 'password'"
+                  id="newPassword"
+                  formControlName="newPassword"
+                  placeholder=" "
+                  (input)="evaluatePasswordStrength(passwordInput.value)">
+                <label for="newPassword">New Password</label>
+                <button type="button" class="toggle-eye" (click)="showNewPassword = !showNewPassword">
+                  {{ showNewPassword ? '🙈' : '👁️' }}
+                </button>
+              </div>
+
+
+
+              <div class="text-danger" *ngIf="securityForm.get('newPassword')?.touched && securityForm.get('newPassword')?.invalid">
+                <ng-container *ngIf="securityForm.get('newPassword')?.hasError('required')">
+                  New password is required.
+                </ng-container>
+                <ng-container *ngIf="securityForm.get('newPassword')?.hasError('minlength')">
+                  Password must be at least 6 characters.
+                </ng-container>
+                <ng-container *ngIf="securityForm.get('newPassword')?.hasError('pattern')">
+                  Password must contain uppercase, number and special character.
+                </ng-container>
+              </div>
+              <div class="password-strength-bar" *ngIf="passwordStrength">
+                <div [ngClass]="{
+                  'strength-weak': passwordStrength === 'weak',
+                  'strength-medium': passwordStrength === 'medium',
+                  'strength-strong': passwordStrength === 'strong'
+                }"></div>
+                <small>{{ passwordStrength | titlecase }} password</small>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <div class="password-toggle-wrapper">
+                <input
+                  [type]="showConfirmPassword ? 'text' : 'password'"
+                  id="confirmPassword"
+                  formControlName="confirmNewPassword"
+                  placeholder=" ">
+                <label for="confirmPassword">Confirm New Password</label>
+                <button type="button" class="toggle-eye" (click)="showConfirmPassword = !showConfirmPassword">
+                  {{ showConfirmPassword ? '🙈' : '👁️' }}
+                </button>
+              </div>
+
+              <div class="text-danger" *ngIf="securityForm.errors?.['mismatch'] && (securityForm.get('confirmNewPassword')?.touched || securityForm.get('confirmNewPassword')?.dirty)">
+                Passwords do not match.
+              </div>
+              <div class="text-danger" *ngIf="securityForm.get('confirmNewPassword')?.touched && securityForm.get('confirmNewPassword')?.hasError('required')">
+                Confirm password is required.
+              </div>
+
+            </div>
+
+            <button class="btn btn-primary" type="submit" [disabled]="isSubmitting">
+              <span *ngIf="isSubmitting" class="spinner"></span>
+              {{ isSubmitting ? 'Saving...' : 'Save' }}
+            </button>
+          </form>
+
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-4">
+      <!-- Two factor authentication card-->
+      <div class="card mb-4">
+        <div class="card-header">Two-Factor Authentication</div>
+        <div class="card-body px-4 py-3">
+          <p>Add another level of security to your account by enabling two-factor authentication. We will send you a text message to verify your login attempts on unrecognized devices and browsers.</p>
+          <form [formGroup]="securityForm">
+            <div class="form-group smsNumber">
+              <input type="tel" id="twoFactorSMS" placeholder=" " formControlName="smsNumber">
+              <label for="twoFactorSMS">SMS Number</label>
+              <div class="text-danger"
+                   *ngIf="securityForm.get('smsNumber')?.touched && securityForm.get('smsNumber')?.hasError('required')">
+                SMS number is required.
+              </div>
+              <div class="text-danger"
+                   *ngIf="securityForm.get('smsNumber')?.touched &&
+            securityForm.get('smsNumber')?.hasError('pattern') &&
+            !securityForm.get('smsNumber')?.hasError('required')">
+                Enter number in format: +387 61 000 000 or +387 60 000 0000.
+              </div>
+              <div class="text-danger" *ngIf="securityForm.get('smsNumber')?.hasError('phoneTaken')">
+                Phone number is already in use.
+              </div>
+
+            </div>
+
+
+
+            <button type="button" class="btn btn-primary" (click)="prepareRecaptchaAndSend()">Send Code</button>
+            <div id="recaptcha-container"></div>
+
+          </form>
+        </div>
+      </div>
+      <!-- Delete account card-->
+      <div class="card mb-4">
+        <div class="card-header">Delete Account</div>
+        <div class="card-body px-4 py-3">
+          <p>Deleting your account is a permanent action and cannot be undone. If you are sure you want to delete your account, select the button below.</p>
+          <button class="btn btn-danger-soft text-danger" type="button">I understand, delete my account</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="overlay" *ngIf="showPhoneVerificationOverlay">
+  <div class="overlay-content animate-overlay">
+    <h3>Phone Verification</h3>
+    <p>Please enter the 6-digit code sent to your phone.</p>
+    <div class="code-timer">
+      Time remaining: {{ formattedTime }}
+    </div>
+
+    <div class="form-group">
+      <input
+        type="text"
+        id="phoneCode"
+        [(ngModel)]="smsCode"
+        maxlength="6"
+        class="code-input"
+        placeholder="Enter code"
+        [class.invalid]="smsCodeError"
+      />
+      <div class="text-danger" *ngIf="smsCodeError">{{ smsCodeError }}</div>
+    </div>
+
+    <div class="overlay-buttons">
+      <button class="cancel-btn" (click)="showPhoneVerificationOverlay = false">Cancel</button>
+      <button class="verify-btn" (click)="verifyPhoneCode()" [disabled]="overlayLoading">
+        <span *ngIf="overlayLoading" class="spinner"></span>
+        {{ overlayLoading ? 'Verifying...' : 'Verify' }}
+      </button>
+    </div>
+  </div>
+</div>
+

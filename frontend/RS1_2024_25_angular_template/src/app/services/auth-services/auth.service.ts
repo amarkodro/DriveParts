@@ -103,6 +103,15 @@ export class AuthService {
     return Number(payload['sub'] || payload['userId'] || payload['id'] || 0);
   }
 
+  changePassword(currentPassword: string, newPassword: string) {
+    return this.http.post(`http://localhost:7000/api/Auth/change-password`, {
+      currentPassword,
+      newPassword
+    });
+  }
 
+  enableTwoFactor(phoneNumber: string) {
+    return this.http.post(`http://localhost:7000/api/Auth/enable-2fa`, { phoneNumber });
+  }
 
 }

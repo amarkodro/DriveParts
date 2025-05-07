@@ -13,8 +13,19 @@ export class MyAuthService {
   }
 
   isLoggedIn(): boolean {
-    return this.getMyAuthInfo() != null && this.getMyAuthInfo()!.isLoggedIn;
+    const token = localStorage.getItem('jwtToken');
+    if (!token) return false;
+
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      const exp = payload.exp;
+      const now = Math.floor(Date.now() / 1000);
+      return now < exp;
+    } catch {
+      return false;
+    }
   }
+
 
   isAdmin(): boolean {
     return this.getMyAuthInfo()?.isAdmin ?? false;

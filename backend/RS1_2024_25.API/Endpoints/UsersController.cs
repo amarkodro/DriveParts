@@ -24,6 +24,7 @@ namespace RS1_2024_25.API.Endpoints
             public string? Password { get; set; }
             public bool IsAdmin { get; set; }
             public bool isUser { get; set; }
+            public IFormFile? Image { get; set; }
             public bool is2FActive { get; set; }
             public int? GenderId { get; set; }
             public int? CityId { get; set; }
@@ -181,6 +182,41 @@ namespace RS1_2024_25.API.Endpoints
 
             return Ok(new { message = "User updated successfully" });
         }
+
+
+        [HttpPut("update-profile/{id}")]
+        public async Task<IActionResult> UpdateProfile(int id, [FromForm] UserRequest request)
+        {
+            var user = await _db.Users.FindAsync(id);
+            if (user == null)
+                return NotFound("User not found.");
+
+            user.Username = request.Username;
+            user.Name = request.Name;
+            user.Surname = request.Surname;
+            user.Email = request.Email;
+            user.PhoneNumber = request.PhoneNumber;
+            user.Address = request.Address;
+            user.CityId = request.CityId;
+            user.GenderId = request.GenderId;
+
+            if (request.Image != null && request.Image.Length > 0)
+            {
+                var imageName = Guid.NewGuid().ToString() + Path.GetExtension(request.Image.FileName);
+                var savePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/UserImages", imageName);
+
+                using (var stream = new FileStream(savePath, FileMode.Create))
+                {
+                    await request.Image.CopyToAsync(stream);
+                }
+
+                user.ImageUrl = $"UserImages/{imageName}";
+            }
+
+            await _db.SaveChangesAsync();
+            return Ok(new { message = "Profile updated successfully" });
+        }
+
 
 
         [HttpDelete("{id}")]

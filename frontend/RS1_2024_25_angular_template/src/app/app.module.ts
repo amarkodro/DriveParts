@@ -24,6 +24,12 @@ import {SocialLoginModule , SocialAuthServiceConfig} from '@abacritt/angularx-so
 import {GoogleLoginProvider} from '@abacritt/angularx-social-login';
 import { CheckoutComponent } from './checkout/checkout.component';
 import { OrderSuccessComponent } from './order-success/order-success.component';
+import {EditProfileComponent} from './edit-profile/edit-profile.component';
+import { SecurityComponent } from './security/security.component';
+import { AngularFireModule } from '@angular/fire/compat';
+import { AngularFireAuthModule } from '@angular/fire/compat/auth';
+import { environment } from '../environments/environment';
+
 
 
 @NgModule({
@@ -40,7 +46,10 @@ import { OrderSuccessComponent } from './order-success/order-success.component';
     ViewPartsComponent,
     CartComponent,
     CheckoutComponent,
-    OrderSuccessComponent
+    OrderSuccessComponent,
+    EditProfileComponent,
+    SecurityComponent,
+
   ],
     imports: [
         BrowserModule,
@@ -59,7 +68,12 @@ import { OrderSuccessComponent } from './order-success/order-success.component';
         RouterModule.forRoot([], {
          anchorScrolling: 'enabled',
          scrollPositionRestoration: 'enabled'
-      })
+      }),
+      AngularFireModule.initializeApp(environment.firebase),
+      AngularFireAuthModule,
+
+
+
     ],
   providers: [
     {

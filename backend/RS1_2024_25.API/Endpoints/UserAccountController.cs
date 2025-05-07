@@ -197,7 +197,12 @@ namespace RS1_2024_25.API.Endpoints
 
             int userId = int.Parse(userIdClaim);
 
-            var user = _db.UserAccounts.FirstOrDefault(u => u.Id == userId);
+            var user = _db.UserAccounts
+                .OfType<User>()
+                .Include(x => x.Gender)
+                .Include(x => x.City)
+                .FirstOrDefault(u => u.Id == userId);
+
             if (user == null)
                 return NotFound("User not found.");
 
@@ -208,7 +213,13 @@ namespace RS1_2024_25.API.Endpoints
                 user.Surname,
                 user.Username,
                 user.Email,
-                user.ImageUrl
+                user.ImageUrl,
+                user.PhoneNumber,
+                user.Address,
+                user.CityId,
+                user.GenderId,
+                CityName = user.City?.Name,
+                GenderName = user.Gender?.GenderName
             });
         }
 

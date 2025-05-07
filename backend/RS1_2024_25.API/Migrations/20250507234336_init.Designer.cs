@@ -12,7 +12,7 @@ using RS1_2024_25.API.Data;
 namespace RS1_2024_25.API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250424112532_init")]
+    [Migration("20250507234336_init")]
     partial class init
     {
         /// <inheritdoc />
