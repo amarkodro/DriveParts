@@ -18,4 +18,9 @@ export class UserService {
   editUser(id:number, data:any):Observable<any> {
     return this.http.put<any>(`${this.apiUrl}/update-profile/${id}`, data);
   }
+  getUserById(id: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}/${id}`);
+  }
+
+
 }

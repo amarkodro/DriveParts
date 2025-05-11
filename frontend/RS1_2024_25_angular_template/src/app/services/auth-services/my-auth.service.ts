@@ -13,7 +13,7 @@ export class MyAuthService {
   }
 
   isLoggedIn(): boolean {
-    const token = localStorage.getItem('jwtToken');
+    const token = localStorage.getItem('jwtToken') || sessionStorage.getItem('jwtToken');
     if (!token) return false;
 
     try {

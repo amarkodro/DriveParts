@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable, BehaviorSubject} from 'rxjs';
 import {jwtDecode} from 'jwt-decode';
+import { MyAuthService } from './my-auth.service';
+
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +11,7 @@ import {jwtDecode} from 'jwt-decode';
 export class AuthService {
  private apiUrl = 'http://localhost:7000/api/Auth';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private myAuthService: MyAuthService) { }
 
   private loginStatus = new BehaviorSubject<boolean>(this.isLoggedIn());
   loginStatus$ = this.loginStatus.asObservable();
@@ -24,12 +26,42 @@ export class AuthService {
   }
 
   saveToken(token: string, rememberMe: boolean): void {
-    if (rememberMe) {
-      localStorage.setItem('jwtToken', token);
-    } else {
-      sessionStorage.setItem('jwtToken', token);
+    if (!token || typeof token !== 'string' || token.split('.').length !== 3) {
+      console.error('❌ Invalid token received. Token skipped.');
+      return;
+    }
+
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      const isAdmin = payload.role === 'Admin' || payload.IsAdmin === true;
+      const isManager = payload.role === 'Manager' || false;
+
+
+      const loginToken = {
+        token: token,
+        myAuthInfo: {
+          userId: Number(payload.sub || payload.id || payload.userId),
+          username: payload.username,
+          firstName: payload.name,
+          lastName: payload.surname,
+          isAdmin,
+          isManager,
+          isLoggedIn: true
+        }
+      };
+
+      if (rememberMe) {
+        localStorage.setItem('jwtToken', token);
+      } else {
+        sessionStorage.setItem('jwtToken', token);
+      }
+
+      this.myAuthService.setLoggedInUser(loginToken);
+    } catch (error) {
+      console.error('❌ Failed to decode or process token:', error);
     }
   }
+
 
   getTokenUser() : string | null {
     return localStorage.getItem('jwtToken') || sessionStorage.getItem('jwtToken');
@@ -112,6 +144,14 @@ export class AuthService {
 
   enableTwoFactor(phoneNumber: string) {
     return this.http.post(`http://localhost:7000/api/Auth/enable-2fa`, { phoneNumber });
+  }
+
+  deactivate(username: string) {
+    return this.http.post(`${this.apiUrl}/deactivate`, {username} );
+  }
+
+  reactivateProfile(email: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/reactivate`, { email }, { responseType: 'text' });
   }
 
 }

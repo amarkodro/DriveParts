@@ -2325,6 +2325,9 @@ namespace RS1_2024_25.API.Migrations
                     b.Property<bool?>("is2FActive")
                         .HasColumnType("bit");
 
+                    b.Property<bool?>("isDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("isUser")
                         .HasColumnType("bit");
 

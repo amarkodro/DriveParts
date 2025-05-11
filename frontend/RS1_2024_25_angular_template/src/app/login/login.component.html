@@ -41,6 +41,10 @@
           <div class="error-message" *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
             Password is required
           </div>
+          <div class="deactivated-message" *ngIf="errorMessage && errorMessage.includes('deactivated')">
+            {{ errorMessage }}
+            <a href="#" (click)="openRestoreOverlay($event)">Activate my profile</a>
+          </div>
         </div>
 
         <div class="options">
@@ -206,4 +210,63 @@
   </div>
 </div>
 
+
+<div class="overlay" *ngIf="showReactivateOverlay">
+  <div class="overlay-content">
+    <h3>Reactivate Account</h3>
+    <p>Enter your email to receive a verification code.</p>
+
+    <div class="input-group">
+      <input
+        autofocus
+        type="email"
+        [(ngModel)]="reactivateEmail"
+        placeholder="Enter your email"
+        class="form-input"
+      />
+    </div>
+
+    <div class="error-message" *ngIf="reactivationError">
+      {{ reactivationError }}
+    </div>
+
+    <div class="overlay-buttons">
+      <button class="cancel-btn" (click)="showReactivateOverlay = false">Cancel</button>
+      <button class="verify-btn" (click)="sendReactivationCode()">
+        <span *ngIf="reactivationLoading" class="spinner"></span>
+        {{ reactivationLoading ? 'Sending...' : 'Send Code' }}
+      </button>
+    </div>
+  </div>
+</div>
+
+
+<div class="overlay" *ngIf="showReactivateCodeOverlay">
+  <div class="overlay-content">
+    <h3>Enter Verification Code</h3>
+    <p>Please enter the 6-digit code sent to your email.</p>
+
+    <div class="input-group">
+      <input
+        type="text"
+        maxlength="6"
+        [(ngModel)]="enteredReactivationCode"
+        placeholder="Enter code"
+        class="form-input"
+        (input)="onCodeInputChange()"
+      />
+      <div class="error-message" *ngIf="reactivationError">
+        {{ reactivationError }}
+      </div>
+    </div>
+
+    <div class="overlay-buttons">
+      <button class="cancel-btn" (click)="showReactivateCodeOverlay = false">Cancel</button>
+      <button class="verify-btn" [disabled]="overlayLoading" (click)="verifyReactivationCode()">
+        <span *ngIf="overlayLoading" class="spinner"></span>
+        {{ overlayLoading ? 'Verifying...' : 'Verify' }}
+      </button>
+    </div>
+  </div>
+</div>
 

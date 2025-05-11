@@ -149,7 +149,7 @@ namespace RS1_2024_25.API.Endpoints
 
         //PUT: api/User/5
         [HttpPut("{id}")]
-        public ActionResult<string> PutUser(int id, UserRequest request)
+        public ActionResult<string> PutUser(int id, [FromBody] UserRequest request)
         {
             var user = _db.Users.Find(id) ?? throw new KeyNotFoundException("User not found");
 

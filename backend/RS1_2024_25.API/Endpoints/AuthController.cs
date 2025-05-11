@@ -123,6 +123,9 @@ namespace RS1_2024_25.API.Endpoints
             if (result == PasswordVerificationResult.Failed)
                 return Unauthorized("Invalid username or password");
 
+            if (user.isDeleted == true)
+                return Unauthorized("Your account is deactivated. Click 'Activate my profile' to restore access.");
+
             var token = CreateJwt(user);
             var role = user.IsAdmin ? "Admin" : "User";
 
@@ -136,6 +139,7 @@ namespace RS1_2024_25.API.Endpoints
             var key = Encoding.UTF8.GetBytes("f8d2eV3r5/8nW1qR4xPqL6zM9xD5u2F8xM0a1pZ3wNk=");
             var identity = new ClaimsIdentity(new Claim[] {
 
+                   new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
                    new Claim("id", user.Id.ToString()),
                    new Claim(ClaimTypes.Role, role),
                    new Claim("username", user.Username ?? ""),
@@ -144,7 +148,9 @@ namespace RS1_2024_25.API.Endpoints
                    new Claim("email", user.Email ?? ""),
                    new Claim("phone", user.PhoneNumber ?? ""),
                    new Claim("cityId", user.CityId?.ToString() ?? "0"),
-                   new Claim("address", user.Address ?? "")
+                   new Claim("address", user.Address ?? ""),
+                   new Claim("role", user.IsAdmin ? "Admin" : "User")
+
 
 
             });
@@ -267,9 +273,13 @@ namespace RS1_2024_25.API.Endpoints
                         ImageUrl = localImageUrl
                     };
 
+                  
                     _db.Users.Add(user);
                     await _db.SaveChangesAsync();
                 }
+
+                if (user.isDeleted == true)
+                    return Unauthorized("Your account is deactivated.");
 
                 var token = CreateJwt(user);
 
@@ -295,23 +305,76 @@ namespace RS1_2024_25.API.Endpoints
             return username;
         }
 
+        
+
+        public class UsernameRequest
+        {
+            public string Username { get; set; }
+        }
 
         [Authorize]
-        [HttpPost("change-password")]
-        public async Task<ActionResult> ChangePassword([FromBody] ChangePasswordRequest request)
+        [HttpPost("deactivate")]
+        public async Task<ActionResult> Deactivate([FromBody] UsernameRequest request)
         {
-            var userId = int.Parse(User.FindFirst("id")?.Value ?? "0");
-            var user = await _db.UserAccounts.FirstOrDefaultAsync(u => u.Id == userId);
-            if (user == null) return NotFound("User not found");
+            if (string.IsNullOrWhiteSpace(request.Username))
+                return BadRequest("Username is required.");
 
-            var result = _passwordHasher.VerifyHashedPassword(user, user.Password, request.CurrentPassword);
-            if (result == PasswordVerificationResult.Failed) return Unauthorized("Current password is incorrect");
+            var userIdClaim = User.FindFirst("id")?.Value;
+            var usernameClaim = User.FindFirst("username")?.Value;
 
-            user.Password = _passwordHasher.HashPassword(user, request.NewPassword);
+            if (!int.TryParse(userIdClaim, out var userId) || string.IsNullOrEmpty(usernameClaim))
+                return Unauthorized("Invalid token claims.");
+
+            if (!string.Equals(usernameClaim, request.Username, StringComparison.OrdinalIgnoreCase))
+                return Forbid("You are not allowed to deactivate other users.");
+
+            var user = await _db.Users.FirstOrDefaultAsync(u => u.Id == userId && u.Username == request.Username);
+            if (user == null)
+                return NotFound("User not found.");
+
+            if (user.isDeleted == true)
+                return BadRequest("Your profile is already deactivated.");
+
+            user.isDeleted = true;
             await _db.SaveChangesAsync();
 
-            return Ok(new {message = "Password changed successfully"});
+            return Ok(new { message = "Your account has been deactivated successfully." });
         }
+
+
+        public class ReactivateRequest
+        {
+            public string Email { get; set; }
+        }
+
+
+        [HttpPost("reactivate")]
+        public async Task<IActionResult> ReactivateByEmail([FromBody] ReactivateRequest request)
+        {
+            if (string.IsNullOrWhiteSpace(request.Email))
+                return BadRequest("Email is required.");
+
+            var user = await _db.UserAccounts
+                .IgnoreQueryFilters()
+                .FirstOrDefaultAsync(u => u.Email == request.Email);
+
+            if (user == null)
+                return NotFound("User not found.");
+
+            if (user.isDeleted == false)
+                return BadRequest("Account is already active.");
+
+            user.isDeleted = false;
+            await _db.SaveChangesAsync();
+
+            return Ok(new { message = "Account reactivated." });
+        }
+
+
+
+
+
+
 
         public class TwoFactorRequest
         {

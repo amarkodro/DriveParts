@@ -20,7 +20,7 @@ export class AuthGuard implements CanActivate {
 
     console.log('🔐 AuthGuard aktivan');
     console.log('Token:', this.authService.getLoginToken());
-    console.log('isLoggedIn:', this.authService.isLoggedIn());
+    console.log('isLoggedIn:', this.authService.getLoginToken()?.myAuthInfo?.isLoggedIn);
 
 
     if (!this.authService.isLoggedIn()) {

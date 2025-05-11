@@ -6,6 +6,7 @@ import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import { environment } from '../../environments/environment';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import {Router} from '@angular/router';
 
 
 declare global {
@@ -35,6 +36,9 @@ export class SecurityComponent implements OnInit {
   formattedTime: string = '05:00';
   codeTimeout: any;
   countdownInterval: any;
+  showDeactivateOverlay: boolean = false;
+  overlayDeactivateLoading: boolean = false;
+
 
 
 
@@ -42,6 +46,7 @@ export class SecurityComponent implements OnInit {
     private fb: FormBuilder,
     private authService: AuthService,
     private toastr: ToastrService,
+    private router: Router,
   ) {}
 
 
@@ -57,7 +62,6 @@ export class SecurityComponent implements OnInit {
       smsNumber: [
         '',
         [
-          Validators.required,
           Validators.pattern(/^\+387\s(60|61)\s\d{3}\s\d{3,4}$/)
         ]
       ]
@@ -270,6 +274,30 @@ export class SecurityComponent implements OnInit {
         }
       });
 
+  }
+
+  confirmDeactivation(): void {
+    this.overlayLoading = true;
+    const username = this.authService.getUserInfoFromToken()?.username;
+
+    this.authService.deactivate(username).subscribe({
+      next: (res) => {
+        this.toastr.success('Deactivation successfully.');
+        this.overlayLoading = false;
+
+        localStorage.removeItem('jwtToken');
+        sessionStorage.removeItem('jwtToken');
+
+        this.authService.setLoginStatus(false);
+        this.authService.setUserInfo(null);
+
+        this.router.navigate(['/login']);
+      },
+      error: (err: any) => {
+        this.toastr.error(err.error , 'Deactivation failed.');
+        this.overlayLoading = false;
+      }
+    })
   }
 
 

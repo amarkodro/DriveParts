@@ -144,7 +144,10 @@
         <div class="card-header">Delete Account</div>
         <div class="card-body px-4 py-3">
           <p>Deleting your account is a permanent action and cannot be undone. If you are sure you want to delete your account, select the button below.</p>
-          <button class="btn btn-danger-soft text-danger" type="button">I understand, delete my account</button>
+          <button class="btn-delete-account" type="button" (click)="showDeactivateOverlay = true">
+            <span class="delete-icon">🗑️</span>
+            Delete my account
+          </button>
         </div>
       </div>
     </div>
@@ -182,4 +185,21 @@
     </div>
   </div>
 </div>
+
+
+<div class="overlay" *ngIf="showDeactivateOverlay">
+  <div class="overlay-content animate-overlay">
+    <h3>Are you sure?</h3>
+    <p>This action will deactivate your profile. You can reactivate it later by logging in again.</p>
+
+    <div class="overlay-buttons">
+      <button class="cancel-btn" (click)="showDeactivateOverlay = false">Cancel</button>
+      <button class="verify-btn" (click)="confirmDeactivation()" [disabled]="overlayLoading">
+        <span *ngIf="overlayLoading" class="spinner"></span>
+        {{ overlayLoading ? 'Processing...' : 'Deactivate' }}
+      </button>
+    </div>
+  </div>
+</div>
+
 

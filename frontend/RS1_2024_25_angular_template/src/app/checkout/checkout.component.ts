@@ -35,7 +35,7 @@ export class CheckoutComponent implements OnInit {
   selectedSupplierId: number | null = null;
   selectedPaymentMethod: number | null = null;
   triedSubmit: boolean = false;
-
+currentUser: any = null;
 
 
   constructor(private fb: FormBuilder,
@@ -94,37 +94,42 @@ export class CheckoutComponent implements OnInit {
       }
     });
 
-    const user = this.authService.getUserInfoFromToken();
 
-    if (user) {
-      this.checkoutForm.patchValue({
-        fullName: `${user.name} ${user.surname}`,
-        email: user.email,
-        phoneNumber: user.phone || '',
-        address: user.address,
-      });
 
-      if (user.cityId) {
-        this.cityService.getCityWithCountry(user.cityId).subscribe({
-          next: (cityData) => {
-            this.checkoutForm.patchValue({
-              city: cityData.name,
-              postalCode: cityData.postalCode,
-              country: cityData.countryName,
-            });
-            this.selectedCityId = user.cityId;
-          },
-          error: (err) => {
-            console.error('GError retrieving city:', err);
-          }
+    this.authService.getUserProfile().subscribe({
+      next: user => {
+        this.currentUser = user;
+
+        this.checkoutForm.patchValue({
+          fullName: `${user.name} ${user.surname}`,
+          email: user.email,
+          phoneNumber: user.phoneNumber || '',
+          address: user.address || '',
         });
-      }
-    }
 
-    if(!user.phone || !user.address || !user.cityId) {
-      this.isEditable = true;
-      this.toastr.info("Please enter the missing information before ordering.");
-    }
+        if (user.cityId) {
+          this.cityService.getCityWithCountry(user.cityId).subscribe({
+            next: cityData => {
+              this.checkoutForm.patchValue({
+                city: cityData.name,
+                postalCode: cityData.postalCode,
+                country: cityData.countryName,
+              });
+              this.selectedCityId = user.cityId;
+            }
+          });
+        }
+
+        if (!user.phoneNumber || !user.address || !user.cityId) {
+          this.isEditable = true;
+          this.toastr.info("Please enter the missing information before ordering.");
+        }
+      },
+      error: err => {
+        console.error("Error loading user profile:", err);
+      }
+    });
+
 
     this.cartService.cartItems$.subscribe(items => {
       this.cartItems = items;
@@ -152,23 +157,30 @@ export class CheckoutComponent implements OnInit {
 
     this.isPlacingOrder = true;
 
-    const user = this.authService.getUserInfoFromToken ();
+    const user = this.currentUser;
     const userId = this.authService.getUserId();
 
     const fullName = this.checkoutForm.get('fullName')?.value || '';
     const [name, surname] = fullName.split(' ');
 
     const updatedUser = {
-      name: name || user.name,
-      surname: surname || user.surname,
-      email: user.email,
-      phoneNumber: this.checkoutForm.get('phoneNumber')?.value || user.phoneNumber,
-      address: this.checkoutForm.get('address')?.value || user.address,
-      cityId: this.selectedCityId || user.cityId,
-      username: user.username,
-      password: user.password,
-      is2FActive: user.is2FActive
+      name: name || user?.name || '',
+      surname: surname || user?.surname || '',
+      email: user?.email || '',
+      phoneNumber: this.checkoutForm.get('phoneNumber')?.value || user?.phoneNumber || '',
+      address: this.checkoutForm.get('address')?.value || user?.address || '',
+      cityId: this.selectedCityId || user?.cityId || 0,
+      username: user?.username || '',
+      password: user?.password || '',
+      is2FActive: user?.is2FActive || false
     };
+
+    console.log("Updated user payload:", updatedUser);
+
+    if (!updatedUser.username || !updatedUser.email) {
+      this.toastr.error("Invalid user data. Please log out and log in again.");
+      return;
+    }
 
     try {
       await this.userService.updateUser(userId, updatedUser).toPromise();

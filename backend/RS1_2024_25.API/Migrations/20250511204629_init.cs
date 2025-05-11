@@ -328,6 +328,7 @@ namespace RS1_2024_25.API.Migrations
                     isUser = table.Column<bool>(type: "bit", nullable: false),
                     is2FActive = table.Column<bool>(type: "bit", nullable: true),
                     ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    isDeleted = table.Column<bool>(type: "bit", nullable: true),
                     CityId = table.Column<int>(type: "int", nullable: true),
                     Discriminator = table.Column<string>(type: "nvarchar(13)", maxLength: 13, nullable: false),
                     AdminLevel = table.Column<string>(type: "nvarchar(max)", nullable: true),

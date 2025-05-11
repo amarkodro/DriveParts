@@ -41,6 +41,16 @@ export class LoginComponent implements OnInit  {
   codeTimer: any;
   timerExpired: boolean = false;
   codeAttemptCount: number = 0;
+  showReactivateOverlay: boolean = false;
+  showReactivateCodeOverlay: boolean = false;
+
+  reactivateEmail: string = '';
+  reactivationCode: string = '';
+  enteredReactivationCode: string = '';
+  reactivationError: string = '';
+  reactivationLoading: boolean = false;
+
+
 
   constructor(private fb: FormBuilder, private authService: AuthService, private router: Router, private toastr : ToastrService, private socialAuthService: SocialAuthService) {
     this.loginForm = this.fb.group({
@@ -52,7 +62,7 @@ export class LoginComponent implements OnInit  {
 
   ngOnInit(): void {
     google.accounts.id.initialize({
-      client_id: '609510374900-mp3inq7o0rbrcvfrg8pdivgnktkqic4r.apps.googleusercontent.com',
+      client_id: '875789338933-01mi71kk9dinvbc1lap0nila0u5m4q01.apps.googleusercontent.com',
       callback: (response: any) => this.handleCredentialResponse(response)
     });
 
@@ -88,11 +98,33 @@ export class LoginComponent implements OnInit  {
         this.toastr.success("Login with Google successful!");
       },
       error: err => {
+        const backendMsg = err?.error;
+
+        if (typeof backendMsg === 'string' && backendMsg.includes('deactivated')) {
+          this.errorMessage = backendMsg;
+          this.reactivateEmail = this.extractEmailFromIdToken(idToken);  // ✅ automatski uzimamo email
+          this.showReactivateOverlay = true;
+          this.toastr.warning("Your account is deactivated. You can reactivate below.");
+        } else {
+          this.toastr.error("Google login not successful");
+        }
+
         console.error("Error Google login:", err);
-        this.toastr.error("Google login not successful");
       }
     });
   }
+
+  extractEmailFromIdToken(idToken: string): string {
+    try {
+      const payload = JSON.parse(atob(idToken.split('.')[1]));
+      return payload.email || '';
+    } catch (e) {
+      console.error("Failed to extract email from ID token:", e);
+      return '';
+    }
+  }
+
+
 
   onSubmit(): void {
     if (this.loginForm.valid) {
@@ -104,7 +136,17 @@ export class LoginComponent implements OnInit  {
 
       this.authService.loginUser(credentials).subscribe({
         next: (res: any) => {
-          this.authService.saveToken(res.token, rememberMe);
+          console.log('🔥 FULL RESPONSE:', res);
+          const token = res?.token;
+
+          if (!token || typeof token !== 'string') {
+            this.toastr.error('Login failed: Invalid token received');
+            return;
+          }
+
+
+          this.authService.saveToken(token, rememberMe);
+          console.log('⬇⬇ Received token ', res.token);
           this.authService.setLoginStatus(true);
 
           this.toastr.success(`Welcome back, ${credentials.username}!`, `Login successful`);
@@ -121,8 +163,17 @@ export class LoginComponent implements OnInit  {
           });
         },
         error: (err: any) => {
-          this.toastr.error('Incorrect username or password.', 'Login failed');
-          this.errorMessage = 'Incorrect username or password.';
+          const backendMsg = err?.error;
+
+          if (typeof backendMsg === 'string' && backendMsg.includes('deactivated')) {
+            this.toastr.warning(backendMsg);
+            this.errorMessage = backendMsg;
+          } else {
+            this.toastr.error('Incorrect username or password.', 'Login failed');
+            this.errorMessage = 'Incorrect username or password.';
+          }
+
+          this.isLoading = false;
           console.error('Login error: ', err);
         }
       });
@@ -142,7 +193,6 @@ export class LoginComponent implements OnInit  {
   openForgotPasswordOVerlay($event: MouseEvent) {
     $event.preventDefault();
     this.showForgotPasswordOverlay = true;
-
   }
 
   cancelForgotPassword() {
@@ -356,4 +406,88 @@ export class LoginComponent implements OnInit  {
     const paddedSeconds = seconds < 10 ? '0' + seconds : seconds;
     return `${minutes}:${paddedSeconds}`;
   }
+
+  openRestoreOverlay(event: MouseEvent) {
+    event.preventDefault();
+    this.showReactivateOverlay = true;
+    this.reactivateEmail = '';
+    this.reactivationCode = '';
+    this.enteredReactivationCode = '';
+    this.reactivationError = '';
+  }
+
+  sendReactivationCode() {
+    if (!this.reactivateEmail || !this.reactivateEmail.includes('@')) {
+      this.reactivationError = 'Please enter a valid email address.';
+      return;
+    }
+
+    this.reactivationCode = Math.floor(100000 + Math.random() * 900000).toString();
+
+    const templateParams = {
+      to_email: this.reactivateEmail,
+      verification_code: this.reactivationCode
+    };
+
+    this.reactivationLoading = true;
+
+    emailjs.send('service_xh0d98k', 'template_tdwpnbe', templateParams, 'B8xPgvirRSkYNmw9g')
+      .then(() => {
+        this.reactivationLoading = false;
+        this.showReactivateOverlay = false;
+        this.showReactivateCodeOverlay = true;
+      })
+      .catch(err => {
+        this.reactivationLoading = false;
+        this.reactivationError = 'Failed to send verification code.';
+        console.error('EmailJS error:', err);
+      });
+  }
+
+  verifyReactivationCode() {
+    const codeRegex = /^\d{6}$/;
+
+    if (!this.enteredReactivationCode.trim()) {
+      this.reactivationError = 'Please enter the code.';
+      return;
+    }
+
+    if (!codeRegex.test(this.enteredReactivationCode)) {
+      this.reactivationError = 'Code must be exactly 6 digits.';
+      return;
+    }
+
+    this.overlayLoading = true;
+
+    setTimeout(() => {
+      if (this.enteredReactivationCode === this.reactivationCode) {
+        this.authService.reactivateProfile(this.reactivateEmail).subscribe({
+          next: () => {
+            this.toastr.success("Your account has been reactivated. You can now log in.");
+            this.showReactivateCodeOverlay = false;
+            this.reactivationError = '';
+            this.reactivationCode = '';
+            this.enteredReactivationCode = '';
+          },
+          error: () => {
+            this.reactivationError = "Failed to reactivate account. Try again.";
+          },
+          complete: () => {
+            this.overlayLoading = false;
+          }
+        });
+      } else {
+        this.reactivationError = 'Incorrect code.';
+        this.overlayLoading = false;
+      }
+    }, 2000);
+  }
+
+  onCodeInputChange() {
+    if (this.reactivationError) {
+      this.reactivationError = '';
+    }
+  }
+
+
 }
