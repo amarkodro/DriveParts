@@ -139,7 +139,7 @@
       <li (click)="closeMenu()" routerLink="/"><a>Home</a></li>
       <li (click)="closeMenu()" routerLink="/parts"><a>Categories</a></li>
       <li (click)="closeMenu()" href="#"><a>Brands</a></li>
-      <li (click)="closeMenu()" href="#"><a>FAQ</a></li>
+      <li (click)="closeMenu()" routerLink="/faq"><a>FAQ</a></li>
       <li (click)="closeMenu()" href="#"><a>About Us</a></li>
     </ul>
   </div>
@@ -151,8 +151,8 @@
         <li class="nav-item"><a class="nav-link" routerLink="/">Home</a></li>
         <li class="nav-item"><a class="nav-link" routerLink="/parts">Categories</a></li>
         <li class="nav-item"><a class="nav-link" href="#">Brands</a></li>
-        <li class="nav-item"><a class="nav-link" href="#">FAQ</a></li>
-        <li class="nav-item"><a class="nav-link" href="#">About Us</a></li>
+        <li class="nav-item"><a class="nav-link" routerLink="/faq" routerLinkActive="active">FAQ</a></li>
+        <li class="nav-item"><a class="nav-link" routerLink="/about-us" routerLinkActive="active">About Us</a></li>
       </ul>
     </div>
   </nav>

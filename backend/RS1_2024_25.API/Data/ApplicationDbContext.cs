@@ -34,6 +34,7 @@ namespace RS1_2024_25.API.Data
         public DbSet<ModelPart> ModelParts { get; set; }
         public DbSet<CartItem> CartItems { get; set; }
         public DbSet<PromoCode> PromoCodes { get; set; }
+        public DbSet<RefreshToken> RefreshTokens { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

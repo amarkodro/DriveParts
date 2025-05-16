@@ -3,6 +3,7 @@ import { PartService } from '../services/navbar-search.service';
 import { Router } from '@angular/router';
 import {AuthService} from '../services/auth-services/auth.service';
 import {CartService} from '../services/cart.service';
+import {Subscription} from 'rxjs';
 
 
 @Component({
@@ -23,6 +24,7 @@ export class NavbarComponent implements OnInit {
   userName: string | null = null;
   cartOpen = false;
   cartItems : any[] = [];
+  private userInfoSub! : Subscription;
 
 
 
@@ -82,9 +84,15 @@ export class NavbarComponent implements OnInit {
     this.authService.userInfo$.subscribe((user) => {
       if (user) {
         this.userName = `${user.name} ${user.surname}`;
-        this.userProfileImage = user.imageUrl?.startsWith('http')
-          ? user.imageUrl
-          : 'http://localhost:7000/' + user.imageUrl;
+        this.userProfileImage = 'http://localhost:7000/' + user.imageUrl;
+        this.isLoggedIn = true;
+
+        this.cartService.loadCartItems();
+      } else {
+        this.userName = '';
+        this.userProfileImage = '';
+        this.isLoggedIn = false;
+        this.cartItems = [];
       }
     });
 
@@ -102,6 +110,10 @@ export class NavbarComponent implements OnInit {
     // Debug token info
     const info = this.authService.getUserInfoFromToken();
     console.log('Data from tokens', info);
+  }
+
+  ngOnDestroy(): void {
+    this.userInfoSub?.unsubscribe();
   }
 
 

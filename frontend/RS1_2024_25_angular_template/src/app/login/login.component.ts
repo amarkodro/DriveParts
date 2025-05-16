@@ -84,8 +84,13 @@ export class LoginComponent implements OnInit  {
     this.authService.googleLogin(idToken).subscribe({
       next: (res: any) => {
         const token = res.token;
+        const refreshToken = res.refreshToken;
+
         this.authService.saveToken(token, true);
-        this.authService.setLoginStatus(true);
+        if (refreshToken) {
+          this.authService.saveRefreshToken(refreshToken);
+        }
+
 
         this.authService.getUserProfile().subscribe({
           next: user => {
@@ -146,6 +151,9 @@ export class LoginComponent implements OnInit  {
 
 
           this.authService.saveToken(token, rememberMe);
+          if(res.refreshToken) {
+            this.authService.saveRefreshToken(res.refreshToken);
+          }
           console.log('⬇⬇ Received token ', res.token);
           this.authService.setLoginStatus(true);
 

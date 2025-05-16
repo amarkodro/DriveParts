@@ -430,8 +430,8 @@ namespace RS1_2024_25.API.Migrations
                     FAQId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Question = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Answer = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    UserId = table.Column<int>(type: "int", nullable: false)
+                    Answer = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UserId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -483,6 +483,28 @@ namespace RS1_2024_25.API.Migrations
                     table.ForeignKey(
                         name: "FK_Orders_UserAccounts_UserId",
                         column: x => x.UserId,
+                        principalTable: "UserAccounts",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "RefreshTokens",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Token = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Expires = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    isRevoked = table.Column<bool>(type: "bit", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UserAccountId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RefreshTokens", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_RefreshTokens_UserAccounts_UserAccountId",
+                        column: x => x.UserAccountId,
                         principalTable: "UserAccounts",
                         principalColumn: "Id");
                 });
@@ -972,6 +994,11 @@ namespace RS1_2024_25.API.Migrations
                 column: "TypeId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_RefreshTokens_UserAccountId",
+                table: "RefreshTokens",
+                column: "UserAccountId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Reviews_PartId",
                 table: "Reviews",
                 column: "PartId");
@@ -1015,6 +1042,9 @@ namespace RS1_2024_25.API.Migrations
 
             migrationBuilder.DropTable(
                 name: "PartEngines");
+
+            migrationBuilder.DropTable(
+                name: "RefreshTokens");
 
             migrationBuilder.DropTable(
                 name: "Reviews");

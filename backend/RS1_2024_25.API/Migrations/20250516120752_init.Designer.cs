@@ -12,7 +12,7 @@ using RS1_2024_25.API.Data;
 namespace RS1_2024_25.API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250511204629_init")]
+    [Migration("20250516120752_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -771,14 +771,13 @@ namespace RS1_2024_25.API.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("FAQId"));
 
                     b.Property<string>("Answer")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Question")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("UserId")
+                    b.Property<int?>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("FAQId");
@@ -2044,6 +2043,37 @@ namespace RS1_2024_25.API.Migrations
                     b.ToTable("PromoCodes");
                 });
 
+            modelBuilder.Entity("RS1_2024_25.API.Data.Models.RefreshToken", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("Expires")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserAccountId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("isRevoked")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserAccountId");
+
+                    b.ToTable("RefreshTokens");
+                });
+
             modelBuilder.Entity("RS1_2024_25.API.Data.Models.Review", b =>
                 {
                     b.Property<int>("ReviewId")
@@ -2414,8 +2444,7 @@ namespace RS1_2024_25.API.Migrations
                     b.HasOne("RS1_2024_25.API.Data.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.Navigation("User");
                 });
@@ -2581,6 +2610,17 @@ namespace RS1_2024_25.API.Migrations
                     b.Navigation("Engine");
 
                     b.Navigation("Part");
+                });
+
+            modelBuilder.Entity("RS1_2024_25.API.Data.Models.RefreshToken", b =>
+                {
+                    b.HasOne("RS1_2024_25.API.Data.Models.UserAccount", "UserAccount")
+                        .WithMany()
+                        .HasForeignKey("UserAccountId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("UserAccount");
                 });
 
             modelBuilder.Entity("RS1_2024_25.API.Data.Models.Review", b =>

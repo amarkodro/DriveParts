@@ -27,6 +27,16 @@ export class OrderSuccessComponent implements OnInit {
               ) { }
 
   ngOnInit(): void {
+
+    this.authService.getUserProfile().subscribe({
+      next: user => {
+        this.authService.setUserInfo(user);
+      },
+      error: err => {
+        console.error("Failed to refresh user info after payment:", err);
+      }
+    });
+
     const userId = this.authService.getUserId();
 
     this.promoCodeId = this.cartService.getPromoCodeId(userId);

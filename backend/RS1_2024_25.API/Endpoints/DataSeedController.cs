@@ -143,18 +143,49 @@ namespace RS1_2024_25.API.Endpoints
 
 
             var faqs = new List<FAQ>
-            {
-                new FAQ { Question = "Kako da pronađem pravi dio za moje vozilo?", Answer = "Koristite našu pretragu po modelu vozila ili kontaktirajte podršku za pomoć.", UserId = 4 },
-                new FAQ { Question = "How can I track my order?", Answer = "You can track your order using the tracking number sent to your email.", UserId = 4 },
-                new FAQ { Question = "Da li nudite povrat novca za neispravne dijelove?", Answer = "Da, povrat novca je moguć unutar 30 dana uz dostavljen dokaz o kupovini.", UserId = 4 },
-                new FAQ { Question = "What payment methods are available?", Answer = "We accept card payments, cash on delivery, and bank transfers.", UserId = 4 },
-                new FAQ { Question = "Koliko traje dostava?", Answer = "Dostava obično traje 3-5 radnih dana, u zavisnosti od lokacije.", UserId = 3 },
-                new FAQ { Question = "Can I return a part if it doesn't fit my vehicle?", Answer = "Yes, you can return unused parts within 15 days of delivery.", UserId = 4 },
-                new FAQ { Question = "Da li nudite popuste za veće narudžbe?", Answer = "Da, popusti su dostupni za narudžbe veće od 500 BAM. Kontaktirajte nas za detalje.", UserId = 3 },
-                new FAQ { Question = "What should I do if I receive the wrong part?", Answer = "Please contact our support team immediately, and we will arrange for a replacement.", UserId = 4 },
-                new FAQ { Question = "Da li je moguće preuzimanje dijelova u prodavnici?", Answer = "Nažalost, trenutno nudimo samo online naručivanje i dostavu.", UserId = 3 },
-                new FAQ { Question = "Do you ship internationally?", Answer = "Currently, we only ship within Bosnia and Herzegovina.", UserId = 4 }
+{
+                new FAQ {
+                    Question = "How can I find the right part for my vehicle?",
+                    Answer = "You can easily find the right part by using our advanced search feature where you can filter parts by your vehicle's make, model, year, and engine type. If you're unsure, feel free to contact our support team and we’ll help you find exactly what you need."
+                },
+                new FAQ {
+                    Question = "How can I track my order?",
+                    Answer = "Once your order has been shipped, you will receive an email with a tracking number and a link to the courier's website where you can check the status and location of your package in real time."
+                },
+                new FAQ {
+                    Question = "Do you offer refunds for defective parts?",
+                    Answer = "Yes, we have a hassle-free return policy. If you receive a defective or damaged part, you can return it within 30 days of purchase. Simply contact our customer service team and provide your order details and a photo of the item."
+                },
+                new FAQ {
+                    Question = "What payment methods are available?",
+                    Answer = "We offer multiple secure payment methods including credit and debit cards, PayPal, bank transfer, and cash on delivery. All transactions are encrypted and your payment information is kept safe."
+                },
+                new FAQ {
+                    Question = "How long does delivery take?",
+                    Answer = "Delivery times vary depending on your location. Typically, orders are delivered within 3 to 5 business days. In more remote areas, delivery might take a little longer, but we’ll always provide you with tracking information."
+                },
+                new FAQ {
+                    Question = "Can I return a part if it doesn’t fit my vehicle?",
+                    Answer = "Yes, if the part you ordered doesn't fit and it is still unused and in its original packaging, you can return it within 15 days. Make sure to keep the invoice and notify us in advance so we can process your return smoothly."
+                },
+                new FAQ {
+                    Question = "Do you offer discounts for bulk orders?",
+                    Answer = "Yes, we offer special pricing and discounts for bulk orders, typically starting from purchases over 500 BAM. If you're a garage or reseller, feel free to reach out to us to discuss personalized offers and long-term cooperation."
+                },
+                new FAQ {
+                    Question = "What should I do if I receive the wrong part?",
+                    Answer = "If you receive the wrong item, please contact us immediately with your order number and a photo of the received item. We will arrange for a quick replacement or a full refund, depending on your preference."
+                },
+                new FAQ {
+                    Question = "Is in-store pickup available?",
+                    Answer = "Currently, we operate exclusively online to keep our prices competitive. All items are delivered directly to your address via our trusted courier partners, ensuring convenience and speed."
+                },
+                new FAQ {
+                    Question = "Do you ship internationally?",
+                    Answer = "At the moment, we only ship within Bosnia and Herzegovina. We are working on expanding our logistics network to include regional and international shipping in the near future."
+                }
             };
+
 
             await _db.FAQs.AddRangeAsync(faqs);
             await _db.SaveChangesAsync();

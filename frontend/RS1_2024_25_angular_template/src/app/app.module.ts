@@ -29,6 +29,8 @@ import { SecurityComponent } from './security/security.component';
 import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFireAuthModule } from '@angular/fire/compat/auth';
 import { environment } from '../environments/environment';
+import { FaqComponent } from './faq/faq.component';
+import { AboutUsComponent } from './about-us/about-us.component';
 
 
 
@@ -49,6 +51,8 @@ import { environment } from '../environments/environment';
     OrderSuccessComponent,
     EditProfileComponent,
     SecurityComponent,
+    FaqComponent,
+    AboutUsComponent,
 
   ],
     imports: [

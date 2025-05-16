@@ -5,6 +5,7 @@ import {jwtDecode} from 'jwt-decode';
 import { MyAuthService } from './my-auth.service';
 
 
+
 @Injectable({
   providedIn: 'root'
 })
@@ -120,7 +121,7 @@ export class AuthService {
     return this.http.get(url);
   }
 
-  googleLogin(token: string) {
+  googleLogin(token: string) : Observable<any> {
     return this.http.post(`${this.apiUrl}/google-login`, { IdToken: token });
   }
 
@@ -153,5 +154,25 @@ export class AuthService {
   reactivateProfile(email: string): Observable<any> {
     return this.http.post(`${this.apiUrl}/reactivate`, { email }, { responseType: 'text' });
   }
+
+  refreshToken(token: string) {
+    return this.http.post<{ token: string, refreshToken: string }>(
+      `${this.apiUrl}/refresh-token`,
+      { token }
+    );
+  }
+
+  saveRefreshToken(refreshToken: string): void {
+    localStorage.setItem('refreshToken', refreshToken);
+  }
+
+  getRefreshToken(): string | null {
+    return localStorage.getItem('refreshToken');
+  }
+
+  removeRefreshToken(): void {
+    localStorage.removeItem('refreshToken');
+  }
+
 
 }

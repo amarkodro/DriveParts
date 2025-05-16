@@ -15,6 +15,8 @@ import {CheckoutComponent} from './checkout/checkout.component';
 import {OrderSuccessComponent} from './order-success/order-success.component';
 import {EditProfileComponent} from './edit-profile/edit-profile.component';
 import {SecurityComponent} from './security/security.component';
+import {FaqComponent} from './faq/faq.component';
+import {AboutUsComponent} from './about-us/about-us.component';
 
 
 const routes: Routes = [
@@ -52,6 +54,8 @@ const routes: Routes = [
   {path: 'edit-profile', component: EditProfileComponent, canActivate: [AuthGuard] },
   {path: 'security', component: SecurityComponent,},
   {path: 'order-success', component: OrderSuccessComponent,},
+  {path: 'faq', component: FaqComponent,},
+  {path: 'about-us', component: AboutUsComponent,},
   {path: '**', redirectTo: 'public', pathMatch: 'full'},
 
 

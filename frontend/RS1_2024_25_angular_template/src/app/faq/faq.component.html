@@ -1,0 +1,47 @@
+<div class="faq-page">
+<div class="faq-wrapper">
+  <h1>Frequently Asked Questions</h1>
+
+  <div *ngFor="let faq of faqs" class="faq-item">
+    <button class="faq-question" (click)="toggle(faq)">
+      {{ faq.question }}
+      <span [class.open]="faq.open">+</span>
+    </button>
+    <div class="faq-answer-wrapper" [class.open]="faq.open">
+      <div class="faq-answer-inner">
+        {{ faq.answer }}
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="faq-form-container" style="margin-top: 40px;">
+  <form [formGroup]="faqForm" (ngSubmit)="submitQuestion()">
+    <div class="form-container">
+      <h4 style="text-align:center; margin-bottom: 25px;">Have a question?</h4>
+
+      <div class="form-group">
+        <input
+          type="text"
+          id="question"
+          formControlName="question"
+          placeholder=" "
+        />
+        <label for="question">Enter your question</label>
+        <div class="text-danger" *ngIf="faqForm.get('question')?.invalid && faqForm.get('question')?.touched">
+          Question is required.
+        </div>
+      </div>
+
+      <button
+        type="submit"
+        class="btn btn-next full-width"
+        [disabled]="faqForm.invalid || isSending"
+      >
+        <span *ngIf="isSending" class="spinner"></span>
+        {{ isSending ? 'Sending...' : 'Submit Question' }}
+      </button>
+    </div>
+  </form>
+  </div>
+</div>

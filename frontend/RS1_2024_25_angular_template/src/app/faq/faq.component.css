@@ -1,0 +1,206 @@
+.faq-wrapper {
+  max-width: 800px;
+  margin: 50px auto;
+  padding: 0 20px;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #fff;
+  border-radius: 12px;
+  animation: fadeInPage 0.8s ease forwards;
+}
+
+.faq-page {
+  background: url('/assets/faq-background.jpg') no-repeat center center fixed;
+  background-size: cover;
+  min-height: 100vh;
+  padding: 40px 0;
+}
+
+.faq-wrapper h1 {
+  text-align: center;
+  margin-bottom: 35px;
+  color: #333;
+  font-size: 34px;
+  font-weight: bold;
+  transition: all 0.5s ease;
+}
+
+.faq-item {
+  padding: 18px 0;
+  border-bottom: 1px solid #ddd;
+}
+
+.faq-question {
+  width: 100%;
+  font-weight: 600;
+  font-size: 18px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #333;
+  padding: 10px 0;
+}
+
+.faq-question span {
+  font-size: 24px;
+  transition: transform 0.2s ease;
+}
+
+.faq-question span.open {
+  transform: rotate(45deg);
+}
+
+.faq-answer {
+  padding-top: 10px;
+  color: #555;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.faq-form-container {
+  max-width: 600px;
+  margin: 60px auto 60px auto;
+  padding: 25px 30px;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.07);
+  border: 1px solid #eee;
+  transition: all 0.6s ease-in-out;
+
+}
+
+.faq-form-container h4 {
+  text-align: center;
+  font-size: 22px;
+  margin-bottom: 30px;
+  color: #444;
+}
+
+.form-container {
+  margin-bottom: 20px;
+}
+
+.form-group {
+  position: relative;
+  margin-bottom: 30px;
+  width: 100%;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 14px 18px;
+  border: 2px solid #ddd;
+  border-radius: 50px;
+  font-size: 16px;
+  background: white;
+  outline: none;
+  transition: all 0.3s ease-in-out;
+  box-sizing: border-box;
+}
+
+.form-group label {
+  position: absolute;
+  top: 16px;
+  left: 20px;
+  font-size: 16px;
+  color: #999;
+  transition: all 0.2s ease-in-out;
+  pointer-events: none;
+  background: white;
+  padding: 0 6px;
+  z-index: 5;
+}
+
+.form-group input:focus,
+.form-group input:not(:placeholder-shown) {
+  border-color: #cc6320;
+  box-shadow: 0px 4px 10px rgba(204, 99, 32, 0.3);
+}
+
+.form-group input:focus + label,
+.form-group input:not(:placeholder-shown) + label {
+  top: -10px;
+  left: 20px;
+  font-size: 12px;
+  color: #cc6320;
+  background: white;
+  padding: 0 8px;
+  z-index: 6;
+  border-radius: 50px;
+}
+
+.btn-next.full-width {
+  background: #e37635;
+  color: white;
+  padding: 12px;
+  width: 100%;
+  font-size: 16px;
+  border: none;
+  border-radius: 30px;
+  transition: all 0.3s ease;
+}
+
+.btn-next.full-width:hover {
+  background: #b55a1c;
+  transform: scale(1.02);
+  box-shadow: 0 6px 15px rgba(204, 99, 32, 0.3);
+}
+
+.text-danger {
+  font-size: 12px;
+  color: red;
+  margin-top: 4px;
+  margin-left: 10px;
+}
+
+@keyframes fadeInPage {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.faq-answer-wrapper {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height 0.4s ease, opacity 0.4s ease;
+}
+
+.faq-answer-wrapper.open {
+  max-height: 300px;
+  opacity: 1;
+}
+
+.faq-answer-inner {
+  padding-top: 10px;
+  color: #555;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.spinner {
+  border: 2px solid #f3f3f3;
+  border-top: 2px solid white;
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  animation: spin 0.6s linear infinite;
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 10px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+
+

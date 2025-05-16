@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.Data;
+using Microsoft.VisualBasic;
 
 namespace RS1_2024_25.API.Endpoints
 {
@@ -129,7 +130,18 @@ namespace RS1_2024_25.API.Endpoints
             var token = CreateJwt(user);
             var role = user.IsAdmin ? "Admin" : "User";
 
-            return Ok(new { Token = token, Role = role });
+            var refreshToken = GenerateRefreshToken();
+
+            _db.RefreshTokens.Add(new RefreshToken
+            {
+                Token = refreshToken,
+                Expires = DateTime.UtcNow.AddMinutes(15),
+                UserAccountId = user.Id,
+            });
+
+            _db.SaveChanges();
+
+            return Ok(new { Token = token, Role = role , RefreshToken = refreshToken});
         }
 
         private string CreateJwt(UserAccount user)
@@ -160,13 +172,23 @@ namespace RS1_2024_25.API.Endpoints
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = identity,
-                Expires = DateTime.Now.AddDays(7),
+                Expires = DateTime.Now.AddMinutes(15),
                 SigningCredentials = credentials
             };
             var token = jwtTokenHandler.CreateToken(tokenDescriptor);
             return jwtTokenHandler.WriteToken(token);
 
         }
+
+        private string GenerateRefreshToken()
+        {
+            var randomBytes = new byte [64];
+            using var rng = RandomNumberGenerator.Create();
+            rng.GetBytes(randomBytes);
+            return Convert.ToBase64String(randomBytes);
+        }
+
+
 
         [HttpGet("check-username")]
         public IActionResult CheckUsername(string username)
@@ -283,7 +305,19 @@ namespace RS1_2024_25.API.Endpoints
 
                 var token = CreateJwt(user);
 
-                return Ok(new { Token = token, Message = "Google login successful" });
+                var refreshToken = GenerateRefreshToken();
+
+                _db.RefreshTokens.Add(new RefreshToken
+                {
+                    Token = refreshToken,
+                    Expires = DateTime.UtcNow.AddMinutes(15),
+                    UserAccountId = user.Id,
+                });
+
+                await _db.SaveChangesAsync();
+
+
+                return Ok(new { Token = token, RefreshToken = refreshToken, Message = "Google login successful" });
             }
             catch (Exception ex)
             {
@@ -409,6 +443,46 @@ namespace RS1_2024_25.API.Endpoints
             return Ok(new { message = "Two-factor authentication enabled and phone number updated." });
         }
 
+        public class RefreshTokenRequest
+        {
+            public string Token { get; set; }
+        }
 
+        [HttpPost("refresh-token")]
+        public IActionResult Refresh([FromBody] RefreshTokenRequest request) {
+
+            if (string.IsNullOrWhiteSpace(request.Token))
+                return BadRequest("Refresh token is required.");
+
+            var storedToken = _db.RefreshTokens
+                .Include(r => r.UserAccount)
+                .FirstOrDefault(r => r.Token == request.Token && r.isRevoked == false);
+
+            if (storedToken == null || storedToken.Expires < DateTime.UtcNow)
+                return Unauthorized("Invalid or expired refresh token");
+
+            
+            storedToken.isRevoked = true;
+
+            
+            var newJwt = CreateJwt(storedToken.UserAccount);
+            var newRefreshToken = GenerateRefreshToken();
+
+            _db.RefreshTokens.Add(new RefreshToken
+            {
+                Token = newRefreshToken,
+                Expires = DateTime.UtcNow.AddMinutes(15),
+                UserAccountId = storedToken.UserAccountId
+            });
+
+            _db.SaveChanges();
+
+            return Ok(new
+            {
+                Token = newJwt,
+                RefreshToken = newRefreshToken
+            });
+
+        }
     }
 }
