@@ -18,6 +18,11 @@ import {SecurityComponent} from './security/security.component';
 import {FaqComponent} from './faq/faq.component';
 import {AboutUsComponent} from './about-us/about-us.component';
 
+import { DashboardComponent } from './dashboard/dashboard.component';
+import { AdminPartsComponent } from './admin-parts/admin-parts.component';
+import { AdminPartFormComponent } from './admin-part-form/admin-part-form.component';
+import { OrdersComponent } from './admin-orders/admin-orders.component';
+import { ChatComponent } from './ai-chat/ai-chat.component';
 
 const routes: Routes = [
   {path: 'unauthorized', component: UnauthorizedComponent},
@@ -56,6 +61,13 @@ const routes: Routes = [
   {path: 'order-success', component: OrderSuccessComponent,},
   {path: 'faq', component: FaqComponent,},
   {path: 'about-us', component: AboutUsComponent,},
+  {path:'dashboard',component:DashboardComponent, canActivate: [AuthGuard], data: {isAdmin : true}},
+  {path:'edit',component:AdminPartsComponent, canActivate: [AuthGuard], data: {isAdmin : true}},
+  {path:'add',component:AdminPartFormComponent, canActivate: [AuthGuard], data: {isAdmin : true}},
+  {path:'orders',component:OrdersComponent, canActivate: [AuthGuard], data: {isAdmin : true}},
+  {path:'put/:id',component:AdminPartFormComponent, canActivate: [AuthGuard], data: {isAdmin : true}},
+  {path:'ai',component:ChatComponent},
+ {path: '**', redirectTo: 'public', pathMatch: 'full'},
   {path: '**', redirectTo: 'public', pathMatch: 'full'},
 
 

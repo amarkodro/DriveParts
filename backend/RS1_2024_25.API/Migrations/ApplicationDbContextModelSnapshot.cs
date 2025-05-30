@@ -586,6 +586,53 @@ namespace RS1_2024_25.API.Migrations
                         });
                 });
 
+            modelBuilder.Entity("RS1_2024_25.API.Data.Models.DashboardStats", b =>
+                {
+                    b.Property<int>("ApprovedOrders")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CancelledOrders")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CompletedOrders")
+                        .HasColumnType("int");
+
+                    b.Property<int>("DashboardId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("DraftOrders")
+                        .HasColumnType("int");
+
+                    b.Property<int>("FailedOrders")
+                        .HasColumnType("int");
+
+                    b.Property<int>("InProgressOrders")
+                        .HasColumnType("int");
+
+                    b.Property<int>("OnHoldOrders")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PendingOrders")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RejectedOrders")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SubmittedOrders")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TotalCustomers")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TotalOrders")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("TotalSales")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.ToTable("Dashboards");
+                });
+
             modelBuilder.Entity("RS1_2024_25.API.Data.Models.Engine", b =>
                 {
                     b.Property<int>("EngineId")
@@ -1350,8 +1397,8 @@ namespace RS1_2024_25.API.Migrations
                     b.Property<int>("PartId")
                         .HasColumnType("int");
 
-                    b.Property<double>("Price")
-                        .HasColumnType("float");
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
@@ -2548,7 +2595,7 @@ namespace RS1_2024_25.API.Migrations
             modelBuilder.Entity("RS1_2024_25.API.Data.Models.OrderItem", b =>
                 {
                     b.HasOne("RS1_2024_25.API.Data.Models.Order", "Order")
-                        .WithMany()
+                        .WithMany("Items")
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
@@ -2657,6 +2704,11 @@ namespace RS1_2024_25.API.Migrations
                         .OnDelete(DeleteBehavior.NoAction);
 
                     b.Navigation("Gender");
+                });
+
+            modelBuilder.Entity("RS1_2024_25.API.Data.Models.Order", b =>
+                {
+                    b.Navigation("Items");
                 });
 #pragma warning restore 612, 618
         }

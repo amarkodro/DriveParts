@@ -6,6 +6,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using RS1_2024_25.API.Data;
 using RS1_2024_25.API.Data.Models;
+using RS1_2024_25.API.Endpoints;
 using RS1_2024_25.API.Helper;
 using RS1_2024_25.API.Helper.Auth;
 using RS1_2024_25.API.Services;
@@ -62,7 +63,12 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddTransient<MyAuthService>();
 builder.Services.AddTransient<MyTokenGenerator>();
 builder.Services.AddScoped<IPasswordHasher<UserAccount>, PasswordHasher<UserAccount>>();
-
+builder.Services.AddHttpClient<OpenAIService>();
+builder.Services.AddHttpClient();
+builder.Services.AddScoped<LocalAIService>();
+builder.Services.AddScoped<OpenAIService>();
+builder.Services.AddScoped<ChatController>();
+builder.Services.AddScoped<CompositeAIService>();
 
 builder.Services.AddAuthentication(x =>
 {

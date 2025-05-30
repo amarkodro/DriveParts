@@ -31,9 +31,19 @@ import { AngularFireAuthModule } from '@angular/fire/compat/auth';
 import { environment } from '../environments/environment';
 import { FaqComponent } from './faq/faq.component';
 import { AboutUsComponent } from './about-us/about-us.component';
-
-
-
+import { DashboardComponent } from './dashboard/dashboard.component';
+//import { NgChartsModule } from 'ng2-charts';
+import { CommonModule } from '@angular/common';
+import { AdminPartFormComponent } from './admin-part-form/admin-part-form.component';
+import { AdminPartsComponent } from './admin-parts/admin-parts.component';
+import { OrdersComponent } from './admin-orders/admin-orders.component';
+import { MatTableModule } from '@angular/material/table';
+import { MatSelectModule } from '@angular/material/select';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { ChatComponent } from './ai-chat/ai-chat.component';
+import { FormsModule } from '@angular/forms';
 @NgModule({
   declarations: [
     AppComponent,
@@ -44,6 +54,8 @@ import { AboutUsComponent } from './about-us/about-us.component';
     ProductSectionComponent,
     FooterComponent,
     PartsComponent,
+    AdminPartFormComponent,
+    AdminPartsComponent,
     PartDetailComponent,
     ViewPartsComponent,
     CartComponent,
@@ -53,6 +65,10 @@ import { AboutUsComponent } from './about-us/about-us.component';
     SecurityComponent,
     FaqComponent,
     AboutUsComponent,
+    DashboardComponent,
+    OrdersComponent,
+    ChatComponent
+    
 
   ],
     imports: [
@@ -60,10 +76,21 @@ import { AboutUsComponent } from './about-us/about-us.component';
         AppRoutingModule,
         HttpClientModule,
         SharedModule,
+        MatTableModule,
+MatSelectModule,
+MatIconModule,
+MatProgressSpinnerModule,
+MatSnackBarModule,
+      // NgChartsModule,
         NgOptimizedImage,
-        ReactiveFormsModule,
         BrowserAnimationsModule,
         SocialLoginModule,
+        ReactiveFormsModule,
+        CommonModule,
+        FormsModule,
+         MatIconModule,
+    MatProgressSpinnerModule,
+    MatSnackBarModule,
       ToastrModule.forRoot({
         positionClass: 'toast-top-center',
         timeOut: 3000,

@@ -1,0 +1,65 @@
+<div class="chat-container">
+  <!-- Chat Header -->
+  <div class="chat-header">
+    <div class="chat-title">AI Assistant</div>
+    <div class="status-indicator">
+      <div class="status-dot" [ngClass]="{
+        'online': aiStatus.includes('Using'),
+        'offline': aiStatus === 'Service offline'
+      }"></div>
+      <span>{{aiStatus}}</span>
+    </div>
+  </div>
+  
+  <!-- Messages Container -->
+  <div #messagesContainer class="messages-container">
+    <!-- Initial AI message -->
+    <div class="message ai-message">
+      <div class="ai-header">
+        <div class="ai-icon">AI</div>
+        <span>Assistant</span>
+      </div>
+      <p>Hello! I'm your AI assistant. How can I help you today?</p>
+    </div>
+    
+    <!-- User message -->
+    <div *ngIf="question" class="message user-message">
+      <p>{{question}}</p>
+    </div>
+    
+    <!-- AI response -->
+    <div *ngIf="answer" class="message ai-message">
+      <div class="ai-header">
+        <div class="ai-icon">AI</div>
+        <span>Assistant</span>
+      </div>
+      <p>{{answer}}</p>
+    </div>
+    
+    <!-- Typing indicator -->
+    <div *ngIf="isTyping" class="typing-indicator">
+      <div class="typing-dot"></div>
+      <div class="typing-dot"></div>
+      <div class="typing-dot"></div>
+    </div>
+  </div>
+  
+  <!-- Input Area -->
+  <div class="input-area">
+    <input 
+      type="text" 
+      class="message-input" 
+      [(ngModel)]="newQuestion" 
+      (keydown.enter)="ask()"
+      placeholder="Type your message..."
+      autocomplete="off"
+    >
+    <button 
+      class="send-button" 
+      (click)="ask()" 
+      [disabled]="!newQuestion.trim() || isTyping"
+    >
+      Send
+    </button>
+  </div>
+</div>
