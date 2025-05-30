@@ -30,7 +30,7 @@ export class AuthGuard implements CanActivate {
 
     // Provjera prava pristupa za administratora
     if (guardData.isAdmin && !this.authService.isAdmin()) {
-      this.router.navigate(['/unauthorized']);
+      this.router.navigate(['/dashboard']);
       return false;
     }
 

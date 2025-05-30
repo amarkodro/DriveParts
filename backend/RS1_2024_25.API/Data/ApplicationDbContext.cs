@@ -11,7 +11,7 @@ namespace RS1_2024_25.API.Data
         public DbSet<MyAppUser> MyAppUsers { get; set; }
         public DbSet<MyAuthenticationToken> MyAuthenticationTokens { get; set; }
         public DbSet<Journey> Journeys { get; set; }
-
+        public DbSet<DashboardStats> Dashboards { get; set; }
         public DbSet<Admin> Admins { get; set; }
         public DbSet<Car> Cars { get; set; }
         public DbSet<Engine> Engines { get; set; }
@@ -35,17 +35,25 @@ namespace RS1_2024_25.API.Data
         public DbSet<CartItem> CartItems { get; set; }
         public DbSet<PromoCode> PromoCodes { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
+     
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<OrderItem>()
+                .HasOne(oi => oi.Part)
+                .WithMany() // Add if Part has no collection of OrderItems
+                .HasForeignKey(oi => oi.PartId);
+
             foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
             {
                 relationship.DeleteBehavior = DeleteBehavior.NoAction;
             }
-
-           var dataSeeder = new DataSeeder();
+            modelBuilder.Entity<DashboardStats>().HasNoKey();
+            var dataSeeder = new DataSeeder();
             dataSeeder.DataSeed(modelBuilder);
 
             // opcija kod nasljeđivanja

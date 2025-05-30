@@ -141,7 +141,7 @@ namespace RS1_2024_25.API.Endpoints
 
             _db.SaveChanges();
 
-            return Ok(new { Token = token, Role = role , RefreshToken = refreshToken});
+            return Ok(new { Token = token, Role = role , RefreshToken = refreshToken, isAdmin=user.IsAdmin});
         }
 
         private string CreateJwt(UserAccount user)
@@ -153,7 +153,7 @@ namespace RS1_2024_25.API.Endpoints
 
                    new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
                    new Claim("id", user.Id.ToString()),
-                   new Claim(ClaimTypes.Role, role),
+
                    new Claim("username", user.Username ?? ""),
                    new Claim("name", user.Name ?? ""),
                    new Claim("surname", user.Surname ?? ""),

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RS1_2024_25.API.Data;
 using RS1_2024_25.API.Data.Models;
-using Microsoft.AspNetCore.Mvc;
+
 using Microsoft.Identity.Client;
 using static RS1_2024_25.API.Endpoints.CarsController;
 
