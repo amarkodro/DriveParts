@@ -124,6 +124,7 @@ export class PartsComponent implements OnInit, AfterViewInit {
   }
 
   applyFilter(): void {
+
     const params: any = {};
     if (this.selectedCarId) params.carId = this.selectedCarId;
     if (this.selectedCategoryId) params.categoryId = this.selectedCategoryId;
@@ -135,6 +136,7 @@ export class PartsComponent implements OnInit, AfterViewInit {
       next: (data) => {
         this.filteredParts = data;
         setTimeout(() => this.checkVisibility(), 300);
+        console.log('filtered parts:',this.filteredParts );
       },
       error: (err) => {
         console.error('Error fetching filtered parts:', err);

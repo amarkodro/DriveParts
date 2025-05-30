@@ -1,0 +1,67 @@
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+
+export interface Part {
+ partId: number;
+  name: string;
+  price: number;
+  categoryId: number;      // Not categoryname
+  manufacturerId: number;  // Not manufacturername
+  partImage: string;
+  description: string;
+  isFeatured: boolean;
+  isOnSale: boolean;
+  isNewArrival: boolean;
+  type: string;
+}
+export interface CategoryResponse {
+  categoryId: number;
+  name: string;
+}
+
+export interface ManufacturerResponse {
+  manufacturerId: number;
+  name: string;
+  contact?: string;
+  address?: string;
+}
+@Injectable({
+  providedIn: 'root'
+})
+export class PartService {
+ updatePartFormData(id: number, partData: FormData): Observable<any> {
+  return this.http.put(`${this.apiUrl}/${id}`, partData);
+}
+  private apiUrl = 'http://localhost:7000/api/parts'; // adjust if needed
+ updatePartWithFormData(id: number, formData: FormData): Observable<any> {
+    return this.http.put(`${this.apiUrl}/${id}/form`, formData);
+  }
+  constructor(private http: HttpClient) {}
+
+  getParts(): Observable<Part[]> {
+    return this.http.get<Part[]>(this.apiUrl);
+  }
+
+  getPart(id: number): Observable<Part> {
+    return this.http.get<Part>(`${this.apiUrl}/${id}`);
+  }
+
+  addPart(partData: FormData): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}`, partData);
+  }
+  updatePart(id: number, part: Part): Observable<any> {
+    return this.http.put(`${this.apiUrl}/${id}`, part);
+  }
+
+  deletePart(id: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/${id}`);
+  }
+  getCategories(): Observable<any[]> {
+    return this.http.get<any[]>('http://localhost:7000/api/categories');
+  }
+  
+  getManufacturers(): Observable<any[]> {
+    return this.http.get<any[]>('http://localhost:7000/api/manufacturers');
+  }
+}
