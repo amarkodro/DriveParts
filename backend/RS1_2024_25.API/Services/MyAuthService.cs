@@ -51,16 +51,33 @@ namespace RS1_2024_25.API.Services
         public MyAuthInfo GetAuthInfo()
         {
             string? authToken = httpContextAccessor.HttpContext?.Request.Headers["my-auth-token"];
-            if (string.IsNullOrEmpty(authToken))
+
+            if (!string.IsNullOrEmpty(authToken))
             {
-                return GetAuthInfo(null);
+                var myAuthToken = applicationDbContext.MyAuthenticationTokens
+                    .Include(x => x.MyAppUser)
+                    .SingleOrDefault(x => x.Value == authToken);
+
+                return GetAuthInfo(myAuthToken);
             }
 
-            var myAuthToken = applicationDbContext.MyAuthenticationTokens
-                .Include(x => x.MyAppUser)
-                .SingleOrDefault(x => x.Value == authToken);
+            // Fallback: Check for JWT (Bearer) Authentication via HttpContext.User
+            var user = httpContextAccessor.HttpContext?.User;
+            if (user != null && user.Identity != null && user.Identity.IsAuthenticated)
+            {
+                return new MyAuthInfo
+                {
+                    UserId = int.Parse(user.FindFirst("id")?.Value ?? "0"),
+                    Username = user.FindFirst("username")?.Value ?? "",
+                    FirstName = user.FindFirst("name")?.Value ?? "",
+                    LastName = user.FindFirst("surname")?.Value ?? "",
+                    IsAdmin = user.FindFirst("role")?.Value == "Admin" || user.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value == "Admin",
+                    IsManager = user.FindFirst("role")?.Value == "Manager" || user.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value == "Manager", // Assuming Manager role logic if applicable
+                    IsLoggedIn = true
+                };
+            }
 
-            return GetAuthInfo(myAuthToken);
+            return GetAuthInfo(null);
         }
 
         public MyAuthInfo GetAuthInfo(MyAuthenticationToken? myAuthToken)
@@ -103,6 +120,6 @@ namespace RS1_2024_25.API.Services
         public bool IsAdmin { get; set; }
         public bool IsManager { get; set; }
         public bool IsLoggedIn { get; set; }
-        public string SlikaPath {  get; set; }
+        public string SlikaPath { get; set; }
     }
 }

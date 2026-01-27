@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { ChatSignalRService, ChatMessage } from '../services/chat-signalr.service';
 import { AuthService } from '../services/auth-services/auth.service';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient } from "@angular/common/http";
 import { Subscription } from 'rxjs';
 
 interface Conversation {
@@ -92,9 +92,9 @@ export class AdminChatInboxComponent implements OnInit, OnDestroy {
 
   handleIncomingMessage(message: ChatMessage) {
   console.log('📨 Admin received message:', message);
-  
+
   let conversation = this.conversations.find(c => c.id === message.conversationId);
-  
+
   if (conversation) {
     // Update conversation
     conversation.lastMessage = message.content;
@@ -123,7 +123,7 @@ export class AdminChatInboxComponent implements OnInit, OnDestroy {
 
     // Move to top
     this.conversations = [
-      conversation, 
+      conversation,
       ...this.conversations.filter(c => c.id !== conversation.id)
     ];
   } else {

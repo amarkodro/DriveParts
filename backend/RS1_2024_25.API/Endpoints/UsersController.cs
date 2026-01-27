@@ -50,33 +50,65 @@ namespace RS1_2024_25.API.Endpoints
 
         }
 
-        //Get : api/User
 
         [HttpGet]
-        public ActionResult<UserResponse[]> GetUsers()
+        public ActionResult<UserResponse[]> GetUsers(
+            [FromQuery] string? search,
+            [FromQuery] string? role,
+            [FromQuery] int page = 1,
+            [FromQuery] int pageSize = 10)
         {
-            var users = _db.Users
-                   .Include(c => c.Gender).Include(c => c.City)
-                   .Select(c => new UserResponse
-                   {
-                       Id = c.Id,
-                       Name = c.Name,
-                       Surname = c.Surname,
-                       Email = c.Email,
-                       PhoneNumber = c.PhoneNumber,
-                       Address = c.Address,
-                       Username = c.Username,
-                       Password = c.Password,
-                       IsAdmin = c.IsAdmin,
-                       isUser = c.isUser,
-                       is2FActive = c.is2FActive ?? false,
-                       GenderName = c.Gender != null ? c.Gender.GenderName : "Unknown",
-                       CityName = c.City != null ? c.City.Name : "Unknown"
-                   }).ToArray();
+            IQueryable<UserAccount> query = _db.UserAccounts;
 
-            return users;
+            // Apply search filter
+            if (!string.IsNullOrEmpty(search))
+            {
+                query = query.Where(u =>
+                    u.Username.Contains(search) ||
+                    u.Email.Contains(search) ||
+                    u.Name.Contains(search) ||
+                    u.Surname.Contains(search));
+            }
+
+            // Apply role filter
+            if (!string.IsNullOrEmpty(role) && role != "all")
+            {
+                if (role == "admin")
+                {
+                    query = query.Where(u => u.IsAdmin == true);
+                }
+                else if (role == "user")
+                {
+                    query = query.Where(u => u.IsAdmin == false);
+                }
+            }
+
+            // Pagination
+            var totalCount = query.Count();
+            var users = query
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .Select(u => new
+                {
+                    u.Id,
+                    u.Username,
+                    u.Email,
+                    u.IsAdmin,
+                    u.Name,
+                    u.Surname,
+                    u.PhoneNumber,
+                    u.Address,
+                    u.ImageUrl
+                })
+                .ToArray();
+
+            // Return with pagination metadata
+            return Ok(new
+            {
+                TotalCount = totalCount,
+                Items = users
+            });
         }
-
         // GET: api/User/5
         [HttpGet("{id}")]
         public ActionResult<UserResponse> GetUser(int id)
@@ -155,7 +187,7 @@ namespace RS1_2024_25.API.Endpoints
 
             if (request.CityId.HasValue)
             {
-                bool cityExists = _db.Cities.Any(c=>c.ID == request.CityId.Value);
+                bool cityExists = _db.Cities.Any(c => c.ID == request.CityId.Value);
                 if (!cityExists) return BadRequest("Invalid City ID.");
 
                 user.CityId = request.CityId.Value;
@@ -177,7 +209,7 @@ namespace RS1_2024_25.API.Endpoints
             user.Address = request.Address;
             user.Username = request.Username;
             user.is2FActive = request.is2FActive;
-           
+
             _db.SaveChanges();
 
             return Ok(new { message = "User updated successfully" });

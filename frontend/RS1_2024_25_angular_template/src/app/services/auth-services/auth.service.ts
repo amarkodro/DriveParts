@@ -173,6 +173,17 @@ export class AuthService {
   removeRefreshToken(): void {
     localStorage.removeItem('refreshToken');
   }
-
+getCurrentUserId(): number | null {
+  const token = this.getTokenUser();
+  if (!token) return null;
+  
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    return Number(payload['sub'] || payload['id'] || 0);
+  } catch (e) {
+    console.error('Error decoding token:', e);
+    return null;
+  }
+}
 
 }

@@ -8,14 +8,15 @@ import {
 } from "@angular/common/http";
 import { Observable, throwError, BehaviorSubject, switchMap, catchError } from "rxjs";
 import { AuthService } from "./auth.service";
-import {Router} from '@angular/router';
+import { Router } from '@angular/router';
+
 
 @Injectable()
 export class MyAuthInterceptor implements HttpInterceptor {
   private isRefreshing = false;
   private refreshTokenSubject: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(null);
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router) { }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const jwtToken = this.authService.getTokenUser();
@@ -70,6 +71,7 @@ export class MyAuthInterceptor implements HttpInterceptor {
           this.authService.setLoginStatus(false);
           localStorage.removeItem('jwtToken');
           sessionStorage.removeItem('jwtToken');
+          localStorage.removeItem('my-auth-token'); // Sync token cleanup
           this.authService?.setUserInfo(null);
           this.router.navigate(['/login']);
           return throwError(() => err);

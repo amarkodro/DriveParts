@@ -10,6 +10,7 @@ using RS1_2024_25.API.Endpoints;
 using RS1_2024_25.API.Helper;
 using RS1_2024_25.API.Helper.Auth;
 using RS1_2024_25.API.Services;
+using RS1_2024_25.API.Hubs;
 using System.Text;
 
 var config = new ConfigurationBuilder()
@@ -69,6 +70,7 @@ builder.Services.AddScoped<LocalAIService>();
 builder.Services.AddScoped<OpenAIService>();
 builder.Services.AddScoped<ChatController>();
 builder.Services.AddScoped<CompositeAIService>();
+builder.Services.AddSignalR();
 
 builder.Services.AddAuthentication(x =>
 {
@@ -84,6 +86,22 @@ builder.Services.AddAuthentication(x =>
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("f8d2eV3r5/8nW1qR4xPqL6zM9xD5u2F8xM0a1pZ3wNk=")),
         ValidateAudience = false,
         ValidateIssuer = false
+    };
+
+    // Add this for SignalR
+    x.Events = new JwtBearerEvents
+    {
+        OnMessageReceived = context =>
+        {
+            var accessToken = context.Request.Query["access_token"];
+            var path = context.HttpContext.Request.Path;
+
+            if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/chathub"))
+            {
+                context.Token = accessToken;
+            }
+            return Task.CompletedTask;
+        }
     };
 });
 
@@ -114,5 +132,9 @@ app.UseAuthorization();
 
 
 app.MapControllers();
-
+app.MapHub<ChatHub>("/chathub", options =>
+{
+    options.Transports = Microsoft.AspNetCore.Http.Connections.HttpTransportType.WebSockets |
+                         Microsoft.AspNetCore.Http.Connections.HttpTransportType.LongPolling;
+});
 app.Run();

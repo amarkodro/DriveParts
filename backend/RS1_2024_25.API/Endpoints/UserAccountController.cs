@@ -73,7 +73,7 @@ namespace RS1_2024_25.API.Endpoints
                     GenderName = u.Gender.GenderName,
                     CityName = u.City.Name,
                     ImageUrl = u.ImageUrl,
-                    }).ToList();
+                }).ToList();
 
             var admins = _db.UserAccounts.OfType<Admin>()
                 .Select(a => new UserAccountResponse
@@ -159,7 +159,7 @@ namespace RS1_2024_25.API.Endpoints
                     isUser = false,
                     is2FActive = request.is2FActive,
                     AdminLevel = request.AdminLevel,
-                    
+
                 };
             }
             else
@@ -189,7 +189,7 @@ namespace RS1_2024_25.API.Endpoints
 
         [HttpGet("profile")]
         [Authorize]
-        public IActionResult GetProfile()
+        public async Task<IActionResult> GetProfile()
         {
             var userIdClaim = User.FindFirst("id")?.Value;
             if (string.IsNullOrEmpty(userIdClaim))
@@ -197,30 +197,59 @@ namespace RS1_2024_25.API.Endpoints
 
             int userId = int.Parse(userIdClaim);
 
-            var user = _db.UserAccounts
-                .OfType<User>()
-                .Include(x => x.Gender)
-                .Include(x => x.City)
-                .FirstOrDefault(u => u.Id == userId);
+            // Query base UserAccount to get both User and Admin types
+            var userAccount = await _db.UserAccounts.FindAsync(userId);
 
-            if (user == null)
+            if (userAccount == null)
                 return NotFound("User not found.");
 
-            return Ok(new
+            // Check if it's a User or Admin
+            if (userAccount is User user)
             {
-                user.Id,
-                user.Name,
-                user.Surname,
-                user.Username,
-                user.Email,
-                user.ImageUrl,
-                user.PhoneNumber,
-                user.Address,
-                user.CityId,
-                user.GenderId,
-                CityName = user.City?.Name,
-                GenderName = user.Gender?.GenderName
-            });
+                // Load navigation properties for User
+                await _db.Entry(user).Reference(u => u.City).LoadAsync();
+                await _db.Entry(user).Reference(u => u.Gender).LoadAsync();
+
+                return Ok(new
+                {
+                    user.Id,
+                    user.Name,
+                    user.Surname,
+                    user.Username,
+                    user.Email,
+                    user.ImageUrl,
+                    user.PhoneNumber,
+                    user.Address,
+                    user.CityId,
+                    user.GenderId,
+                    user.IsAdmin,
+                    CityName = user.City?.Name,
+                    GenderName = user.Gender?.GenderName
+                });
+            }
+            else if (userAccount is Admin admin)
+            {
+                // Return admin profile
+                return Ok(new
+                {
+                    admin.Id,
+                    admin.Name,
+                    admin.Surname,
+                    admin.Username,
+                    admin.Email,
+                    admin.ImageUrl,
+                    admin.PhoneNumber,
+                    admin.Address,
+                    admin.IsAdmin,
+                    AdminLevel = admin.AdminLevel,
+                    CityId = (int?)null,
+                    GenderId = (int?)null,
+                    CityName = (string?)null,
+                    GenderName = (string?)null
+                });
+            }
+
+            return NotFound("User type not recognized.");
         }
 
         // DELETE: api/UserAccount/5

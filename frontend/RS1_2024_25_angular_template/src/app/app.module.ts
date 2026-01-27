@@ -44,6 +44,19 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { ChatComponent } from './ai-chat/ai-chat.component';
 import { FormsModule } from '@angular/forms';
+import { OrdersModalComponent } from './orders-modal/orders-modal.component';
+import { CustomerListComponent } from './customer-list/customer-list.component';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MyOrdersComponent } from './my-orders/my-orders.component';
+import { ConfirmationDialogComponent } from './confirmation-dialog/confirmation-dialog.component';
+import { FloatingAiButtonComponent } from './floating-ai-button/floating-ai-button.component';
+import { UserSupportChatComponent } from './user-support-chat/user-support-chat.component';
+import { AdminChatInboxComponent } from './admin-chat-inbox/admin-chat-inbox.component';
+
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -67,9 +80,14 @@ import { FormsModule } from '@angular/forms';
     AboutUsComponent,
     DashboardComponent,
     OrdersComponent,
-    ChatComponent
-    
-
+    ChatComponent,
+    OrdersModalComponent,
+    CustomerListComponent,
+    MyOrdersComponent,
+    ConfirmationDialogComponent,
+    FloatingAiButtonComponent,
+    UserSupportChatComponent,
+    AdminChatInboxComponent,
   ],
     imports: [
         BrowserModule,
@@ -91,6 +109,13 @@ MatSnackBarModule,
          MatIconModule,
     MatProgressSpinnerModule,
     MatSnackBarModule,
+      BrowserModule,
+    HttpClientModule,
+    MatInputModule,
+    MatButtonModule,
+    MatPaginatorModule,
+    MatDialogModule,
+    MatIconModule,
       ToastrModule.forRoot({
         positionClass: 'toast-top-center',
         timeOut: 3000,
