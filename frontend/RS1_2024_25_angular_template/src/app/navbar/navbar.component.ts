@@ -1,11 +1,11 @@
 import { Component, HostListener, OnInit, ElementRef } from '@angular/core';
 import { PartService } from '../services/navbar-search.service';
 import { Router } from '@angular/router';
-import {AuthService} from '../services/auth-services/auth.service';
-import {CartService} from '../services/cart.service';
-import {Subscription} from 'rxjs';
-
-
+import { AuthService } from '../services/auth-services/auth.service';
+import { CartService } from '../services/cart.service';
+import { Subscription } from 'rxjs';
+import { NgZone } from '@angular/core';
+import { ChangeDetectorRef } from '@angular/core';
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
@@ -23,22 +23,28 @@ export class NavbarComponent implements OnInit {
   searchOpen: boolean = false;
   userName: string | null = null;
   cartOpen = false;
-  cartItems : any[] = [];
-  private userInfoSub! : Subscription;
-
-
+  cartItems: any[] = [];
+  private userInfoSub!: Subscription;
+  isListening = false;
+  recognition: any;
+  speechSupported = false;
+  finalTranscript = '';
+  isAdmin: boolean = false;
 
   constructor(private partService: PartService,
-              private router: Router,
-              private elementRef: ElementRef,
-              private authService: AuthService,
-              private cartService: CartService,
-     ) {}
+    private router: Router,
+    private elementRef: ElementRef,
+    private authService: AuthService,
+    private cartService: CartService,
+    private ngZone: NgZone,
+    private cdRef: ChangeDetectorRef
+  ) { }
 
   ngOnInit(): void {
     this.partService.getAllParts().subscribe({
       next: (data) => {
         this.allParts = data;
+        console.log('Loaded parts:', this.allParts.length); // Debug
       },
       error: (error) => {
         console.error('Error fetching parts:', error);
@@ -73,9 +79,11 @@ export class NavbarComponent implements OnInit {
       if (status) {
         const userInfo = this.authService.getUserInfoFromToken();
         this.userName = userInfo ? `${userInfo.name} ${userInfo.surname}` : 'User';
+        this.isAdmin = userInfo?.role === 'Admin' || false;
         this.cartService.loadCartItems();
       } else {
         this.userName = null;
+        this.isAdmin = false;
         this.cartItems = [];
       }
     });
@@ -110,9 +118,120 @@ export class NavbarComponent implements OnInit {
     // Debug token info
     const info = this.authService.getUserInfoFromToken();
     console.log('Data from tokens', info);
+    this.isAdmin = info?.role === 'Admin' || false;
+    this.checkSpeechSupport();
+  }
+  checkSpeechSupport() {
+    this.speechSupported = 'webkitSpeechRecognition' in window || 'SpeechRecognition' in window;
+  }
+  toggleVoiceSearch(event: Event) {
+    event.stopPropagation(); // Prevent event bubbling
+
+    if (!this.speechSupported) {
+      alert('Speech recognition not supported in this browser. Try Chrome or Edge.');
+      return;
+    }
+
+    if (this.isListening) {
+      this.stopVoiceRecognition();
+    } else {
+      this.startVoiceRecognition();
+    }
+  }
+  startVoiceRecognition() {
+    if (this.isListening) return;
+
+    this.isListening = true;
+    this.finalTranscript = '';
+    this.searchString = '';
+    this.filteredParts = []; // Clear previous results
+
+    const SpeechRecognition = (window as any).webkitSpeechRecognition || (window as any).SpeechRecognition;
+
+    if (!this.recognition) {
+      this.recognition = new SpeechRecognition();
+      this.recognition.continuous = false;
+      this.recognition.interimResults = true;
+      this.recognition.lang = 'en-US';
+
+      this.recognition.onresult = (event: any) => {
+        let interimTranscript = '';
+
+        for (let i = event.resultIndex; i < event.results.length; ++i) {
+          if (event.results[i].isFinal) {
+            this.finalTranscript += event.results[i][0].transcript;
+          } else {
+            interimTranscript += event.results[i][0].transcript;
+          }
+        }
+
+        this.ngZone.run(() => {
+          // Update search string for display
+          this.searchString = this.finalTranscript + interimTranscript;
+
+          // DIRECTLY UPDATE SEARCH RESULTS
+          this.updateSearchResults(this.searchString);
+        });
+      };
+
+
+      this.recognition.onerror = (event: any) => {
+        console.error('Speech recognition error', event.error);
+        this.stopVoiceRecognition();
+      };
+
+      this.recognition.onend = () => {
+        this.ngZone.run(() => {
+          this.isListening = false;
+        });
+      };
+    }
+
+    this.recognition.start();
+  }
+  updateSearchResults(searchText: string) {
+    const normalizedSearch = searchText.toLowerCase().trim();
+
+    if (normalizedSearch === '') {
+      this.filteredParts = [];
+      return;
+    }
+
+    // Split search into individual words
+    const searchTerms = normalizedSearch.split(/\s+/).filter(term => term.length > 0);
+
+    // Filter parts - search in both name and description
+    this.filteredParts = this.allParts.filter(part => {
+      const partName = part.name ? part.name.toLowerCase() : '';
+      const partDesc = part.description ? part.description.toLowerCase() : '';
+
+      // Check if all search terms appear in either name or description
+      return searchTerms.every(term =>
+        partName.includes(term) ||
+        partDesc.includes(term)
+      );
+    });
+
+    // Force UI update
+    this.cdRef.detectChanges();
+    console.log('Voice search results:', this.filteredParts.length);
+  }
+  private triggerSearchUpdate() {
+    // Create a shallow copy of the array to force change detection
+    this.filteredParts = [...this.filteredParts];
+
+    // Force Angular to run change detection
+    this.cdRef.detectChanges();
+  }
+  stopVoiceRecognition() {
+    if (this.recognition) {
+      this.recognition.stop();
+    }
+    this.isListening = false;
   }
 
   ngOnDestroy(): void {
+    this.stopVoiceRecognition();
     this.userInfoSub?.unsubscribe();
   }
 
@@ -124,7 +243,7 @@ export class NavbarComponent implements OnInit {
     this.menuOpen = false;
   }
 
-  onSearchChange() {
+  /*onSearchChange() {
     const normalizedSearch = this.searchString.toLowerCase().trim();
     if (normalizedSearch === '') {
       this.filteredParts = [];
@@ -135,8 +254,10 @@ export class NavbarComponent implements OnInit {
       );
       this.searchOpen = this.filteredParts.length > 0;
     }
+  }*/
+  onSearchChange() {
+    this.updateSearchResults(this.searchString);
   }
-
   selectPart(part: any) {
     this.searchString = '';
     this.filteredParts = [];
@@ -157,6 +278,7 @@ export class NavbarComponent implements OnInit {
 
     localStorage.removeItem('jwtToken');
     sessionStorage.removeItem('jwtToken');
+    localStorage.removeItem('my-auth-token'); // Sync token cleanup
 
     this.isLoggedIn = false;
     this.userName = null;
@@ -212,8 +334,7 @@ export class NavbarComponent implements OnInit {
   }
 
   toggleCartDropdown() {
-    if(!this.isLoggedIn)
-    {
+    if (!this.isLoggedIn) {
       this.router.navigate(['/login']);
       return;
     }
@@ -224,7 +345,7 @@ export class NavbarComponent implements OnInit {
   loadCartItems(): void {
     this.cartService.getCartItems().subscribe({
       next: (items: any[]) => {
-        console.log('API ANSWER: ',items);
+        console.log('API ANSWER: ', items);
 
         this.cartItems = items.map(item => ({
           partId: item.partId,
@@ -240,14 +361,14 @@ export class NavbarComponent implements OnInit {
     });
   }
 
-  removeFromCart(partId:number) {
+  removeFromCart(partId: number) {
     this.cartService.removeItemFromCart(partId).subscribe({
       next: () => this.cartService.loadCartItems(),
       error: (err) => console.error('Error deleting from cart:', err)
     });
   }
 
-  clearEntireCart(){
+  clearEntireCart() {
     this.cartService.clearCart().subscribe({
       next: () => this.loadCartItems(),
       error: err => console.error('Error clearing cart:', err)

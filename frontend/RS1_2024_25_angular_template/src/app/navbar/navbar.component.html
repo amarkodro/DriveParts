@@ -7,12 +7,21 @@
     </a>
 
     <div class="search-container">
-      <input type="search" class="search-input" placeholder="Search parts..."
-             [(ngModel)]="searchString" (input)="onSearchChange()">
-      <ul *ngIf="filteredParts.length > 0" class="search-dropdown">
+      <input type="search" class="search-input" placeholder="Search parts..." [(ngModel)]="searchString"
+        (input)="onSearchChange()">
+      <!-- Voice search button with listening indicator -->
+      <button class="voice-search-btn" (click)="toggleVoiceSearch($event)" [class.listening]="isListening">
+        <i class="fas" [ngClass]="isListening ? 'fa-microphone-slash' : 'fa-microphone'"></i>
+        <span *ngIf="isListening" class="pulse-dot"></span>
+      </button>
+      <ul *ngIf="filteredParts.length > 0 || (isListening && searchString)" class="search-dropdown">
+        <li *ngIf="filteredParts.length === 0 && isListening" class="search-status">
+          <i class="fas fa-spinner fa-spin"></i> Searching for "{{ searchString }}"
+        </li>
+
         <li *ngFor="let part of filteredParts" (click)="selectPart(part)">
           <img [src]="'http://localhost:7000' + part.partImage || 'https://via.placeholder.com/50x50'"
-               alt="{{ part.name }}" />
+            alt="{{ part.name }}" />
           <div>
             <p class="part-name">{{ part.name }}</p>
             <p class="part-description">{{ part.description }}</p>
@@ -59,7 +68,7 @@
           <i class="fas fa-chevron-down" [class.open]="dropdownOpen"></i>
         </a>
         <ul *ngIf="dropdownOpen" class="dropdown-menu">
-          <li><a routerLink="/my-offers">My Offers</a></li>
+          <li><a routerLink="/my-orders" routerLinkActive="active">My Orders</a></li>
           <li><a (click)="openSettings(); $event.stopPropagation()">Settings</a></li>
           <li *ngIf="!isLoggedIn"><a routerLink="/login">Login</a></li>
           <li *ngIf="isLoggedIn"><a (click)="logout()">Logout</a></li>
@@ -80,12 +89,12 @@
 
     <div class="icon-bar d-flex justify-content-between align-items-center">
       <!-- Cart -->
-      <div class="cart-icon-mobile"(click)="toggleCartDropdown()">
+      <div class="cart-icon-mobile" (click)="toggleCartDropdown()">
         <i class="fas fa-shopping-cart"></i>
         <span>Cart</span>
       </div>
       <div *ngIf="cartOpen" class="cart-dropdown-mobile">
-        <div class="cart-header" >
+        <div class="cart-header">
           <strong>Your Cart</strong>
         </div>
 
@@ -134,17 +143,17 @@
 
 
 
-  <div class="mobile-menu d-lg-none" [ngClass]="{'show': menuOpen}">
-    <ul>
-      <li (click)="closeMenu()" routerLink="/"><a>Home</a></li>
-      <li (click)="closeMenu()" routerLink="/parts"><a>Categories</a></li>
-      <li (click)="closeMenu()" href="#"><a>Brands</a></li>
-      <li (click)="closeMenu()" routerLink="/faq"><a>FAQ</a></li>
-      <li (click)="closeMenu()" href="#"><a>About Us</a></li>
-    </ul>
-  </div>
+    <div class="mobile-menu d-lg-none" [ngClass]="{'show': menuOpen}">
+      <ul>
+        <li (click)="closeMenu()" routerLink="/"><a>Home</a></li>
+        <li (click)="closeMenu()" routerLink="/parts"><a>Categories</a></li>
+        <li (click)="closeMenu()" href="#"><a>Brands</a></li>
+        <li (click)="closeMenu()" routerLink="/faq"><a>FAQ</a></li>
+        <li (click)="closeMenu()" href="#"><a>About Us</a></li>
+      </ul>
+    </div>
 
-</div>
+  </div>
   <nav class="bottom-navbar d-none d-lg-flex">
     <div class="container">
       <ul class="navbar-nav">
@@ -153,6 +162,13 @@
         <li class="nav-item"><a class="nav-link" href="#">Brands</a></li>
         <li class="nav-item"><a class="nav-link" routerLink="/faq" routerLinkActive="active">FAQ</a></li>
         <li class="nav-item"><a class="nav-link" routerLink="/about-us" routerLinkActive="active">About Us</a></li>
+      </ul>
+      <ul class="navbar-nav navbar-nav-right" *ngIf="isLoggedIn && isAdmin">
+        <li class="nav-item">
+          <a class="nav-link admin-messages-link" routerLink="/admin/support-inbox" routerLinkActive="active">
+            <i class="fas fa-envelope"></i> Messages
+          </a>
+        </li>
       </ul>
     </div>
   </nav>

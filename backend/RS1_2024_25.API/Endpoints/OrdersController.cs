@@ -128,6 +128,32 @@ namespace RS1_2024_25.API.Endpoints
 
         }
 
+        [HttpGet("by-customer/{customerId}")]
+        public ActionResult<OrderResponse[]> GetOrdersByCustomer(int customerId)
+        {
+            var orders = _db.Orders
+                .AsNoTracking()
+                .Include(x => x.Status)
+                .Include(x => x.User)
+                .Include(x => x.Supplier)
+                .Include(x => x.Payment)
+                .Where(o => o.UserId == customerId)
+                .Select(x => new OrderResponse
+                {
+                    OrderId = x.OrderId,
+                    Date = x.Date,
+                    StatusName = x.Status != null ? x.Status.Name : "Unknown",
+                    Username = x.User != null ? x.User.Username : "Unknown",
+                    SupplierName = x.Supplier != null ? x.Supplier.Name : "Unknown",
+                    PaymentMethod = x.Payment != null ? x.Payment.PaymentMethod : "Unknown",
+                    PromoCode = x.PromoCode != null ? x.PromoCode.Code : "Unknown",
+                    Discount = x.PromoCode != null ? x.PromoCode.Discount : 0,
+                    TotalAmount = x.TotalAmount
+                }).ToArray();
+
+            return orders;
+        }
+
         [HttpPost("add")]
         public ActionResult<OrderResponse> PostOrder(OrderRequest request)
         {

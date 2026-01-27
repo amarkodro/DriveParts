@@ -86,13 +86,12 @@
 </button>
   <!-- Add delete button -->
   <button class="delete-btn" (click)="deleteOrder(order.orderId)">Delete</button>
-   <button mat-icon-button 
-          color="primary" 
-          (click)="downloadPdf(order.orderId)"
-          [disabled]="isDownloading"
-          class="pdf-btn">
+   <button 
+  (click)="downloadPdf(order.orderId)"
+  [disabled]="isDownloading"
+  class="pdf-btn">
   Reciept
-  </button>
+</button>
   
   <!-- Loading Spinner -->
   <mat-spinner *ngIf="isDownloading" 

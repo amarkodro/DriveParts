@@ -1,0 +1,43 @@
+<!-- orders-modal.component.html -->
+<div class="modal-overlay" *ngIf="isOpen">
+  <div class="modal-content">
+    <span class="close-btn" (click)="close()">&times;</span>
+    
+    <div class="modal-body">
+      <h2 class="modal-title">Orders for {{customerName}}</h2>
+      
+      <div *ngIf="loading" class="loading-spinner">
+        <mat-spinner diameter="40"></mat-spinner>
+      </div>
+
+      <div *ngIf="!loading && orders.length === 0" class="no-orders">
+        No orders found for this customer
+      </div>
+
+      <table *ngIf="!loading && orders.length > 0" class="orders-table">
+        <thead>
+          <tr>
+            <th>Order ID</th>
+            <th>Date</th>
+            <th>Status</th>
+            <th>Supplier</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let order of orders">
+            <td>{{order.orderId}}</td>
+            <td>{{order.date | date:'mediumDate'}}</td>
+            <td>{{order.statusName}}</td>
+            <td>{{order.supplierName}}</td>
+            <td>{{order.totalAmount | currency}}</td>
+          </tr>
+        </tbody>
+      </table>
+      
+      <div class="modal-actions">
+        <button class="close-modal-btn" (click)="close()">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
