@@ -13,27 +13,17 @@
   
   <!-- Messages Container -->
   <div #messagesContainer class="messages-container">
-    <!-- Initial AI message -->
-    <div class="message ai-message">
-      <div class="ai-header">
+    <!-- Message History -->
+    <div *ngFor="let message of messages" class="message" 
+         [ngClass]="{
+           'user-message': message.role === 'user',
+           'ai-message': message.role === 'assistant'
+         }">
+      <div *ngIf="message.role === 'assistant'" class="ai-header">
         <div class="ai-icon">AI</div>
         <span>Assistant</span>
       </div>
-      <p>Hello! I'm your AI assistant. How can I help you today?</p>
-    </div>
-    
-    <!-- User message -->
-    <div *ngIf="question" class="message user-message">
-      <p>{{question}}</p>
-    </div>
-    
-    <!-- AI response -->
-    <div *ngIf="answer" class="message ai-message">
-      <div class="ai-header">
-        <div class="ai-icon">AI</div>
-        <span>Assistant</span>
-      </div>
-      <p>{{answer}}</p>
+      <p>{{message.content}}</p>
     </div>
     
     <!-- Typing indicator -->
@@ -41,6 +31,12 @@
       <div class="typing-dot"></div>
       <div class="typing-dot"></div>
       <div class="typing-dot"></div>
+    </div>
+    
+    <!-- Speech recognition status -->
+    <div *ngIf="isListening" class="speech-status">
+      <div class="pulse-dot"></div>
+      <span>Listening... Speak now</span>
     </div>
   </div>
   
@@ -54,12 +50,23 @@
       placeholder="Type your message..."
       autocomplete="off"
     >
-    <button 
-      class="send-button" 
-      (click)="ask()" 
-      [disabled]="!newQuestion.trim() || isTyping"
-    >
-      Send
-    </button>
+    <div class="input-buttons">
+      <button 
+  class="voice-button" 
+  (click)="toggleVoiceRecognition()"
+  [class.listening]="isListening"
+  [disabled]="isTyping" 
+  title="Voice Input"
+>
+  <i class="fas" [ngClass]="isListening ? 'fa-microphone-slash' : 'fa-microphone'"></i>
+</button>
+      <button 
+        class="send-button" 
+        (click)="ask()" 
+        [disabled]="!newQuestion.trim() || isTyping"
+      >
+        Send
+      </button>
+    </div>
   </div>
 </div>

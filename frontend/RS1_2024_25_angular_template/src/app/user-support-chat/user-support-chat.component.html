@@ -1,0 +1,44 @@
+<div class="chat-widget" *ngIf="!isOpen && isLoggedIn && !isAdmin">
+    <button class="chat-toggle-btn" (click)="toggleChat()">
+        <i class="fa fa-comments"></i>
+        <span>Support</span>
+    </button>
+</div>
+
+<div class="chat-window" *ngIf="isOpen && isLoggedIn && !isAdmin" [class.minimized]="isMinimized">
+    <div class="chat-header">
+        <h3>Support Chat</h3>
+        <div class="header-actions">
+            <button (click)="toggleMinimize()" class="minimize-btn">
+                <i class="fa" [ngClass]="isMinimized ? 'fa-window-maximize' : 'fa-window-minimize'"></i>
+            </button>
+            <button (click)="toggleChat()" class="close-btn">
+                <i class="fa fa-times"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="chat-body" *ngIf="!isMinimized">
+        <div class="messages-container" #messagesContainer>
+            <div *ngIf="messages.length === 0" class="empty-state">
+                <p>Send a message to our support team!</p>
+            </div>
+            <div *ngFor="let msg of messages" class="message" [class.sent]="msg.isFromUser"
+                [class.received]="!msg.isFromUser">
+                <div class="message-content">
+                    <strong>{{ msg.senderName }}</strong>
+                    <p>{{ msg.content }}</p>
+                    <span class="timestamp">{{ msg.timestamp | date:'short' }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="chat-input">
+            <input type="text" [(ngModel)]="newMessage" (keyup.enter)="sendMessage()" placeholder="Type your message..."
+                [disabled]="!isConnected" />
+            <button (click)="sendMessage()" [disabled]="!isConnected || !newMessage.trim()">
+                <i class="fa fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+</div>

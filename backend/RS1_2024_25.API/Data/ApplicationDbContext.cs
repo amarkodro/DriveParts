@@ -35,6 +35,8 @@ namespace RS1_2024_25.API.Data
         public DbSet<CartItem> CartItems { get; set; }
         public DbSet<PromoCode> PromoCodes { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
+        public DbSet<Conversation> Conversations { get; set; }
+        public DbSet<Message> Messages { get; set; }
      
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

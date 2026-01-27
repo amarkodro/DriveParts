@@ -1,0 +1,59 @@
+<div class="admin-inbox">
+    <div class="inbox-container">
+        <!-- Left Panel: Conversations List -->
+        <div class="conversations-panel">
+            <div class="panel-header">
+                <h2>Support Inbox</h2>
+            </div>
+            <div class="conversations-list">
+                <div *ngFor="let conv of conversations" class="conversation-item"
+                    [class.active]="selectedConversation?.id === conv.id" (click)="selectConversation(conv)">
+                    <div class="conversation-info">
+                        <h4>{{ conv.userName }}</h4>
+                        <p class="last-message">{{ conv.lastMessage }}</p>
+                    </div>
+                    <div class="conversation-meta">
+                        <span class="timestamp">{{ conv.lastMessageAt | date:'short' }}</span>
+                        <span class="unread-badge" *ngIf="conv.unreadCount > 0">{{ conv.unreadCount }}</span>
+                    </div>
+                </div>
+                <div *ngIf="conversations.length === 0" class="empty-state">
+                    <p>No conversations yet</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Panel: Chat Window -->
+        <div class="chat-panel">
+            <div *ngIf="!selectedConversation" class="no-selection">
+                <i class="fa fa-comments"></i>
+                <p>Select a conversation to start chatting</p>
+            </div>
+
+            <div *ngIf="selectedConversation" class="chat-container">
+                <div class="chat-header">
+                    <h3>{{ selectedConversation.userName }}</h3>
+                </div>
+
+                <div class="messages-container" #messagesContainer>
+                    <div *ngFor="let msg of selectedConversation.messages" class="message"
+                        [class.sent]="!msg.isFromUser" [class.received]="msg.isFromUser">
+                        <div class="message-content">
+                            <strong>{{ msg.senderName }}</strong>
+                            <p>{{ msg.content }}</p>
+                            <span class="timestamp">{{ msg.timestamp | date:'short' }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chat-input">
+                    <input type="text" [(ngModel)]="newMessage" (keyup.enter)="sendMessage()"
+                        placeholder="Type your reply..." [disabled]="!isConnected" />
+                    <button (click)="sendMessage()" [disabled]="!isConnected || !newMessage.trim()">
+                        <i class="fa fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
