@@ -245,4 +245,7 @@ export class ProductSectionComponent implements OnInit {
     setTimeout(() => imgClone.remove(), 900);
   }
 
+  goToPartDetails(partId: any) {
+    this.router.navigate(['part-detail', partId]);
+  }
 }

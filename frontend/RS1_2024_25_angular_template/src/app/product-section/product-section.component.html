@@ -9,9 +9,9 @@
         <button class="view-all-btn" (click)="viewAllParts('featured')">View All</button>
       </div>
       <div class="product-grid">
-        <div *ngFor="let part of featuredParts.slice(0,4)" class="product-card">
+        <div *ngFor="let part of featuredParts.slice(0,4)" class="product-card" (click)="goToPartDetails(part.partId)">
           <div class="product-icons">
-            <div class="product-detail-box" (click)="openProductModal(part)">
+            <div class="product-detail-box" (click)="openProductModal(part); $event.stopPropagation()">
               <img src="/assets/zoom-in.png">
             </div>
             <span class="wishlist-icon">&#9825;</span>
@@ -39,9 +39,9 @@
         <button class="view-all-btn" (click)="viewAllParts('new-arrivals')">View All</button>
       </div>
       <div class="product-grid">
-        <div *ngFor="let part of newArrivalParts.slice(0,4)" class="product-card">
+        <div *ngFor="let part of newArrivalParts.slice(0,4)" class="product-card" (click)="goToPartDetails(part.partId)">
           <div class="product-icons">
-            <div class="product-detail-box" (click)="openProductModal(part)">
+            <div class="product-detail-box" (click)="openProductModal(part); $event.stopPropagation()">
               <img src="/assets/zoom-in.png">
             </div>
             <span class="wishlist-icon">&#9825;</span>
@@ -68,9 +68,9 @@
         <button class="view-all-btn" (click)="viewAllParts('on-sale')">View All</button>
       </div>
       <div class="product-grid">
-        <div *ngFor="let part of onSaleParts.slice(0,4)" class="product-card">
+        <div *ngFor="let part of onSaleParts.slice(0,4)" class="product-card" (click)="goToPartDetails(part.partId)">
           <div class="product-icons">
-            <div class="product-detail-box" (click)="openProductModal(part)">
+            <div class="product-detail-box" (click)="openProductModal(part); $event.stopPropagation()">
               <img src="/assets/zoom-in.png">
             </div>
             <span class="wishlist-icon">&#9825;</span>

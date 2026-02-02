@@ -3,6 +3,8 @@ import {ActivatedRoute} from '@angular/router';
 import {PartsService} from '../services/parts.service';
 import {CartService} from '../services/cart.service';
 import {ToastrService} from 'ngx-toastr';
+import {Router} from '@angular/router';
+import {AuthService} from '../services/auth-services/auth.service';
 
 @Component({
   selector: 'app-view-parts',
@@ -18,6 +20,7 @@ export class ViewPartsComponent implements OnInit {
               private partsService : PartsService,
               private cartService : CartService,
               private toastr: ToastrService,
+              private router : Router
               ) {}
     ngOnInit(): void {
       this.route.queryParams.subscribe(params => {
@@ -151,5 +154,9 @@ export class ViewPartsComponent implements OnInit {
     });
 
     setTimeout(() => imgClone.remove(), 900);
+  }
+
+  goToPartDetails(partId: any) {
+    this.router.navigate(['/part-detail', partId]);
   }
 }

@@ -5,9 +5,9 @@
         <h2>{{ category | titlecase }} Parts</h2>
       </div>
       <div class="product-grid">
-        <div *ngFor="let part of parts" class="product-card">
+        <div *ngFor="let part of parts" class="product-card" (click)="goToPartDetails(part.partId)" >
           <div class="product-icons">
-            <div class="product-detail-box" (click)="openProductModal(part)">
+            <div class="product-detail-box" (click)="openProductModal(part); $event.stopPropagation()">
               <img src="/assets/zoom-in.png">
             </div>
             <span class="wishlist-icon">&#9825;</span>

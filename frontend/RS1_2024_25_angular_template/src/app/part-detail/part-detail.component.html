@@ -16,8 +16,18 @@
           <span class="manufacturer-part">Manufacturer: {{part.manufacturerName}}</span>
         </div>
         <p class="current-price">Price: {{ part.price }}KM</p>
+
+        <div class="quantity-wrapper mb-3">
+          <label class="quantity-label">Quantity</label>
+          <div class="quantity-control">
+            <button type="button" class="qty-btn" (click)="decreaseQuantity()">−</button>
+            <input type="number" class="qty-input" [value]="quantity" value="1" min="1" readonly>
+            <button type="button" class="qty-btn" (click)="increaseQuantity()">+</button>
+          </div>
+        </div>
+
         <div class="actions mb-4">
-          <button class="btn btn-outline-dark me-3 add-to-cart">Add to Cart</button>
+          <button class="btn btn-outline-dark me-3 add-to-cart" (click)="addToCart($event); $event.stopPropagation();">Add to Cart</button>
           <button class="btn btn-outline-primary add-to-favorites">Add to Favorites</button>
         </div>
         <div class="reviews">
