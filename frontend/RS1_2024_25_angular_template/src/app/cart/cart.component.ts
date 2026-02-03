@@ -13,6 +13,7 @@ import {AuthService} from '../services/auth-services/auth.service';
 })
 export class CartComponent implements OnInit {
   cartItems: any[] = [];
+  savedItems: any[] = [];
   discount: number = 0;
   invalidCoupon: boolean = false;
   checkoutForm!: FormGroup;
@@ -42,13 +43,18 @@ export class CartComponent implements OnInit {
     this.cartService.loadCartItems();
 
     this.cartService.cartItems$.subscribe(items => {
-      this.cartItems = items.map(item => ({
+      const mapped = items.map(item => ({
+        id: item.id ?? item.Id,
         partId: item.partId,
         name: item.partName || item.name,
         quantity: item.quantity,
         price: item.price,
-        image: 'http://localhost:7000/' + (item.image || 'images/placeholder.png')
+        image: 'http://localhost:7000/' + (item.image || 'images/placeholder.png'),
+        isSavedForLater: item.isSavedForLater
       }));
+
+      this.cartItems = mapped.filter(x => !x.isSavedForLater);
+      this.savedItems = mapped.filter(x => x.isSavedForLater);
     });
   }
 
@@ -188,6 +194,32 @@ export class CartComponent implements OnInit {
     setTimeout(() => {
       this.router.navigate(['/checkout']);
     }, 2000);
+  }
+
+  onSaveForLater(item: any): void {
+    this.cartService.saveForLater(item.id).subscribe({
+      next: () => {
+        this.cartService.loadCartItems();
+        this.toastr.info('Item saved for later');
+      },
+      error: (err) => {
+        console.error(err);
+        this.toastr.error('Failed to save for later');
+      }
+    });
+  }
+
+  onMoveToCart(item: any): void {
+    this.cartService.moveToCart(item.id).subscribe({
+      next: () => {
+        this.cartService.loadCartItems();
+        this.toastr.success('Item moved to cart');
+      },
+      error: (err) => {
+        console.error(err);
+        this.toastr.error('Failed to move to cart');
+      }
+    });
   }
 
 }

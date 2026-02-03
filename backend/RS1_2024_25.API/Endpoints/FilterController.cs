@@ -21,6 +21,7 @@ namespace RS1_2024_25.API.Endpoints
 
         public class FilterResponse
         {
+            public int Id { get; set; }
             public int PartId { get; set; }
             public string Name { get; set; }
             public double Price { get; set; }
@@ -129,7 +130,7 @@ namespace RS1_2024_25.API.Endpoints
                             (carId==null || x.Model.CarId==carId))
                         .Select(x => new FilterResponse
                         {
-
+                            Id = x.PartId,
                             PartId = x.PartId,
                             Name = x.Part.Name,
                             Price = x.Part.Price,

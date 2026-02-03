@@ -84,10 +84,10 @@
 <!-- Parts Section -->
 <div class="product-section" *ngIf="filteredParts.length>0">
   <div class="product-grid">
-    <div class="product-card part-card" *ngFor="let part of filteredParts">
+    <div class="product-card part-card" *ngFor="let part of filteredParts" (click)="goToPartDetails(part.partId)">
       <!-- Wishlist & Details Container -->
       <div class="product-icons">
-        <div class="product-detail-box" (click)="openProductModal(part)"> <img src="/assets/zoom-in.png"></div>
+        <div class="product-detail-box" (click)="openProductModal(part); $event.stopPropagation() "> <img src="/assets/zoom-in.png"></div>
         <span class="wishlist-icon">&#9825;</span>
       </div>
 

@@ -347,4 +347,8 @@ export class PartsComponent implements OnInit, AfterViewInit {
 
     setTimeout(() => imgClone.remove(), 900);
   }
+
+  goToPartDetails(partId: number) {
+    this.router.navigate(['/part-detail', partId]);
+  }
 }

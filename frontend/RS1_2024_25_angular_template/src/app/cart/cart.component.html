@@ -13,6 +13,8 @@
         </div>
 
         <div *ngFor="let item of cartItems" class="cart-row d-flex align-items-center mb-3">
+
+
           <div class="item-img me-3">
             <img [src]="item.image" alt="Image" class="rounded" width="60" height="60">
           </div>
@@ -29,12 +31,21 @@
             <strong>{{ item.price }} KM</strong>
           </div>
 
+          <i
+            class="fa fa-bookmark text-secondary"
+            title="Save for later"
+            style="cursor: pointer;"
+            (click)="onSaveForLater(item); $event.stopPropagation()">
+          </i>
+
           <div class="item-remove">
             <i class="fa fa-trash text-danger" style="cursor: pointer;" (click)="removeItem(item.partId)"></i>
           </div>
         </div>
       </div>
     </div>
+
+
 
     <div class="col-md-4">
       <div class="payment-info">
@@ -85,6 +96,37 @@
     </div>
   </div>
 </div>
+
+<div *ngIf="savedItems.length > 0" class="saved-wrapper mt-4">
+  <div class="saved-card">
+    <div class="saved-header">
+      <h6 class="mb-0 saved-title">Saved for later</h6>
+      <span class="saved-count">{{ savedItems.length }} items</span>
+    </div>
+
+    <div *ngFor="let s of savedItems" class="saved-row d-flex align-items-center">
+      <div class="item-img me-3">
+        <img [src]="s.image" alt="Image" class="rounded" width="60" height="60">
+      </div>
+
+      <div class="item-name me-3 flex-grow-1">
+        <strong>{{ s.name }}</strong>
+        <div class="text-muted small">{{ s.price }} KM</div>
+      </div>
+
+      <div class="saved-actions">
+        <i class="fa fa-shopping-cart text-primary action-icon"
+           title="Move to cart"
+           (click)="onMoveToCart(s); $event.stopPropagation()"></i>
+
+        <i class="fa fa-trash text-danger action-icon"
+           title="Remove"
+           (click)="removeItem(s.partId); $event.stopPropagation()"></i>
+      </div>
+    </div>
+  </div>
+</div>
+
 
 <div *ngIf="cartItems.length === 0" class="container mt-5 p-5 text-center cart-empty">
   <img src="assets/shopping.png" alt="Empty Cart" width="130" class="mb-4" />

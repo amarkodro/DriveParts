@@ -9,5 +9,6 @@
         public Part Part { get; set; }
         public int Quantity { get; set; }
         public DateTime AddedAt { get; set; } = DateTime.Now;
+        public bool IsSavedForLater { get; set; } = false;
     }
 }

@@ -12,7 +12,7 @@ namespace RS1_2024_25.API.Endpoints
     public class CartItemController(ApplicationDbContext _db) : ControllerBase
     {
         [HttpPost("add")]
-        
+
         public IActionResult AddToCart([FromBody] CartItemRequests requests)
         {
             var userId = int.Parse(User.FindFirst("id")?.Value ?? "0");
@@ -33,7 +33,7 @@ namespace RS1_2024_25.API.Endpoints
 
 
         [HttpGet("getAll")]
-       
+
         public IActionResult GetCart()
         {
             var userId = int.Parse(User.FindFirst("id")?.Value ?? "0");
@@ -47,18 +47,20 @@ namespace RS1_2024_25.API.Endpoints
                 .Where(c => c.Part != null)
                 .Select(c => new CartItemResponse
                 {
+                    Id = c.Id,
                     PartId = c.PartId,
                     PartName = c.Part.Name,
                     Image = c.Part.PartImage,
                     Price = c.Part.Price,
-                    Quantity = c.Quantity
+                    Quantity = c.Quantity,
+                    IsSavedForLater = c.IsSavedForLater
                 });
 
             return Ok(result);
         }
 
         [HttpDelete("remove/{partId}")]
-      
+
         public IActionResult RemoveFromCart(int partId)
         {
             var userId = int.Parse(User.FindFirst("id")?.Value ?? "0");
@@ -72,7 +74,7 @@ namespace RS1_2024_25.API.Endpoints
             return Ok(new { message = "Item removed from cart." });
         }
 
-        
+
         [HttpDelete("clear")]
         public IActionResult ClearCart()
         {
@@ -86,7 +88,7 @@ namespace RS1_2024_25.API.Endpoints
             _db.SaveChanges();
 
             return Ok(new { message = "Cart cleared successfully. " });
-           
+
         }
 
         [HttpPut("update")]
@@ -104,16 +106,48 @@ namespace RS1_2024_25.API.Endpoints
             return Ok(new { message = "Quantity update successfully. " });
         }
 
+        [HttpPut("{id}/move-to-cart")]
+        public async Task<IActionResult> MoveToCart(int id)
+        {
+            var item = await _db.CartItems.FindAsync(id);
+            if (item == null)
+            {
+                return NotFound(new { message = "Item not found in cart." });
+            }
+
+            item.IsSavedForLater = false;
+            await _db.SaveChangesAsync();
+
+            return Ok(new { message = "Item moved to cart successfully." });
+        }
+
+        [HttpPut("{id}/save-to-later")]
+        public async Task<IActionResult> SaveToLater(int id)
+        {
+            var item = await _db.CartItems.FindAsync(id);
+            if (item == null)
+            {
+                return NotFound(new { message = "Item not found in cart." });
+            }
+
+            item.IsSavedForLater = true;
+            await _db.SaveChangesAsync();
+
+            return Ok(new { message = "Item moved to cart successfully." });
+        }
+
 
     }
 
     public class CartItemResponse
     {
+        public int Id { get; set; }
         public int PartId { get; set; }
         public string PartName { get; set; }
         public string Image { get; set; }
         public double Price { get; set; }
         public int Quantity { get; set; }
+        public bool IsSavedForLater { get; set; }
     }
 
 

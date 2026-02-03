@@ -13,6 +13,7 @@ export class CartService {
   private cartItemsSubject = new BehaviorSubject<any[]>([]);
   cartItems$ = this.cartItemsSubject.asObservable();
   private discount: number = 0;
+  private cartItemId: any;
 
   constructor(private http: HttpClient, ) {
     const savedItems = localStorage.getItem('cartItems');
@@ -105,4 +106,17 @@ export class CartService {
   }
 
 
+  saveForLater(cartItemId: number) {
+    return this.http.put(
+      `http://localhost:7000/api/cart/${cartItemId}/save-to-later`,
+      {}
+    );
+  }
+
+  moveToCart(cartItemId: number) {
+    return this.http.put(
+      `http://localhost:7000/api/cart/${cartItemId}/move-to-cart`,
+      {}
+    );
+  }
 }
