@@ -45,26 +45,74 @@ namespace RS1_2024_25.API.Endpoints
         }
 
         [HttpGet]
-        public ActionResult<PartResponse[]> GetParts()
+        public ActionResult GetParts(
+            [FromQuery] int page = 1,
+            [FromQuery] int pageSize = 10,
+            [FromQuery] string? name = null,
+            [FromQuery] int? categoryId = null,
+            [FromQuery] int? manufacturerId = null,
+            [FromQuery] double? minPrice = null,
+            [FromQuery] double? maxPrice = null)
         {
-            var parts = _db.Parts
-                          .Include(p => p.Category)
-                          .Include(p => p.Manufacturer)
-                          .Select(x => new PartResponse
-                          {
-                              PartId=x.PartId,
-                              Name = x.Name,
-                              Price = x.Price,
-                              Description = x.Description,
-                              CategoryName = x.Category != null ? x.Category.Name : "Unknown",
-                              ManufacturerName = x.Manufacturer != null ? x.Manufacturer.Name : "Unknown",
-                              PartImage = x.PartImage,
-                              IsNewArrival = x.IsNewArrival,
-                              IsOnSale = x.IsOnSale,
-                              IsFeatured = x.IsFeatured
-                          }).ToArray();
+            IQueryable<Part> query = _db.Parts
+                .Include(p => p.Category)
+                .Include(p => p.Manufacturer);
 
-            return parts;
+            // Apply filters
+            if (!string.IsNullOrEmpty(name))
+            {
+                query = query.Where(p => p.Name.Contains(name));
+            }
+
+            if (categoryId.HasValue)
+            {
+                query = query.Where(p => p.CategoryId == categoryId.Value);
+            }
+
+            if (manufacturerId.HasValue)
+            {
+                query = query.Where(p => p.ManufacturerId == manufacturerId.Value);
+            }
+
+            if (minPrice.HasValue)
+            {
+                query = query.Where(p => p.Price >= minPrice.Value);
+            }
+
+            if (maxPrice.HasValue)
+            {
+                query = query.Where(p => p.Price <= maxPrice.Value);
+            }
+
+            // Get total count before pagination
+            var totalCount = query.Count();
+
+            // Apply pagination
+            var parts = query
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .Select(x => new PartResponse
+                {
+                    PartId = x.PartId,
+                    Name = x.Name,
+                    Price = x.Price,
+                    Description = x.Description,
+                    CategoryId = x.CategoryId,
+                    ManufacturerId = x.ManufacturerId,
+                    CategoryName = x.Category != null ? x.Category.Name : "Unknown",
+                    ManufacturerName = x.Manufacturer != null ? x.Manufacturer.Name : "Unknown",
+                    PartImage = x.PartImage,
+                    IsNewArrival = x.IsNewArrival,
+                    IsOnSale = x.IsOnSale,
+                    IsFeatured = x.IsFeatured
+                }).ToArray();
+
+            // Return with pagination metadata
+            return Ok(new
+            {
+                TotalCount = totalCount,
+                Items = parts
+            });
         }
 
         [HttpGet("{id}")]
@@ -95,7 +143,7 @@ namespace RS1_2024_25.API.Endpoints
         }
 
         [HttpPost]
-        public ActionResult<PartResponse> PostPart(PartRequest request)
+        public ActionResult<PartResponse> PostPart([FromForm] PartRequest request)
         {
             string imageUrl = null;
             if (request.PartImage != null)
@@ -104,7 +152,7 @@ namespace RS1_2024_25.API.Endpoints
                 var extension = Path.GetExtension(request.PartImage.FileName);
                 var uniqueFileName = $"{fileName}_{Guid.NewGuid()}{extension}";
                 var filePath = Path.Combine("wwwroot/images", uniqueFileName);
-                using (var stream = new FileStream(filePath, FileMode.Create)) { request.PartImage.CopyToAsync(stream); }
+                using (var stream = new FileStream(filePath, FileMode.Create)) { request.PartImage.CopyTo(stream); }
                 imageUrl = $"/images/{uniqueFileName}";
             }
             
@@ -275,6 +323,24 @@ namespace RS1_2024_25.API.Endpoints
 
        
 
+
+        [HttpGet("suggestions")]
+        public async Task<ActionResult<List<string>>> GetPartSuggestions([FromQuery] string query)
+        {
+            if (string.IsNullOrWhiteSpace(query))
+            {
+                return Ok(new List<string>());
+            }
+
+            var suggestions = await _db.Parts
+                .Where(p => p.Name.Contains(query))
+                .Select(p => p.Name)
+                .Distinct()
+                .Take(10)
+                .ToListAsync();
+
+            return Ok(suggestions);
+        }
 
     }
 }

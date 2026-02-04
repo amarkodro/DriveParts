@@ -6,8 +6,9 @@
 
     <div class="filter-box">
       <!-- Car Dropdown -->
-      <div class="filter-item" [ngClass]="{'open': dropdownState['car']}" (click)="toggleDropdown('car'); $event.stopPropagation()">
-        <div class="dropdown-container"  >
+      <div class="filter-item" [ngClass]="{'open': dropdownState['car']}"
+        (click)="toggleDropdown('car'); $event.stopPropagation()">
+        <div class="dropdown-container">
           <div class="selected-option">{{ getSelectedCarName() || 'Select Car' }}</div>
           <div class="dropdown-arrow"><i class="fas fa-chevron-down"></i></div>
         </div>
@@ -18,7 +19,8 @@
         </div>
       </div>
 
-      <div class="filter-item" [ngClass]="{'open': dropdownState['model']}" (click)="toggleDropdown('model');$event.stopPropagation()">
+      <div class="filter-item" [ngClass]="{'open': dropdownState['model']}"
+        (click)="toggleDropdown('model');$event.stopPropagation()">
         <div class="dropdown-container">
           <div class="selected-option">{{ getSelectedModelName() || 'Select Model' }}</div>
           <div class="dropdown-arrow"><i class="fas fa-chevron-down"></i></div>
@@ -32,7 +34,8 @@
       </div>
 
       <!-- Category Dropdown -->
-      <div class="filter-item" [ngClass]="{'open': dropdownState['category']}" (click)="toggleDropdown('category');$event.stopPropagation()">
+      <div class="filter-item" [ngClass]="{'open': dropdownState['category']}"
+        (click)="toggleDropdown('category');$event.stopPropagation()">
         <div class="dropdown-container">
           <div class="selected-option">{{ getSelectedCategoryName() || 'Select Category' }}</div>
           <div class="dropdown-arrow"><i class="fas fa-chevron-down"></i></div>
@@ -45,7 +48,8 @@
       </div>
 
       <!-- Part Dropdown -->
-      <div class="filter-item" [ngClass]="{'open': dropdownState['part']}" (click)="toggleDropdown('part');$event.stopPropagation()">
+      <div class="filter-item" [ngClass]="{'open': dropdownState['part']}"
+        (click)="toggleDropdown('part');$event.stopPropagation()">
         <div class="dropdown-container">
           <div class="selected-option">{{ getSelectedPartName() || 'Select Part' }}</div>
           <div class="dropdown-arrow"><i class="fas fa-chevron-down"></i></div>
@@ -58,7 +62,8 @@
       </div>
 
 
-      <div class="filter-item" *ngIf="showVehicleTypeDropdown" [ngClass]="{'open': dropdownState['type']}" (click)="toggleDropdown('type');$event.stopPropagation()">
+      <div class="filter-item" *ngIf="showVehicleTypeDropdown" [ngClass]="{'open': dropdownState['type']}"
+        (click)="toggleDropdown('type');$event.stopPropagation()">
         <div class="dropdown-container">
           <div class="selected-option">{{ getSelectedTypeName() || 'Select Type' }}</div>
           <div class="dropdown-arrow"><i class="fas fa-chevron-down"></i></div>
@@ -70,12 +75,12 @@
         </div>
       </div>
 
-    <div class="filter-buttons">
-      <!-- Search Button -->
-      <button class="search-btn" (click)="applyFilter()">Search</button>
+      <div class="filter-buttons">
+        <!-- Search Button -->
+        <button class="search-btn" (click)="applyFilter()">Search</button>
 
-      <!-- Reset Button -->
-      <button class="reset-btn" (click)="resetFilter()">Reset</button>
+        <!-- Reset Button -->
+        <button class="reset-btn" (click)="resetFilter()">Reset</button>
       </div>
     </div>
   </div>
@@ -84,17 +89,16 @@
 <!-- Parts Section -->
 <div class="product-section" *ngIf="filteredParts.length>0">
   <div class="product-grid">
-    <div class="product-card part-card" *ngFor="let part of filteredParts" (click)="goToPartDetails(part.partId)">
+    <div class="product-card part-card" *ngFor="let part of filteredParts">
       <!-- Wishlist & Details Container -->
       <div class="product-icons">
-        <div class="product-detail-box" (click)="openProductModal(part); $event.stopPropagation() "> <img src="/assets/zoom-in.png"></div>
+        <div class="product-detail-box" (click)="openProductModal(part)"> <img src="/assets/zoom-in.png"></div>
         <span class="wishlist-icon">&#9825;</span>
       </div>
 
       <!-- Product Image -->
       <img [src]="'http://localhost:7000' + part.partImage || 'https://via.placeholder.com/300x200'"
-           alt="{{ part.name }}"
-           class="product-image product-main-image" />
+        alt="{{ part.name }}" class="product-image product-main-image" />
 
       <!-- Product Info -->
       <div class="product-info">
@@ -117,84 +121,51 @@
     <span class="close-btn" (click)="closeProductModal()">&times;</span>
 
     <div class="modal-body">
+      <!-- Picture's product -->
       <div class="modal-image-container">
-        <img
-          [src]="'http://localhost:7000' + selectedPart.partImage || 'https://via.placeholder.com/300x200'"
-          alt="{{ selectedPart.name }}"
-          class="modal-image modal-product-image" />
+        <img [src]="'http://localhost:7000' + selectedPart.partImage || 'https://via.placeholder.com/300x200'"
+          alt="{{ selectedPart.name }}" class="modal-image modal-product-image" />
       </div>
 
+      <!-- Information of product -->
       <div class="modal-info">
         <h2 class="modal-title">{{ selectedPart.name }}</h2>
 
         <div class="modal-details">
-          <p class="modal-description"><strong>Description:</strong>{{ selectedPart.description }}</p>
-          <p><strong>Manufacturer:</strong> {{ selectedPart.manufacturerName || 'N/A' }}</p>
-          <p><strong>Category:</strong> {{ selectedPart.categoryName || 'N/A' }}</p>
-          <p class="modal-price"><strong>Price:</strong> <span>{{ selectedPart.price }} KM</span></p>
+          <p class="modal-description"><strong>Description:</strong> {{ selectedPart.description }}</p>
 
-          <div class="modal-overlay" *ngIf="selectedPart">
-            <div class="modal-content">
-              <span class="close-btn" (click)="closeProductModal()">&times;</span>
-
-              <div class="modal-body">
-                <!-- Picture's product -->
-                <div class="modal-image-container">
-                  <img
-                    [src]="'http://localhost:7000' + selectedPart.partImage || 'https://via.placeholder.com/300x200'"
-                    alt="{{ selectedPart.name }}"
-                    class="modal-image modal-product-image" />
-                </div>
-
-                <!-- Information of product -->
-                <div class="modal-info">
-                  <h2 class="modal-title">{{ selectedPart.name }}</h2>
-
-                  <div class="modal-details">
-                    <p class="modal-description"><strong>Description:</strong> {{ selectedPart.description }}</p>
-
-                    <!-- Manufacturer and Category in the same row -->
-                    <div class="modal-info-row">
-                      <p><strong>Manufacturer:</strong> {{ selectedPart.manufacturerName || 'N/A' }}</p>
-                      <p><strong>Category:</strong> {{ selectedPart.categoryName || 'N/A' }}</p>
-                    </div>
-
-                    <p class="modal-price"><strong>Price:</strong> <span>{{ selectedPart.price * selectedPart.quantity}} KM</span></p>
-                  </div>
-
-                  <hr class="modal-divider">
-
-                  <!-- Button and Quantitiy for added -->
-                  <div class="modal-actions">
-                    <label for="inputQuantitySelector" class="quantity-label">Quantity:</label>
-
-                    <div class="input-group quantity-selector">
-                      <!-- Button for decrease quantity -->
-                      <button type="button" class="btn btn-secondary btn-sm quantity-btn" (click)="decreaseQuantity()">
-                        <span>-</span>
-                      </button>
-
-                      <!-- Input for quantity -->
-                      <input type="number" id="inputQuantitySelector" class="form-control text-center quantity-input"
-                             [(ngModel)]="selectedPart.quantity" min="1" max="10" step="1"
-                             aria-label="Quantity selector">
-
-                      <!-- Button for increase quantity -->
-                      <button type="button" class="btn btn-secondary btn-sm quantity-btn" (click)="increaseQuantity()">
-                        <span>+</span>
-                      </button>
-                    </div>
-
-                    <button class="btn add-to-cart-btn" (click)="addToCart(selectedPart, $event)">Add to Cart</button>
-                  </div>
-                </div>
-              </div>
-            </div>
+          <!-- Manufacturer and Category in the same row -->
+          <div class="modal-info-row">
+            <p><strong>Manufacturer:</strong> {{ selectedPart.manufacturerName || 'N/A' }}</p>
+            <p><strong>Category:</strong> {{ selectedPart.categoryName || 'N/A' }}</p>
           </div>
+
+          <p class="modal-price"><strong>Price:</strong> <span>{{ selectedPart.price * (selectedPart.quantity || 1) }}
+              KM</span></p>
+        </div>
+
+        <hr class="modal-divider">
+
+        <!-- Button and Quantity for adding to cart -->
+        <div class="modal-actions">
+          <label for="inputQuantitySelector" class="quantity-label">Quantity:</label>
+
+          <div class="input-group quantity-selector">
+            <button type="button" class="btn btn-secondary btn-sm quantity-btn" (click)="decreaseQuantity()">
+              <span>-</span>
+            </button>
+
+            <input type="number" id="inputQuantitySelector" class="form-control text-center quantity-input"
+              [(ngModel)]="selectedPart.quantity" min="1" max="10" step="1" aria-label="Quantity selector">
+
+            <button type="button" class="btn btn-secondary btn-sm quantity-btn" (click)="increaseQuantity()">
+              <span>+</span>
+            </button>
+          </div>
+
+          <button class="btn add-to-cart-btn" (click)="addToCart(selectedPart, $event)">Add to Cart</button>
         </div>
       </div>
     </div>
   </div>
 </div>
-
-

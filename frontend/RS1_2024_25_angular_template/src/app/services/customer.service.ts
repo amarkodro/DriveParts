@@ -24,4 +24,9 @@ export class CustomerService {
   getCustomerOrders(customerId: number): Observable<any> {
     return this.http.get(`${this.apiUrl}/orders/by-customer/${customerId}`);
   }
+
+  getCustomerSuggestions(query: string): Observable<string[]> {
+    const params = new HttpParams().set('query', query);
+    return this.http.get<string[]>(`${this.apiUrl}/UserAccount/suggestions`, { params });
+  }
 }

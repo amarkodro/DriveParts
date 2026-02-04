@@ -1,0 +1,81 @@
+<div class="favorites-container">
+    <h1 class="page-title">My Favorites</h1>
+
+    <div class="product-section" *ngIf="favoriteParts.length > 0; else noFavorites">
+        <div class="product-grid">
+            <div class="product-card part-card" *ngFor="let part of favoriteParts">
+                <!-- Icons -->
+                <div class="product-icons">
+                    <div class="product-detail-box" (click)="openProductModal(part)">
+                        <img src="assets/zoom-in.png" alt="Zoom">
+                    </div>
+                    <span class="wishlist-icon active" (click)="removeFavorite(part, $event)">&#9829;</span>
+                </div>
+
+                <!-- Image -->
+                <img [src]="'http://localhost:7000' + part.partImage || 'https://via.placeholder.com/300x200'"
+                    alt="{{ part.name }}" class="product-image product-main-image" />
+
+                <!-- Info -->
+                <div class="product-info">
+                    <h3 class="product-name">{{ part.name }}</h3>
+                    <p class="product-description">{{ part.description }}</p>
+
+                    <div class="product-bottom">
+                        <p class="product-price">{{ part.price }} KM</p>
+                        <button class="cart-btn"
+                            (click)="addToCart(part, $event); $event.stopPropagation();">🛒</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <ng-template #noFavorites>
+        <div class="no-favorites">
+            <p>You haven't added any favorites yet.</p>
+            <a routerLink="/" class="browse-btn">Browse Parts</a>
+        </div>
+    </ng-template>
+
+    <!-- MODAL - Reuse similar structure -->
+    <div class="modal-overlay" *ngIf="selectedPart">
+        <div class="modal-content">
+            <span class="close-btn" (click)="closeProductModal()">&times;</span>
+
+            <div class="modal-body">
+                <div class="modal-image-container">
+                    <img [src]="'http://localhost:7000' + selectedPart.partImage || 'https://via.placeholder.com/300x200'"
+                        class="modal-image modal-product-image" />
+                </div>
+
+                <div class="modal-info">
+                    <h2 class="modal-title">{{ selectedPart.name }}</h2>
+                    <div class="modal-details">
+                        <p class="modal-description"><strong>Description:</strong> {{ selectedPart.description }}</p>
+                        <div class="modal-info-row">
+                            <p><strong>Manufacturer:</strong> {{ selectedPart.manufacturerName || 'N/A' }}</p>
+                            <p><strong>Category:</strong> {{ selectedPart.categoryName || 'N/A' }}</p>
+                        </div>
+                        <p class="modal-price"><strong>Price:</strong> <span>{{ selectedPart.price *
+                                (selectedPart.quantity || 1) }} KM</span></p>
+                    </div>
+
+                    <hr class="modal-divider">
+
+                    <div class="modal-actions">
+                        <label class="quantity-label">Quantity:</label>
+                        <div class="input-group quantity-selector">
+                            <button type="button" class="quantity-btn" (click)="decreaseQuantity()">-</button>
+                            <input type="number" class="quantity-input" [(ngModel)]="selectedPart.quantity" min="1"
+                                max="10">
+                            <button type="button" class="quantity-btn" (click)="increaseQuantity()">+</button>
+                        </div>
+                        <button class="btn add-to-cart-btn" (click)="addToCart(selectedPart, $event)">Add to
+                            Cart</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

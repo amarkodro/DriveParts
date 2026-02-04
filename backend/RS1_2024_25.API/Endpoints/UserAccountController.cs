@@ -263,5 +263,22 @@ namespace RS1_2024_25.API.Endpoints
 
             return Ok("User account deleted successfully");
         }
+        [HttpGet("suggestions")]
+        public async Task<ActionResult<List<string>>> GetCustomerSuggestions([FromQuery] string query)
+        {
+            if (string.IsNullOrWhiteSpace(query))
+            {
+                return Ok(new List<string>());
+            }
+
+            var suggestions = await _db.UserAccounts
+                .Where(u => u.Username.Contains(query) || u.Email.Contains(query))
+                .Select(u => u.Username.Contains(query) ? u.Username : u.Email)
+                .Distinct()
+                .Take(10)
+                .ToListAsync();
+
+            return Ok(suggestions);
+        }
     }
 }

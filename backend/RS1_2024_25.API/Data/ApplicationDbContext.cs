@@ -37,6 +37,7 @@ namespace RS1_2024_25.API.Data
         public DbSet<RefreshToken> RefreshTokens { get; set; }
         public DbSet<Conversation> Conversations { get; set; }
         public DbSet<Message> Messages { get; set; }
+        public DbSet<MyPart> MyParts { get; set; }
      
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

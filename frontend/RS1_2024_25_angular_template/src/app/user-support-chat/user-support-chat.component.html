@@ -18,7 +18,14 @@
         </div>
     </div>
 
-    <div class="chat-body" *ngIf="!isMinimized">
+    <div class="chat-body" *ngIf="!isMinimized" appDragDrop (fileDropped)="onFileDropped($event)">
+        <div class="drop-zone-overlay" *ngIf="isUploading">
+            <div class="spinner-container">
+                <mat-spinner diameter="40"></mat-spinner>
+                <p>Uploading...</p>
+            </div>
+        </div>
+
         <div class="messages-container" #messagesContainer>
             <div *ngIf="messages.length === 0" class="empty-state">
                 <p>Send a message to our support team!</p>
@@ -27,17 +34,38 @@
                 [class.received]="!msg.isFromUser">
                 <div class="message-content">
                     <strong>{{ msg.senderName }}</strong>
-                    <p>{{ msg.content }}</p>
+                    <p *ngIf="msg.content">{{ msg.content }}</p>
+                    <div *ngIf="msg.fileUrl" class="message-attachment">
+                        <img [src]="'http://localhost:7000' + msg.fileUrl" [alt]="msg.fileName"
+                            class="attachment-img" />
+                    </div>
                     <span class="timestamp">{{ msg.timestamp | date:'short' }}</span>
                 </div>
             </div>
         </div>
 
+        <div class="file-preview" *ngIf="selectedFile">
+            <div class="file-info">
+                <i class="fa fa-file-image-o"></i>
+                <span>{{ selectedFile.name }}</span>
+            </div>
+            <button class="remove-file-btn" (click)="removeFile()">
+                <i class="fa fa-times"></i>
+            </button>
+        </div>
+
         <div class="chat-input">
+            <button class="attach-btn" (click)="fileInput.click()">
+                <i class="fa fa-paperclip"></i>
+            </button>
+            <input type="file" #fileInput style="display: none;" (change)="onFileSelected($event)" accept="image/*" />
+
             <input type="text" [(ngModel)]="newMessage" (keyup.enter)="sendMessage()" placeholder="Type your message..."
-                [disabled]="!isConnected" />
-            <button (click)="sendMessage()" [disabled]="!isConnected || !newMessage.trim()">
-                <i class="fa fa-paper-plane"></i>
+                [disabled]="!isConnected || isUploading" />
+            <button (click)="sendMessage()"
+                [disabled]="!isConnected || (!newMessage.trim() && !selectedFile) || isUploading">
+                <i class="fa fa-paper-plane" *ngIf="!isUploading"></i>
+                <i class="fa fa-spinner fa-spin" *ngIf="isUploading"></i>
             </button>
         </div>
     </div>

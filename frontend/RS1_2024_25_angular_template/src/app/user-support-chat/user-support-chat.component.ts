@@ -28,78 +28,78 @@ export class UserSupportChatComponent implements OnInit, OnDestroy {
   ) { }
 
   async ngOnInit() {
-  const token = this.authService.getTokenUser();
-  this.isLoggedIn = !!token;
+    const token = this.authService.getTokenUser();
+    this.isLoggedIn = !!token;
 
-  const userInfo = this.authService.getUserInfoFromToken();
-  this.isAdmin = userInfo?.role === 'Admin' || userInfo?.IsAdmin === true;
+    const userInfo = this.authService.getUserInfoFromToken();
+    this.isAdmin = userInfo?.role === 'Admin' || userInfo?.IsAdmin === true;
 
-  console.log('🔍 User Support Chat - Token:', !!token, 'isAdmin:', this.isAdmin);
+    console.log('🔍 User Support Chat - Token:', !!token, 'isAdmin:', this.isAdmin);
 
-  if (token && !this.isAdmin) {
-    await this.chatService.startConnection(token);
-    this.isConnected = this.chatService.isConnected();
+    if (token && !this.isAdmin) {
+      await this.chatService.startConnection(token);
+      this.isConnected = this.chatService.isConnected();
 
-    // CRITICAL: Load existing messages FIRST
-    await this.loadChatHistory();
+      // CRITICAL: Load existing messages FIRST
+      await this.loadChatHistory();
 
-    // Then subscribe to new messages
-    this.messageSubscription = this.chatService.message$.subscribe(message => {
-      if (message) {
-        // Avoid duplicates
-        const exists = this.messages.some(m => 
-          m.messageId === message.messageId ||
-          (m.content === message.content && 
-           Math.abs(new Date(m.timestamp).getTime() - new Date(message.timestamp).getTime()) < 1000)
-        );
-        
-        if (!exists) {
-          this.messages.push(message);
-          setTimeout(() => this.scrollToBottom(), 100);
+      // Then subscribe to new messages
+      this.messageSubscription = this.chatService.message$.subscribe(message => {
+        if (message) {
+          // Avoid duplicates
+          const exists = this.messages.some(m =>
+            m.messageId === message.messageId ||
+            (m.content === message.content &&
+              Math.abs(new Date(m.timestamp).getTime() - new Date(message.timestamp).getTime()) < 1000)
+          );
+
+          if (!exists) {
+            this.messages.push(message);
+            setTimeout(() => this.scrollToBottom(), 100);
+          }
+        }
+      });
+    }
+
+    // Subscribe to login status changes
+    this.authService.loginStatus$.subscribe(status => {
+      this.isLoggedIn = status;
+      const userInfo = this.authService.getUserInfoFromToken();
+      this.isAdmin = userInfo?.role === 'Admin' || userInfo?.IsAdmin === true;
+
+      if (status && !this.isConnected && !this.isAdmin) {
+        const newToken = this.authService.getTokenUser();
+        if (newToken) {
+          this.chatService.startConnection(newToken).then(() => {
+            this.isConnected = this.chatService.isConnected();
+            this.loadChatHistory();
+          });
         }
       }
     });
   }
 
-    // Subscribe to login status changes
-    this.authService.loginStatus$.subscribe(status => {
-    this.isLoggedIn = status;
-    const userInfo = this.authService.getUserInfoFromToken();
-    this.isAdmin = userInfo?.role === 'Admin' || userInfo?.IsAdmin === true;
+  async loadChatHistory() {
+    try {
+      console.log('📥 Loading chat history...');
+      const messages = await this.http.get<ChatMessage[]>(
+        'http://localhost:7000/api/SupportChat/user-messages'
+      ).toPromise();
 
-    if (status && !this.isConnected && !this.isAdmin) {
-      const newToken = this.authService.getTokenUser();
-      if (newToken) {
-        this.chatService.startConnection(newToken).then(() => {
-          this.isConnected = this.chatService.isConnected();
-          this.loadChatHistory();
-        });
+      if (messages && messages.length > 0) {
+        this.messages = messages;
+        console.log('✅ Loaded', messages.length, 'messages');
+        setTimeout(() => this.scrollToBottom(), 100);
+      } else {
+        console.log('ℹ️ No previous messages found');
+      }
+    } catch (err: any) {
+      console.error('❌ Error loading chat history:', err);
+      if (err.status === 401) {
+        console.error('Unauthorized - token might be invalid');
       }
     }
-  });
-}
-
- async loadChatHistory() {
-  try {
-    console.log('📥 Loading chat history...');
-    const messages = await this.http.get<ChatMessage[]>(
-      'http://localhost:7000/api/SupportChat/user-messages'
-    ).toPromise();
-    
-    if (messages && messages.length > 0) {
-      this.messages = messages;
-      console.log('✅ Loaded', messages.length, 'messages');
-      setTimeout(() => this.scrollToBottom(), 100);
-    } else {
-      console.log('ℹ️ No previous messages found');
-    }
-  } catch (err: any) {
-    console.error('❌ Error loading chat history:', err);
-    if (err.status === 401) {
-      console.error('Unauthorized - token might be invalid');
-    }
   }
-}
 
   ngOnDestroy() {
     this.messageSubscription?.unsubscribe();
@@ -117,8 +117,28 @@ export class UserSupportChatComponent implements OnInit, OnDestroy {
     this.isMinimized = !this.isMinimized;
   }
 
+  selectedFile: File | null = null;
+  isUploading = false;
+
   async sendMessage() {
-    if (!this.newMessage.trim() || !this.isConnected) return;
+    if ((!this.newMessage.trim() && !this.selectedFile) || !this.isConnected) return;
+
+    let fileUrl: string | undefined;
+    let fileName: string | undefined;
+
+    if (this.selectedFile) {
+      this.isUploading = true;
+      try {
+        const uploadResult = await this.uploadFile(this.selectedFile);
+        fileUrl = uploadResult.url;
+        fileName = uploadResult.fileName;
+      } catch (err) {
+        console.error('Upload failed', err);
+        this.isUploading = false;
+        return; // Stop sending if upload failed
+      }
+      this.isUploading = false;
+    }
 
     const messageContent = this.newMessage;
     const userId = this.authService.getUserId();
@@ -132,15 +152,44 @@ export class UserSupportChatComponent implements OnInit, OnDestroy {
       senderName: userInfo ? `${userInfo.name} ${userInfo.surname}` : 'You',
       content: messageContent,
       timestamp: new Date(),
-      isFromUser: true
+      isFromUser: true,
+      fileUrl: fileUrl,
+      fileName: fileName
     };
 
     this.messages.push(localMessage);
     this.newMessage = '';
+    this.selectedFile = null;
     setTimeout(() => this.scrollToBottom(), 100);
 
     // Send to server
-    await this.chatService.sendMessageToAdmins(messageContent);
+    await this.chatService.sendMessageToAdmins(messageContent, fileUrl, fileName);
+  }
+
+  onFileDropped(files: FileList) {
+    if (files && files.length > 0) {
+      this.selectedFile = files[0];
+      console.log('File dropped:', this.selectedFile);
+    }
+  }
+
+  onFileSelected(event: any) {
+    if (event.target.files && event.target.files.length > 0) {
+      this.selectedFile = event.target.files[0];
+    }
+  }
+
+  removeFile() {
+    this.selectedFile = null;
+  }
+
+  private uploadFile(file: File): Promise<{ url: string, fileName: string }> {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    return this.http.post<{ url: string, fileName: string }>('http://localhost:7000/api/storage/upload', formData)
+      .toPromise()
+      .then(res => res!); // Non-null assertion for simplicity, handle properly in prod
   }
 
   scrollToBottom(): void {

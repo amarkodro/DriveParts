@@ -6,25 +6,25 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { MyAuthInterceptor } from './services/auth-services/my-auth-interceptor.service';
 import { NavbarComponent } from '../../src/app/navbar/navbar.component';
 import { SharedModule } from './modules/shared/shared.module';
-import {NgOptimizedImage} from "@angular/common";
+import { NgOptimizedImage } from "@angular/common";
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { HeroSectionComponent } from './hero-section/hero-section.component';
 import { ProductSectionComponent } from './product-section/product-section.component';
 import { FooterComponent } from './footer/footer.component';
-import {ReactiveFormsModule} from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { PartsComponent } from './parts/parts.component';
 import { PartDetailComponent } from './part-detail/part-detail.component';
 import { ViewPartsComponent } from './view-parts/view-parts.component';
-import {RouterModule} from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
 import { CartComponent } from './cart/cart.component';
-import {SocialLoginModule , SocialAuthServiceConfig} from '@abacritt/angularx-social-login';
-import {GoogleLoginProvider} from '@abacritt/angularx-social-login';
+import { SocialLoginModule, SocialAuthServiceConfig } from '@abacritt/angularx-social-login';
+import { GoogleLoginProvider } from '@abacritt/angularx-social-login';
 import { CheckoutComponent } from './checkout/checkout.component';
 import { OrderSuccessComponent } from './order-success/order-success.component';
-import {EditProfileComponent} from './edit-profile/edit-profile.component';
+import { EditProfileComponent } from './edit-profile/edit-profile.component';
 import { SecurityComponent } from './security/security.component';
 import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFireAuthModule } from '@angular/fire/compat/auth';
@@ -55,7 +55,8 @@ import { ConfirmationDialogComponent } from './confirmation-dialog/confirmation-
 import { FloatingAiButtonComponent } from './floating-ai-button/floating-ai-button.component';
 import { UserSupportChatComponent } from './user-support-chat/user-support-chat.component';
 import { AdminChatInboxComponent } from './admin-chat-inbox/admin-chat-inbox.component';
-
+import { DragDropDirective } from './directives/drag-drop.directive';
+import { MyFavoritesComponent } from './my-favorites/my-favorites.component';
 
 @NgModule({
   declarations: [
@@ -67,6 +68,7 @@ import { AdminChatInboxComponent } from './admin-chat-inbox/admin-chat-inbox.com
     ProductSectionComponent,
     FooterComponent,
     PartsComponent,
+    MyFavoritesComponent, // Add here
     AdminPartFormComponent,
     AdminPartsComponent,
     PartDetailComponent,
@@ -88,49 +90,50 @@ import { AdminChatInboxComponent } from './admin-chat-inbox/admin-chat-inbox.com
     FloatingAiButtonComponent,
     UserSupportChatComponent,
     AdminChatInboxComponent,
+    DragDropDirective,
   ],
-    imports: [
-        BrowserModule,
-        AppRoutingModule,
-        HttpClientModule,
-        SharedModule,
-        MatTableModule,
-MatSelectModule,
-MatIconModule,
-MatProgressSpinnerModule,
-MatSnackBarModule,
-      // NgChartsModule,
-        NgOptimizedImage,
-        BrowserAnimationsModule,
-        SocialLoginModule,
-        ReactiveFormsModule,
-        CommonModule,
-        FormsModule,
-         MatIconModule,
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    HttpClientModule,
+    SharedModule,
+    MatTableModule,
+    MatSelectModule,
+    MatIconModule,
     MatProgressSpinnerModule,
     MatSnackBarModule,
-      BrowserModule,
+    // NgChartsModule,
+    NgOptimizedImage,
+    BrowserAnimationsModule,
+    SocialLoginModule,
+    ReactiveFormsModule,
+    CommonModule,
+    FormsModule,
+    MatIconModule,
+    MatProgressSpinnerModule,
+    MatSnackBarModule,
+    BrowserModule,
     HttpClientModule,
     MatInputModule,
     MatButtonModule,
     MatPaginatorModule,
     MatDialogModule,
     MatIconModule,
-      ToastrModule.forRoot({
-        positionClass: 'toast-top-center',
-        timeOut: 3000,
-        progressBar: true
-      }),
-        RouterModule.forRoot([], {
-         anchorScrolling: 'enabled',
-         scrollPositionRestoration: 'enabled'
-      }),
-      AngularFireModule.initializeApp(environment.firebase),
-      AngularFireAuthModule,
+    ToastrModule.forRoot({
+      positionClass: 'toast-top-center',
+      timeOut: 3000,
+      progressBar: true
+    }),
+    RouterModule.forRoot([], {
+      anchorScrolling: 'enabled',
+      scrollPositionRestoration: 'enabled'
+    }),
+    AngularFireModule.initializeApp(environment.firebase),
+    AngularFireAuthModule,
 
 
 
-    ],
+  ],
   providers: [
     {
       provide: 'SocialAuthServiceConfig',

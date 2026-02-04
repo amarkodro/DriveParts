@@ -1,58 +1,166 @@
 <div class="dashboard-container">
-    <div class="dashboard-sidebar">
-      <h2>Manage</h2>
-      <ul>
-        <li><a routerLink="/dashboard" routerLinkActive="active">Dashboard</a></li>
-        <li><a routerLink="/edit" routerLinkActive="active">Parts</a></li>
-        <li><a routerLink="/orders" routerLinkActive="active">Orders</a></li>
-        <li><a routerLink="/customers" routerLinkActive="active">Customers</a></li>
-      </ul>
-    </div>
-    <div class="p-4">
-        <h2 class="text-2xl mb-4">Parts Management</h2>
-       <div class="mb-4">
-          <input
-            type="text"
-            [(ngModel)]="searchTerm"
-            (input)="onSearchChange()"
-            placeholder="Search by part name..."
-            class="search-input"
-          >
+  <div class="dashboard-sidebar">
+    <h2>Manage</h2>
+    <ul>
+      <li><a routerLink="/dashboard" routerLinkActive="active">Dashboard</a></li>
+      <li><a routerLink="/edit" routerLinkActive="active">Parts</a></li>
+      <li><a routerLink="/orders" routerLinkActive="active">Orders</a></li>
+      <li><a routerLink="/customers" routerLinkActive="active">Customers</a></li>
+    </ul>
+  </div>
+  <div class="p-4">
+    <h2 class="text-2xl mb-4">Parts Management</h2>
+
+    <!-- Filter Section -->
+    <div class="filter-section mb-4">
+      <!-- Top Row: 3 filters -->
+      <div class="filter-row-top">
+        <!-- Search by Name -->
+        <div class="filter-item search-container" style="position: relative;">
+          <label>Search by Name</label>
+          <input type="text" [(ngModel)]="searchTerm" (input)="onSearchInput()" placeholder="Search by part name..."
+            class="search-input" autocomplete="off">
+
+          <ul class="suggestions-list" *ngIf="suggestions.length > 0">
+            <li *ngFor="let suggestion of suggestions" (click)="selectSuggestion(suggestion)">
+              {{ suggestion }}
+            </li>
+          </ul>
         </div>
- <button class="add-part-btn" (click)="openAddModal()">Add Part</button>      
-         <table class="min-w-full">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Name</th>
-              <th>Price</th>
-              <th>Description</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let part of paginatedParts">
-              <td>{{ part.partId }}</td>
-              <td>{{ part.name }}</td>
-              <td>{{ part.price }}</td>
-              <td>{{ part.description }}</td>
-              <td class="actions-container">
-                <!-- Action buttons with correct classes -->
-                <button (click)="editPart(part)" class="edit-btn">Edit</button>
-                <button (click)="deletePart(part.partId)" class="delete-btn">Delete</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <!-- Pagination Controls -->
-<div class="pagination-controls">
-          <button 
-            *ngFor="let page of totalPages" 
-            (click)="setPage(page)" 
-            [class.bg-blue-600]="currentPage === page"
-            class="page-button">
-            {{ page }}
-          </button>
+
+        <!-- Category Filter -->
+        <div class="filter-item">
+          <label>Category</label>
+          <select [(ngModel)]="categoryFilter" (change)="onFilterChange()" class="filter-select">
+            <option [ngValue]="undefined">All Categories</option>
+            <option *ngFor="let category of categories" [ngValue]="category.categoryId">
+              {{ category.name }}
+            </option>
+          </select>
         </div>
-</div>
+
+        <!-- Manufacturer Filter -->
+        <div class="filter-item">
+          <label>Manufacturer</label>
+          <select [(ngModel)]="manufacturerFilter" (change)="onFilterChange()" class="filter-select">
+            <option [ngValue]="undefined">All Manufacturers</option>
+            <option *ngFor="let manufacturer of manufacturers" [ngValue]="manufacturer.manufacturerId">
+              {{ manufacturer.name }}
+            </option>
+          </select>
+        </div>
       </div>
+
+      <!-- Bottom Row: 2 filters + Clear button -->
+      <div class="filter-row-bottom">
+        <!-- Min Price -->
+        <div class="filter-item">
+          <label>Min Price</label>
+          <input type="number" [(ngModel)]="minPrice" (change)="onFilterChange()" placeholder="Min" class="filter-input"
+            min="0" step="0.01">
+        </div>
+
+        <!-- Max Price -->
+        <div class="filter-item">
+          <label>Max Price</label>
+          <input type="number" [(ngModel)]="maxPrice" (change)="onFilterChange()" placeholder="Max" class="filter-input"
+            min="0" step="0.01">
+        </div>
+
+        <!-- Clear Filters Button -->
+        <div class="filter-item">
+          <label>&nbsp;</label>
+          <button class="clear-filters-btn" (click)="clearFilters()">Clear Filters</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Page Size Selector -->
+    <div class="page-size-control">
+      <label>Show:</label>
+      <select [(ngModel)]="pageSize" (change)="onPageSizeChange()" class="page-size-select">
+        <option [value]="5">5 parts</option>
+        <option [value]="10">10 parts</option>
+        <option [value]="20">20 parts</option>
+        <option [value]="9999">All parts</option>
+      </select>
+    </div>
+
+    <button class="add-part-btn" (click)="openAddModal()">Add Part</button>
+
+    <!-- Scrollable Table Container -->
+    <div class="table-container" [class.scrollable]="pageSize === 9999">
+      <table class="min-w-full">
+        <thead>
+          <tr>
+            <th>Image</th>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Description</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let part of paginatedParts">
+            <td>
+              <img [src]="part.partImage ? 'http://localhost:7000' + part.partImage : 'https://via.placeholder.com/50'"
+                alt="{{ part.name }}" class="table-thumbnail"
+                (click)="enlargeImage(part.partImage ? 'http://localhost:7000' + part.partImage : 'https://via.placeholder.com/300')">
+            </td>
+            <td>{{ part.partId }}</td>
+            <td>{{ part.name }}</td>
+            <td>{{ part.price }}</td>
+            <td>{{ part.description }}</td>
+            <td class="actions-container">
+              <!-- Action buttons with correct classes -->
+              <button (click)="editPart(part)" class="edit-btn">Edit</button>
+              <button (click)="deletePart(part.partId)" class="delete-btn">Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Loading Indicator -->
+    <div *ngIf="loading" class="loading-indicator">
+      <p>Loading parts...</p>
+    </div>
+
+    <!-- Pagination Controls - Only show when not "All" -->
+    <div class="pagination-controls" *ngIf="pageSize !== 9999">
+      <button *ngFor="let page of totalPagesArray" (click)="setPage(page)" [class.bg-blue-600]="currentPage === page"
+        [disabled]="loading" class="page-button">
+        {{ page }}
+      </button>
+    </div>
+
+    <!-- Pagination Info -->
+    <div class="pagination-info" *ngIf="pageSize !== 9999">
+      Showing {{ (currentPage - 1) * pageSize + 1 }} to {{ Math.min(currentPage * pageSize, totalCount) }} of {{
+      totalCount }} parts
+    </div>
+
+    <!-- Total Count for "All" view -->
+    <div class="pagination-info" *ngIf="pageSize === 9999">
+      Showing all {{ totalCount }} parts
+    </div>
+  </div>
+</div>
+
+<!-- Image Enlarge Modal -->
+<div class="image-modal-overlay" *ngIf="enlargedImage" (click)="closeEnlargedImage()">
+  <div class="image-modal-content" (click)="$event.stopPropagation()">
+    <span class="image-modal-close" (click)="closeEnlargedImage()">&times;</span>
+    <div class="zoom-container">
+      <img [src]="enlargedImage" alt="Enlarged view" class="enlarged-image"
+        [class.zoomed]="isZoomed"
+        [style.transform-origin]="zoomOrigin"
+        (click)="toggleZoom($event)"
+        (error)="handleImageError($event)">
+      <div class="zoom-hint">
+        {{ isZoomed ? 'Click to zoom out' : 'Click to zoom in on details' }}
+      </div>
+    </div>
+  </div>
+</div>

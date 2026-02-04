@@ -69,7 +69,6 @@
         </a>
         <ul *ngIf="dropdownOpen" class="dropdown-menu">
           <li><a routerLink="/my-orders" routerLinkActive="active">My Orders</a></li>
-          <li><a href="#">My Favorites</a></li>
           <li><a (click)="openSettings(); $event.stopPropagation()">Settings</a></li>
           <li *ngIf="!isLoggedIn"><a routerLink="/login">Login</a></li>
           <li *ngIf="isLoggedIn"><a (click)="logout()">Logout</a></li>
@@ -150,6 +149,7 @@
         <li (click)="closeMenu()" href="#"><a>Brands</a></li>
         <li (click)="closeMenu()" routerLink="/faq"><a>FAQ</a></li>
         <li (click)="closeMenu()" href="#"><a>About Us</a></li>
+        <li *ngIf="isLoggedIn" (click)="closeMenu()" routerLink="/favorites"><a>My Favorites</a></li>
       </ul>
     </div>
 
@@ -162,8 +162,14 @@
         <li class="nav-item"><a class="nav-link" href="#">Brands</a></li>
         <li class="nav-item"><a class="nav-link" routerLink="/faq" routerLinkActive="active">FAQ</a></li>
         <li class="nav-item"><a class="nav-link" routerLink="/about-us" routerLinkActive="active">About Us</a></li>
+        <li class="nav-item" *ngIf="isLoggedIn"><a class="nav-link" routerLink="/favorites" routerLinkActive="active">My Favorites</a></li>
       </ul>
       <ul class="navbar-nav navbar-nav-right" *ngIf="isLoggedIn && isAdmin">
+        <li class="nav-item">
+          <a class="nav-link admin-messages-link" routerLink="/dashboard" routerLinkActive="active">
+            <i class="fas fa-tachometer-alt"></i> Dashboard
+          </a>
+        </li>
         <li class="nav-item">
           <a class="nav-link admin-messages-link" routerLink="/admin/support-inbox" routerLinkActive="active">
             <i class="fas fa-envelope"></i> Messages

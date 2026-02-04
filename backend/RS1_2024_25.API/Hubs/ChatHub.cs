@@ -43,7 +43,7 @@ namespace RS1_2024_25.API.Hubs
             await base.OnConnectedAsync();
         }
 
-        public async Task SendMessageToAdmins(string content)
+        public async Task SendMessageToAdmins(string content, string? fileUrl = null, string? fileName = null)
         {
             var userId = GetUserId();
             if (userId == null) return;
@@ -75,7 +75,9 @@ namespace RS1_2024_25.API.Hubs
                 SenderId = userId.Value,
                 Content = content,
                 Timestamp = DateTime.UtcNow,
-                IsRead = false
+                IsRead = false,
+                FileUrl = fileUrl,
+                FileName = fileName
             };
             _context.Messages.Add(message);
             await _context.SaveChangesAsync();
@@ -92,11 +94,13 @@ namespace RS1_2024_25.API.Hubs
                 senderName = $"{sender?.Name} {sender?.Surname}",
                 content = content,
                 timestamp = message.Timestamp,
-                isFromUser = true
+                isFromUser = true,
+                fileUrl = fileUrl,
+                fileName = fileName
             });
         }
 
-        public async Task SendMessageToUser(int targetUserId, string content)
+        public async Task SendMessageToUser(int targetUserId, string content, string? fileUrl = null, string? fileName = null)
         {
             var adminId = GetUserId();
             if (adminId == null) return;
@@ -119,7 +123,9 @@ namespace RS1_2024_25.API.Hubs
                 SenderId = adminId.Value,
                 Content = content,
                 Timestamp = DateTime.UtcNow,
-                IsRead = false
+                IsRead = false,
+                FileUrl = fileUrl,
+                FileName = fileName
             };
             _context.Messages.Add(message);
             await _context.SaveChangesAsync();
@@ -133,7 +139,9 @@ namespace RS1_2024_25.API.Hubs
                 senderName = $"{admin.Name} {admin.Surname}",
                 content = content,
                 timestamp = message.Timestamp,
-                isFromUser = false
+                isFromUser = false,
+                fileUrl = fileUrl,
+                fileName = fileName
             });
 
             // Also notify other admins
@@ -146,7 +154,9 @@ namespace RS1_2024_25.API.Hubs
                 content = content,
                 timestamp = message.Timestamp,
                 isFromUser = false,
-                targetUserId = targetUserId
+                targetUserId = targetUserId,
+                fileUrl = fileUrl,
+                fileName = fileName
             });
         }
 

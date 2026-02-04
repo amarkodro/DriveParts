@@ -26,6 +26,7 @@ import { ChatComponent } from './ai-chat/ai-chat.component';
 import { CustomerListComponent } from './customer-list/customer-list.component';
 import { MyOrdersComponent } from './my-orders/my-orders.component';
 import { AdminChatInboxComponent } from './admin-chat-inbox/admin-chat-inbox.component';
+import { MyFavoritesComponent } from './my-favorites/my-favorites.component';
 
 const routes: Routes = [
   { path: 'unauthorized', component: UnauthorizedComponent },
@@ -77,6 +78,7 @@ const routes: Routes = [
   { path: 'ai', component: ChatComponent },
   { path: 'customers', component: CustomerListComponent, canActivate: [AuthGuard], data: { isAdmin: true } },
   { path: 'my-orders', component: MyOrdersComponent, canActivate: [AuthGuard] },
+  { path: 'favorites', component: MyFavoritesComponent, canActivate: [AuthGuard] },
   { path: '**', redirectTo: 'public', pathMatch: 'full' },
 
 

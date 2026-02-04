@@ -80,7 +80,9 @@ namespace RS1_2024_25.API.Endpoints
                     SenderName = $"{m.Sender.Name} {m.Sender.Surname}",
                     Content = m.Content,
                     Timestamp = m.Timestamp,
-                    IsFromUser = m.SenderId == conversation.UserId
+                    IsFromUser = m.SenderId == conversation.UserId,
+                    FileUrl = m.FileUrl,
+                    FileName = m.FileName
                 })
                 .ToList();
 
@@ -118,7 +120,9 @@ namespace RS1_2024_25.API.Endpoints
                     SenderName = $"{m.Sender.Name} {m.Sender.Surname}",
                     Content = m.Content,
                     Timestamp = m.Timestamp,
-                    IsFromUser = m.SenderId == conversation.UserId
+                    IsFromUser = m.SenderId == conversation.UserId,
+                    FileUrl = m.FileUrl,
+                    FileName = m.FileName
                 })
                 .ToList();
 

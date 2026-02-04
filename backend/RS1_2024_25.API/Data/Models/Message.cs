@@ -22,5 +22,8 @@ namespace RS1_2024_25.API.Data.Models
 
         public DateTime Timestamp { get; set; }
         public bool IsRead { get; set; }
+
+        public string? FileUrl { get; set; }
+        public string? FileName { get; set; }
     }
 }

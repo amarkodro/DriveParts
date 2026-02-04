@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { OrdersService,Order } from '../services/admin-orders.service';
+import { OrdersService, Order } from '../services/admin-orders.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 @Component({
   selector: 'app-orders',
@@ -9,12 +9,12 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class OrdersComponent implements OnInit {
   orders: Order[] = [];
   paginatedOrders: Order[] = [];
-  pageSize = 5  ;
+  pageSize = 5;
   currentPage = 1;
   totalPages = 1;
-   searchTerm = '';
-   selectedStatusId = 0;
-filteredOrders: Order[] = [];  // holds all filtered orders
+  searchTerm = '';
+  selectedStatusId = 0;
+  filteredOrders: Order[] = [];  // holds all filtered orders
   statusOptions = [
     { id: 1, name: 'Pending' },    // Must match seeded names
     { id: 2, name: 'Approved' },  // Exactly as in your database
@@ -27,71 +27,71 @@ filteredOrders: Order[] = [];  // holds all filtered orders
     { id: 9, name: 'Draft' },
     { id: 10, name: 'Submitted' },
   ];
-isDownloading = false;
-  constructor(private ordersService: OrdersService,private snackBar:MatSnackBar) {}
+  isDownloading = false;
+  constructor(private ordersService: OrdersService, private snackBar: MatSnackBar) { }
 
   ngOnInit(): void {
     this.loadOrders();
   }
- loadOrders(): void {
-  this.ordersService.getOrders().subscribe(apiOrders => {
-    this.orders = apiOrders.map(order => {
-      const normalize = (s: string) => s.trim().toLowerCase().replace(/[^a-z]/g, '');
-      const statusMatch = this.statusOptions.find(s =>
-        normalize(s.name) === normalize(order.statusName || '')
-      );
-      return {
-        ...order,
-        statusId: statusMatch?.id || 0
-      };
-    });
+  loadOrders(): void {
+    this.ordersService.getOrders().subscribe(apiOrders => {
+      this.orders = apiOrders.map(order => {
+        const normalize = (s: string) => s.trim().toLowerCase().replace(/[^a-z]/g, '');
+        const statusMatch = this.statusOptions.find(s =>
+          normalize(s.name) === normalize(order.statusName || '')
+        );
+        return {
+          ...order,
+          statusId: statusMatch?.id || 0
+        };
+      });
 
-    this.applyFilters();
-  });
-}
+      this.applyFilters();
+    });
+  }
 
   nextPage(): void {
-  if (this.currentPage < this.totalPages) {
-    this.currentPage++;
-    this.updatePaginatedOrders();
-  }
-}
-
-previousPage(): void {
-  if (this.currentPage > 1) {
-    this.currentPage--;
-    this.updatePaginatedOrders();
-  }
-}
-
- onPageSizeChange(): void {
-  this.pageSize = Number(this.pageSize); // Force conversion to number
-  this.currentPage = 1;
-  this.applyFilters();
-}
- updateOrderStatus(orderId: number, statusId: number): void {
-  if (!statusId || statusId === 0) {
-    alert('Invalid status!');
-    return;
-  }
-  
-  this.ordersService.updateOrderStatus(orderId, statusId).subscribe({
-    next: () => {
-      this.loadOrders(); // Refresh the list
-      alert('Status updated!'); // Temporary feedback
-    },
-    error: (err) => {
-      console.error('Update failed:', err);
-      alert('Update failed. Check console.');
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+      this.updatePaginatedOrders();
     }
-  });
-}
+  }
+
+  previousPage(): void {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.updatePaginatedOrders();
+    }
+  }
+
+  onPageSizeChange(): void {
+    this.pageSize = Number(this.pageSize); // Force conversion to number
+    this.currentPage = 1;
+    this.applyFilters();
+  }
+  updateOrderStatus(orderId: number, statusId: number): void {
+    if (!statusId || statusId === 0) {
+      alert('Invalid status!');
+      return;
+    }
+
+    this.ordersService.updateOrderStatus(orderId, statusId).subscribe({
+      next: () => {
+        this.loadOrders(); // Refresh the list
+        alert('Status updated!'); // Temporary feedback
+      },
+      error: (err) => {
+        console.error('Update failed:', err);
+        alert('Update failed. Check console.');
+      }
+    });
+  }
   updateStatus(orderId: number, statusId: number): void {
     this.ordersService.updateOrderStatus(orderId, +statusId).subscribe(() => {
       this.loadOrders(); // Refresh data
     });
   }
-   deleteOrder(orderId: number): void {
+  deleteOrder(orderId: number): void {
     if (confirm('Are you sure you want to delete this order?')) {
       this.ordersService.deleteOrder(orderId).subscribe({
         next: () => {
@@ -127,33 +127,33 @@ previousPage(): void {
   }
 
   onSearchChange(): void {
-  this.applyFilters();
-}
+    this.applyFilters();
+  }
   // Add status filter handler
- onStatusFilterChange(): void {
-  this.selectedStatusId = +this.selectedStatusId;
-  this.applyFilters();
-}
+  onStatusFilterChange(): void {
+    this.selectedStatusId = +this.selectedStatusId;
+    this.applyFilters();
+  }
   applyFilters(): void {
-  this.filteredOrders = this.orders.filter(order => {
-    const statusMatches = this.selectedStatusId === 0 || order.statusId === this.selectedStatusId;
-    const searchMatches = !this.searchTerm || order.orderId.toString().includes(this.searchTerm);
-    return statusMatches && searchMatches;
-  });
+    this.filteredOrders = this.orders.filter(order => {
+      const statusMatches = this.selectedStatusId === 0 || order.statusId === this.selectedStatusId;
+      const searchMatches = !this.searchTerm || order.orderId.toString().includes(this.searchTerm);
+      return statusMatches && searchMatches;
+    });
 
-  // Ensure division uses numbers
-  this.totalPages = Math.max(1, Math.ceil(this.filteredOrders.length / this.pageSize));
-  this.currentPage = 1;
-  this.updatePaginatedOrders();
-}
+    // Ensure division uses numbers
+    this.totalPages = Math.max(1, Math.ceil(this.filteredOrders.length / this.pageSize));
+    this.currentPage = 1;
+    this.updatePaginatedOrders();
+  }
 
-updatePaginatedOrders(): void {
-  const startIndex = (this.currentPage - 1) * this.pageSize;
-  const endIndex = startIndex + this.pageSize;
-  this.paginatedOrders = this.filteredOrders.slice(startIndex, endIndex);
+  updatePaginatedOrders(): void {
+    const startIndex = (this.currentPage - 1) * this.pageSize;
+    const endIndex = startIndex + this.pageSize;
+    this.paginatedOrders = this.filteredOrders.slice(startIndex, endIndex);
 
-  console.log(
-    `Filtered ${this.filteredOrders.length} orders, page ${this.currentPage}/${this.totalPages}, showing ${this.paginatedOrders.length}`
-  );
-}
+    console.log(
+      `Filtered ${this.filteredOrders.length} orders, page ${this.currentPage}/${this.totalPages}, showing ${this.paginatedOrders.length}`
+    );
+  }
 }

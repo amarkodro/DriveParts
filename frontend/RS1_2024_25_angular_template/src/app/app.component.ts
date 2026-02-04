@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from './services/auth-services/auth.service';
+import { KeyboardShortcutsService } from './services/keyboard-shortcuts.service';
 
 @Component({
   selector: 'app-root',
@@ -9,9 +10,15 @@ import { AuthService } from './services/auth-services/auth.service';
 export class AppComponent implements OnInit {
   title = 'RS1 - 2024-25 - template 1 ';
 
-  constructor(private authService: AuthService) { }
+  constructor(
+    private authService: AuthService,
+    private keyboardShortcutsService: KeyboardShortcutsService
+  ) { }
 
   ngOnInit(): void {
+    // Initialize global keyboard shortcuts
+    this.keyboardShortcutsService.init();
+
     // Token restoration is now handled by MyAuthService constructor (runs before routing)
     // Here we just set login status and fetch user profile
     if (this.authService.isLoggedIn()) {
@@ -27,3 +34,4 @@ export class AppComponent implements OnInit {
     }
   }
 }
+

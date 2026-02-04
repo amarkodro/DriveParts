@@ -1,7 +1,7 @@
 /* ===== Dashboard Layout ===== */
 .dashboard-container {
     display: flex;
-    height: 100vh;
+    min-height: 100vh;
     background-color: #f3f4f6;
 }
 
@@ -51,8 +51,8 @@
 .parts-management-container {
     flex-grow: 1;
     padding: 2rem;
+    padding-bottom: 4rem;
     background-color: #f3f4f6;
-    overflow-y: auto;
 }
 
 .parts-management-container h2 {
@@ -94,21 +94,46 @@
 /* Form Controls */
 .search-input {
     width: 100%;
-    padding: 0.75rem 2.5rem 0.75rem 1rem;
+    padding: 0.75rem;
     border: 2px solid #e5e7eb;
     border-radius: 0.5rem;
     font-size: 0.9rem;
     transition: all 0.3s ease;
-    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%239ca3af" width="18" height="18"><path d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 1 0-.7.7l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>');
-    background-repeat: no-repeat;
-    background-position: right 1rem center;
-    background-size: 18px;
+    box-sizing: border-box;
 }
 
 .search-input:focus {
     outline: none;
     border-color: #3b82f6;
     box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.suggestions-list {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 0 0 5px 5px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    z-index: 1000;
+    max-height: 200px;
+    overflow-y: auto;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.suggestions-list li {
+    padding: 10px 15px;
+    cursor: pointer;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.suggestions-list li:hover {
+    background-color: #f5f7fa;
+    color: #3b82f6;
 }
 
 /* Action Buttons */
@@ -194,4 +219,242 @@
         flex-direction: column;
         gap: 0.5rem;
     }
+}
+
+/* Filter Section Styles */
+.filter-section {
+    background-color: white;
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    margin-bottom: 1.5rem;
+}
+
+.filter-row-top {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    align-items: end;
+    margin-bottom: 1rem;
+}
+
+.filter-row-bottom {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    align-items: end;
+}
+
+.filter-item {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.filter-item label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #374151;
+    margin-bottom: 0.5rem;
+}
+
+.filter-select,
+.filter-input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 2px solid #e5e7eb;
+    border-radius: 0.5rem;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    background-color: white;
+    box-sizing: border-box;
+}
+
+.filter-select:focus,
+.filter-input:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.clear-filters-btn {
+    background-color: #6b7280;
+    color: white;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    border: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    width: 100%;
+}
+
+.clear-filters-btn:hover {
+    background-color: #4b5563;
+}
+
+/* Loading Indicator */
+.loading-indicator {
+    text-align: center;
+    padding: 2rem;
+    color: #6b7280;
+    font-style: italic;
+}
+
+/* Pagination Info */
+.pagination-info {
+    text-align: center;
+    margin-top: 1rem;
+    color: #6b7280;
+    font-size: 0.875rem;
+}
+
+.page-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Table Thumbnail Styles */
+.table-thumbnail {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.table-thumbnail:hover {
+    transform: scale(1.1);
+}
+
+/* Image Modal Styles */
+.image-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    cursor: pointer;
+}
+
+.image-modal-content {
+    position: relative;
+    max-width: 90%;
+    max-height: 90%;
+    cursor: default;
+}
+
+.enlarged-image {
+    max-width: 100%;
+    max-height: 90vh;
+    object-fit: contain;
+    border-radius: 0.5rem;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: zoom-in;
+}
+
+.enlarged-image.zoomed {
+    transform: scale(2.5);
+    cursor: zoom-out;
+}
+
+.zoom-container {
+    position: relative;
+    overflow: hidden;
+    border-radius: 0.5rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+}
+
+.zoom-hint {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    pointer-events: none;
+    opacity: 0.8;
+    transition: opacity 0.3s ease;
+}
+
+.zoom-container:hover .zoom-hint {
+    opacity: 1;
+}
+
+.image-modal-close {
+    position: absolute;
+    top: -40px;
+    right: 0;
+    color: white;
+    font-size: 40px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.image-modal-close:hover {
+    color: #ef4444;
+}
+
+/* Page Size Control */
+.page-size-control {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.page-size-control label {
+    font-weight: 500;
+    color: #374151;
+}
+
+.page-size-select {
+    padding: 0.5rem 1rem;
+    border: 2px solid #e5e7eb;
+    border-radius: 0.5rem;
+    background-color: white;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.page-size-select:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Scrollable Table Container */
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.table-container.scrollable {
+    max-height: 600px;
+    overflow-y: auto;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+}
+
+.table-container.scrollable table {
+    margin-bottom: 0;
+}
+
+/* Sticky table header for scrollable view */
+.table-container.scrollable thead {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: #f8fafc;
 }

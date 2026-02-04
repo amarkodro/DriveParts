@@ -10,6 +10,8 @@ export interface ChatMessage {
   content: string;
   timestamp: Date;
   isFromUser: boolean;
+  fileUrl?: string;
+  fileName?: string;
 }
 
 @Injectable({
@@ -69,10 +71,10 @@ export class ChatSignalRService {
     }
   }
 
-  async sendMessageToAdmins(content: string): Promise<void> {
+  async sendMessageToAdmins(content: string, fileUrl?: string, fileName?: string): Promise<void> {
     if (this.hubConnection?.state === signalR.HubConnectionState.Connected) {
       try {
-        await this.hubConnection.invoke('SendMessageToAdmins', content);
+        await this.hubConnection.invoke('SendMessageToAdmins', content, fileUrl, fileName);
         console.log('✅ Message sent to admins');
       } catch (err) {
         console.error('❌ Error sending message:', err);
@@ -82,10 +84,10 @@ export class ChatSignalRService {
     }
   }
 
-  async sendMessageToUser(userId: number, content: string): Promise<void> {
+  async sendMessageToUser(userId: number, content: string, fileUrl?: string, fileName?: string): Promise<void> {
     if (this.hubConnection?.state === signalR.HubConnectionState.Connected) {
       try {
-        await this.hubConnection.invoke('SendMessageToUser', userId, content);
+        await this.hubConnection.invoke('SendMessageToUser', userId, content, fileUrl, fileName);
         console.log('✅ Message sent to user', userId);
       } catch (err) {
         console.error('❌ Error sending message:', err);

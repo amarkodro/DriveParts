@@ -1,45 +1,40 @@
 <div class="dashboard-container">
   <div class="dashboard-sidebar">
     <h2>Manage</h2>
-      <ul>
-        <li><a routerLink="/dashboard" routerLinkActive="active">Dashboard</a></li>
-        <li><a routerLink="/edit" routerLinkActive="active">Parts</a></li>
-        <li><a routerLink="/orders" routerLinkActive="active">Orders</a></li>
-        <li><a routerLink="/customers" routerLinkActive="active">Customers</a></li>
-      </ul>
+    <ul>
+      <li><a routerLink="/dashboard" routerLinkActive="active">Dashboard</a></li>
+      <li><a routerLink="/edit" routerLinkActive="active">Parts</a></li>
+      <li><a routerLink="/orders" routerLinkActive="active">Orders</a></li>
+      <li><a routerLink="/customers" routerLinkActive="active">Customers</a></li>
+    </ul>
   </div>
 
   <div class="order-container">
     <div class="order-card">
       <h2 class="text-xl font-bold mb-4">Order Management</h2>
-       <div class="filter-controls">
- <div class="search-container mb-4">
-      <input
-        type="text"
-        [(ngModel)]="searchTerm"
-        (input)="onSearchChange()"
-        placeholder="Search by Order ID..."
-        class="search-input"
-      >
-    </div>
-    <div class="status-filter">
-  <select [(ngModel)]="selectedStatusId" (change)="onStatusFilterChange()">
-    <option [value]="0">All Statuses</option>
-    <option *ngFor="let status of statusOptions" [value]="status.id">
-      {{ status.name }}
-    </option>
-  </select>
-</div>
-</div>
+      <div class="filter-controls">
+        <div class="search-container mb-4">
+          <input type="text" [(ngModel)]="searchTerm" (input)="onSearchChange()" placeholder="Search by Order ID..."
+            class="search-input">
+        </div>
+        <div class="status-filter">
+          <select [(ngModel)]="selectedStatusId" (change)="onStatusFilterChange()">
+            <option [value]="0">All Statuses</option>
+            <option *ngFor="let status of statusOptions" [value]="status.id">
+              {{ status.name }}
+            </option>
+          </select>
+        </div>
+      </div>
 
-<div class="page-size-selector">
-    <label>Items per page:</label>
-    <select [(ngModel)]="pageSize" (change)="onPageSizeChange()">
-  <option [value]="5">5</option>
-  <option [value]="10">10</option>
-  <option [value]="20">20</option>
-</select>
-  </div>
+      <div class="page-size-selector">
+        <label>Items per page:</label>
+        <select [(ngModel)]="pageSize" (change)="onPageSizeChange()">
+          <option [value]="5">5</option>
+          <option [value]="10">10</option>
+          <option [value]="20">20</option>
+        </select>
+      </div>
 
       <div class="page-navigation">
         <button (click)="previousPage()" [disabled]="currentPage === 1">‹ Previous</button>
@@ -66,49 +61,41 @@
             <td>{{ order.username }}</td>
             <td>{{ order.supplierName }}</td>
             <td>{{ order.paymentMethod }}</td>
-      <td>
-  <select [(ngModel)]="order.statusId">
-    <option *ngFor="let status of statusOptions" [value]="status.id">
-      {{ status.name }}
-    </option>
-  </select>
-  <div *ngIf="!order.statusId" class="error">
-    Status not recognized: {{ order.statusName }}
-  </div>
-</td>
-          <td>
-           <button 
-  class="update-btn" 
-  (click)="updateOrderStatus(order.orderId, order.statusId)"
-  [disabled]="!order.statusId"
->
-  Update
-</button>
-  <!-- Add delete button -->
-  <button class="delete-btn" (click)="deleteOrder(order.orderId)">Delete</button>
-   <button 
-  (click)="downloadPdf(order.orderId)"
-  [disabled]="isDownloading"
-  class="pdf-btn">
-  Reciept
-</button>
-  
-  <!-- Loading Spinner -->
-  <mat-spinner *ngIf="isDownloading" 
-               diameter="20" 
-               class="spinner"></mat-spinner>
-</td> 
+            <td>
+              <select [(ngModel)]="order.statusId">
+                <option *ngFor="let status of statusOptions" [value]="status.id">
+                  {{ status.name }}
+                </option>
+              </select>
+              <div *ngIf="!order.statusId" class="error">
+                Status not recognized: {{ order.statusName }}
+              </div>
+            </td>
+            <td>
+              <button class="update-btn" (click)="updateOrderStatus(order.orderId, order.statusId)"
+                [disabled]="!order.statusId">
+                Update
+              </button>
+              <!-- Add delete button -->
+              <button class="delete-btn" (click)="deleteOrder(order.orderId)">Delete</button>
+              <button (click)="downloadPdf(order.orderId)" [disabled]="isDownloading" class="pdf-btn">
+                Reciept
+              </button>
+
+              <!-- Loading Spinner -->
+              <mat-spinner *ngIf="isDownloading" diameter="20" class="spinner"></mat-spinner>
+            </td>
           </tr>
         </tbody>
       </table>
       <!-- Repeat pagination controls at bottom -->
-    <div class="pagination-controls bottom">
-      <div class="page-navigation">
-        <button (click)="previousPage()" [disabled]="currentPage === 1">‹ Previous</button>
-        <span>Page {{ currentPage }} of {{ totalPages }}</span>
-        <button (click)="nextPage()" [disabled]="currentPage === totalPages">Next ›</button>
+      <div class="pagination-controls bottom">
+        <div class="page-navigation">
+          <button (click)="previousPage()" [disabled]="currentPage === 1">‹ Previous</button>
+          <span>Page {{ currentPage }} of {{ totalPages }}</span>
+          <button (click)="nextPage()" [disabled]="currentPage === totalPages">Next ›</button>
+        </div>
       </div>
-    </div>
     </div>
   </div>
 </div>

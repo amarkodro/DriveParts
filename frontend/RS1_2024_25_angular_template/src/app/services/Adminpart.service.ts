@@ -1,9 +1,9 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 export interface Part {
- partId: number;
+  partId: number;
   name: string;
   price: number;
   categoryId: number;      // Not categoryname
@@ -30,17 +30,35 @@ export interface ManufacturerResponse {
   providedIn: 'root'
 })
 export class PartService {
- updatePartFormData(id: number, partData: FormData): Observable<any> {
-  return this.http.put(`${this.apiUrl}/${id}`, partData);
-}
+  updatePartFormData(id: number, partData: FormData): Observable<any> {
+    return this.http.put(`${this.apiUrl}/${id}`, partData);
+  }
   private apiUrl = 'http://localhost:7000/api/parts'; // adjust if needed
- updatePartWithFormData(id: number, formData: FormData): Observable<any> {
+  updatePartWithFormData(id: number, formData: FormData): Observable<any> {
     return this.http.put(`${this.apiUrl}/${id}/form`, formData);
   }
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
-  getParts(): Observable<Part[]> {
-    return this.http.get<Part[]>(this.apiUrl);
+  getParts(
+    page: number = 1,
+    pageSize: number = 10,
+    name?: string,
+    categoryId?: number,
+    manufacturerId?: number,
+    minPrice?: number,
+    maxPrice?: number
+  ): Observable<any> {
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('pageSize', pageSize.toString());
+
+    if (name) params = params.set('name', name);
+    if (categoryId) params = params.set('categoryId', categoryId.toString());
+    if (manufacturerId) params = params.set('manufacturerId', manufacturerId.toString());
+    if (minPrice !== undefined && minPrice !== null) params = params.set('minPrice', minPrice.toString());
+    if (maxPrice !== undefined && maxPrice !== null) params = params.set('maxPrice', maxPrice.toString());
+
+    return this.http.get<any>(this.apiUrl, { params });
   }
 
   getPart(id: number): Observable<Part> {
@@ -60,8 +78,13 @@ export class PartService {
   getCategories(): Observable<any[]> {
     return this.http.get<any[]>('http://localhost:7000/api/categories');
   }
-  
+
   getManufacturers(): Observable<any[]> {
     return this.http.get<any[]>('http://localhost:7000/api/manufacturers');
+  }
+
+  getPartSuggestions(query: string): Observable<string[]> {
+    const params = new HttpParams().set('query', query);
+    return this.http.get<string[]>(`${this.apiUrl}/suggestions`, { params });
   }
 }

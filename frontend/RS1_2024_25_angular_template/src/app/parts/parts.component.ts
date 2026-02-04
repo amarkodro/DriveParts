@@ -1,9 +1,10 @@
-import {Component, OnInit, AfterViewInit, ElementRef, Renderer2, HostListener} from '@angular/core';
+import { Component, OnInit, AfterViewInit, ElementRef, Renderer2, HostListener } from '@angular/core';
 import { DropdownService } from '../services/dropdown.service';
 import { Router } from '@angular/router';
-import {AuthService} from '../services/auth-services/auth.service';
-import {CartService} from '../services/cart.service';
-import {ToastrService} from 'ngx-toastr';
+import { AuthService } from '../services/auth-services/auth.service';
+import { CartService } from '../services/cart.service';
+import { ToastrService } from 'ngx-toastr';
+import { FavoritesService } from '../services/favorites.service';
 
 interface DropdownItem {
   id: number;
@@ -11,11 +12,17 @@ interface DropdownItem {
 }
 
 interface Part {
-  id: number;
+  id?: number;
+  partId?: number;
   name: string;
   price: number;
   description: string;
   partImage: string;
+  categoryId?: number;
+  manufacturerId?: number;
+  categoryName?: string;
+  manufacturerName?: string;
+  quantity?: number;
 }
 
 @Component({
@@ -46,6 +53,8 @@ export class PartsComponent implements OnInit, AfterViewInit {
   showVehicleTypeDropdown: boolean = false;
   frontCategoryId: number = 11;
   selectedPart: any = null;
+  favoriteIds: number[] = [];
+
   constructor(
     private dropdownService: DropdownService,
     private router: Router,
@@ -54,10 +63,53 @@ export class PartsComponent implements OnInit, AfterViewInit {
     private authService: AuthService,
     private cartService: CartService,
     private toastr: ToastrService,
-  ) {}
+    private favoritesService: FavoritesService
+  ) { }
 
   ngOnInit(): void {
     this.loadDropdowns();
+    this.loadFavorites();
+  }
+
+  loadFavorites() {
+    if (this.authService.isLoggedIn()) {
+      this.favoritesService.getFavoriteIds().subscribe({
+        next: (ids) => this.favoriteIds = ids,
+        error: (err) => console.error('Error loading favorites:', err)
+      });
+    }
+  }
+
+  isFavorite(partId: number | undefined): boolean {
+    if (!partId) return false;
+    return this.favoriteIds.includes(partId);
+  }
+
+  toggleFavorite(part: any, event: Event) {
+    event.stopPropagation();
+    if (!this.authService.isLoggedIn()) {
+      this.toastr.warning('Please login to add to favorites');
+      return;
+    }
+
+    const partIdToUse = part.partId || part.id;
+    if (!partIdToUse) {
+      this.toastr.error('Part ID is missing');
+      return;
+    }
+
+    this.favoritesService.toggleFavorite(partIdToUse).subscribe({
+      next: (res) => {
+        if (res.isFavorite) {
+          this.favoriteIds = [...this.favoriteIds, partIdToUse];
+          this.toastr.success('Added to favorites');
+        } else {
+          this.favoriteIds = this.favoriteIds.filter(id => id !== partIdToUse);
+          this.toastr.info('Removed from favorites');
+        }
+      },
+      error: (err) => this.toastr.error('Failed to toggle favorite')
+    });
   }
 
   @HostListener('document:click', ['$event'])
@@ -136,7 +188,7 @@ export class PartsComponent implements OnInit, AfterViewInit {
       next: (data) => {
         this.filteredParts = data;
         setTimeout(() => this.checkVisibility(), 300);
-        console.log('filtered parts:',this.filteredParts );
+        console.log('filtered parts:', this.filteredParts);
       },
       error: (err) => {
         console.error('Error fetching filtered parts:', err);
@@ -170,8 +222,14 @@ export class PartsComponent implements OnInit, AfterViewInit {
     }
 
     const quantity = part.quantity || 1;
+    const partIdToUse = part.partId || part.id;
 
-    this.cartService.addToCart(part.partId, quantity).subscribe({
+    if (!partIdToUse) {
+      this.toastr.error('Part ID is missing');
+      return;
+    }
+
+    this.cartService.addToCart(partIdToUse, quantity).subscribe({
       next: (res) => {
         this.toastr.success(`${part.name} added to cart`, 'Success');
         this.cartService.loadCartItems();  // Refresh cart items across components
@@ -257,7 +315,7 @@ export class PartsComponent implements OnInit, AfterViewInit {
       this.loadVehicleTypes();
     } else {
       this.showVehicleTypeDropdown = false;
-      this.types = []; // Reset tipova
+      this.types = [];
       this.selectedTypeId = null;
     }
   }
@@ -346,9 +404,5 @@ export class PartsComponent implements OnInit, AfterViewInit {
     });
 
     setTimeout(() => imgClone.remove(), 900);
-  }
-
-  goToPartDetails(partId: number) {
-    this.router.navigate(['/part-detail', partId]);
   }
 }

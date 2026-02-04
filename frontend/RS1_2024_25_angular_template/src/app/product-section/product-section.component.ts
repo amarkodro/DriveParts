@@ -1,9 +1,10 @@
-import {Component, ElementRef, OnInit} from '@angular/core';
+import { Component, ElementRef, OnInit } from '@angular/core';
 import { PartsService } from '../services/parts.service';
 import { Router } from '@angular/router';
-import {CartService} from '../services/cart.service';
-import {AuthService} from '../services/auth-services/auth.service';
-import {ToastrService} from 'ngx-toastr';
+import { CartService } from '../services/cart.service';
+import { AuthService } from '../services/auth-services/auth.service';
+import { ToastrService } from 'ngx-toastr';
+import { FavoritesService } from '../services/favorites.service';
 
 @Component({
   selector: 'app-product-section',
@@ -17,25 +18,68 @@ export class ProductSectionComponent implements OnInit {
   selectedProduct: any = null;
   wishlistPopupVisible: boolean = false;
   wishlistPopupPosition = { top: '0px', left: '0px' };
-
+  favoriteIds: number[] = [];
 
   cartItems: any[] = [];
   selectedQuantity: any;
 
-
-  constructor(private partsService: PartsService,
-              private router: Router,
-              private elRef: ElementRef,
-              private cartService : CartService,
-              private authService: AuthService,
-              private toastr: ToastrService,
-              ) {}
+  constructor(
+    private partsService: PartsService,
+    private router: Router,
+    private elRef: ElementRef,
+    private cartService: CartService,
+    private authService: AuthService,
+    private toastr: ToastrService,
+    private favoritesService: FavoritesService
+  ) { }
 
   ngOnInit(): void {
     this.loadFeaturedParts();
     this.loadNewArrivalParts();
     this.loadOnSaleParts();
     this.loadCartFromStorage();
+    this.loadFavorites();
+  }
+
+  loadFavorites() {
+    if (this.authService.isLoggedIn()) {
+      this.favoritesService.getFavoriteIds().subscribe({
+        next: (ids) => this.favoriteIds = ids,
+        error: (err) => console.error('Error loading favorites:', err)
+      });
+    }
+  }
+
+  isFavorite(partId: number | undefined): boolean {
+    if (!partId) return false;
+    return this.favoriteIds.includes(partId);
+  }
+
+  toggleFavorite(part: any, event: Event) {
+    event.stopPropagation();
+    if (!this.authService.isLoggedIn()) {
+      this.toastr.warning('Please login to add to favorites');
+      return;
+    }
+
+    const partId = part.partId || part.id;
+    if (!partId) {
+      this.toastr.error('Part ID is missing');
+      return;
+    }
+
+    this.favoritesService.toggleFavorite(partId).subscribe({
+      next: (res) => {
+        if (res.isFavorite) {
+          this.favoriteIds = [...this.favoriteIds, partId];
+          this.toastr.success('Added to favorites');
+        } else {
+          this.favoriteIds = this.favoriteIds.filter(id => id !== partId);
+          this.toastr.info('Removed from favorites');
+        }
+      },
+      error: (err) => this.toastr.error('Failed to toggle favorite')
+    });
   }
 
   loadFeaturedParts(): void {
@@ -80,6 +124,7 @@ export class ProductSectionComponent implements OnInit {
   closeProductModal(): void {
     this.selectedProduct = null;
   }
+
   addToCart(part: any, event: MouseEvent): void {
     const token = this.authService.getTokenUser();
 
@@ -90,8 +135,14 @@ export class ProductSectionComponent implements OnInit {
     }
 
     const quantity = part.quantity || this.selectedProduct?.quantity || 1;
+    const partIdToUse = part.partId || part.id;
 
-    this.cartService.addToCart(part.partId, quantity).subscribe({
+    if (!partIdToUse) {
+      this.toastr.error('Part ID is missing');
+      return;
+    }
+
+    this.cartService.addToCart(partIdToUse, quantity).subscribe({
       next: () => {
         this.toastr.success(`${part.name} added to cart`, 'Success');
         this.cartService.notifyCartUpdate();
@@ -109,8 +160,6 @@ export class ProductSectionComponent implements OnInit {
       }
     });
   }
-
-
 
   removeFromCart(part: any): void {
     this.cartItems = this.cartItems.filter(item => item.id !== part.id);
@@ -173,7 +222,7 @@ export class ProductSectionComponent implements OnInit {
   }
 
   viewAllParts(category: string) {
-    this.router.navigate(['view-parts'],{queryParams: {category}});
+    this.router.navigate(['view-parts'], { queryParams: { category } });
   }
 
   flyToCart(event: MouseEvent) {

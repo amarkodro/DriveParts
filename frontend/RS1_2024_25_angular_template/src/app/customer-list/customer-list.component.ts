@@ -18,7 +18,7 @@ export class CustomerListComponent implements OnInit {
   totalCount = 0;
   totalPages = 1;
   loading = false;
-  
+
   showOrdersModal = false;
   selectedCustomerId: number | null = null;
   selectedCustomerName = '';
@@ -40,7 +40,7 @@ export class CustomerListComponent implements OnInit {
       this.currentPage = 1;
       this.loadCustomers();
     });
-    
+
     this.loadCustomers();
   }
 
@@ -128,22 +128,71 @@ export class CustomerListComponent implements OnInit {
     });
   }
 
-  // Close modal when clicking outside
-  @HostListener('document:click', ['$event'])
-  onDocumentClick(event: MouseEvent): void {
-    const modal = document.querySelector('.modal-content');
-    const overlay = document.querySelector('.modal-overlay');
-    
-    if (this.showOrdersModal && overlay && modal && 
-        event.target === overlay && !modal.contains(event.target as Node)) {
-      this.closeOrdersModal();
-    }
-  }
+
 
   // Close modal on ESC key
   @HostListener('document:keydown.escape', ['$event'])
   onKeydownHandler(event: KeyboardEvent): void {
     if (this.showOrdersModal) {
+      this.closeOrdersModal();
+    }
+  }
+
+  // Image enlarge functionality
+  enlargedImage: string | null = null;
+
+  enlargeImage(imageUrl: string): void {
+    this.enlargedImage = imageUrl;
+  }
+
+  closeEnlargedImage(): void {
+    this.enlargedImage = null;
+  }
+
+  handleImageError(event: any): void {
+    event.target.src = 'assets/default-user.png';
+  }
+
+  // Suggestions logic
+  suggestions: string[] = [];
+
+  onSearchInput(): void {
+    // Original search change logic (debounced)
+    this.searchSubject.next(this.searchTerm);
+
+    // Fetch suggestions directly if term is long enough
+    if (this.searchTerm.length >= 2) {
+      this.customerService.getCustomerSuggestions(this.searchTerm).subscribe(data => {
+        this.suggestions = data;
+      });
+    } else {
+      this.suggestions = [];
+    }
+  }
+
+  selectSuggestion(suggestion: string): void {
+    this.searchTerm = suggestion;
+    this.suggestions = [];
+    this.onSearchChange(); // Trigger search immediately
+  }
+
+  // Close suggestions when clicking outside
+  @HostListener('document:click', ['$event'])
+  clickout(event: MouseEvent): void {
+    // Only close if click is outside search container
+    // Note: The previous logic for modal closing handles one click listener, 
+    // we can merge logic or just check target here as well.
+    const target = event.target as HTMLElement;
+    if (!target.closest('.search-container')) {
+      this.suggestions = [];
+    }
+
+    // Existing modal logic
+    const modal = document.querySelector('.modal-content');
+    const overlay = document.querySelector('.modal-overlay');
+
+    if (this.showOrdersModal && overlay && modal &&
+      event.target === overlay && !modal.contains(event.target as Node)) {
       this.closeOrdersModal();
     }
   }

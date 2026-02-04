@@ -91,50 +91,70 @@ export class AdminChatInboxComponent implements OnInit, OnDestroy {
   }
 
   handleIncomingMessage(message: ChatMessage) {
-  console.log('📨 Admin received message:', message);
+    console.log('📨 Admin received message:', message);
 
-  let conversation = this.conversations.find(c => c.id === message.conversationId);
+    let conversation = this.conversations.find(c => c.id === message.conversationId);
 
-  if (conversation) {
-    // Update conversation
-    conversation.lastMessage = message.content;
-    conversation.lastMessageAt = message.timestamp;
+    if (conversation) {
+      // Update conversation
+      conversation.lastMessage = message.content;
+      conversation.lastMessageAt = message.timestamp;
 
-    // CRITICAL FIX: Initialize messages array if not exist
-    if (!conversation.messages) {
-      conversation.messages = [];
-    }
+      // CRITICAL FIX: Initialize messages array if not exist
+      if (!conversation.messages) {
+        conversation.messages = [];
+      }
 
-    // Avoid duplicates
-    const exists = conversation.messages.some(m => m.messageId === message.messageId);
-    if (!exists) {
-      conversation.messages.push(message);
-    }
+      // Avoid duplicates
+      const exists = conversation.messages.some(m => m.messageId === message.messageId);
+      if (!exists) {
+        conversation.messages.push(message);
+      }
 
-    // If this is the selected conversation, scroll
-    if (this.selectedConversation?.id === conversation.id) {
-      // Update the selected conversation reference
-      this.selectedConversation.messages = conversation.messages;
-      setTimeout(() => this.scrollToBottom(), 100);
+      // If this is the selected conversation, scroll
+      if (this.selectedConversation?.id === conversation.id) {
+        // Update the selected conversation reference
+        this.selectedConversation.messages = conversation.messages;
+        setTimeout(() => this.scrollToBottom(), 100);
+      } else {
+        // Only increment unread if not currently viewing
+        conversation.unreadCount++;
+      }
+
+      // Move to top
+      this.conversations = [
+        conversation,
+        ...this.conversations.filter(c => c.id !== conversation.id)
+      ];
     } else {
-      // Only increment unread if not currently viewing
-      conversation.unreadCount++;
+      // New conversation - reload the entire list
+      console.log('🔄 New conversation detected, reloading...');
+      this.loadConversations();
     }
-
-    // Move to top
-    this.conversations = [
-      conversation,
-      ...this.conversations.filter(c => c.id !== conversation.id)
-    ];
-  } else {
-    // New conversation - reload the entire list
-    console.log('🔄 New conversation detected, reloading...');
-    this.loadConversations();
   }
-}
+
+  selectedFile: File | null = null;
+  isUploading = false;
 
   async sendMessage() {
-    if (!this.newMessage.trim() || !this.selectedConversation || !this.isConnected) return;
+    if ((!this.newMessage.trim() && !this.selectedFile) || !this.selectedConversation || !this.isConnected) return;
+
+    let fileUrl: string | undefined;
+    let fileName: string | undefined;
+
+    if (this.selectedFile) {
+      this.isUploading = true;
+      try {
+        const uploadResult = await this.uploadFile(this.selectedFile);
+        fileUrl = uploadResult.url;
+        fileName = uploadResult.fileName;
+      } catch (err) {
+        console.error('Upload failed', err);
+        this.isUploading = false;
+        return; // Stop sending if upload failed
+      }
+      this.isUploading = false;
+    }
 
     const messageContent = this.newMessage;
     const userId = this.authService.getUserId();
@@ -148,15 +168,44 @@ export class AdminChatInboxComponent implements OnInit, OnDestroy {
       senderName: userInfo ? `${userInfo.name} ${userInfo.surname}` : 'Admin',
       content: messageContent,
       timestamp: new Date(),
-      isFromUser: false
+      isFromUser: false,
+      fileUrl: fileUrl,
+      fileName: fileName
     };
 
     this.selectedConversation.messages.push(localMessage);
     this.newMessage = '';
+    this.selectedFile = null;
     setTimeout(() => this.scrollToBottom(), 100);
 
     // Send to server
-    await this.chatService.sendMessageToUser(this.selectedConversation.userId, messageContent);
+    await this.chatService.sendMessageToUser(this.selectedConversation.userId, messageContent, fileUrl, fileName);
+  }
+
+  onFileDropped(files: FileList) {
+    if (files && files.length > 0) {
+      this.selectedFile = files[0];
+      console.log('File dropped:', this.selectedFile);
+    }
+  }
+
+  onFileSelected(event: any) {
+    if (event.target.files && event.target.files.length > 0) {
+      this.selectedFile = event.target.files[0];
+    }
+  }
+
+  removeFile() {
+    this.selectedFile = null;
+  }
+
+  private uploadFile(file: File): Promise<{ url: string, fileName: string }> {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    return this.http.post<{ url: string, fileName: string }>('http://localhost:7000/api/storage/upload', formData)
+      .toPromise()
+      .then(res => res!); // Non-null assertion for simplicity, handle properly in prod
   }
 
   scrollToBottom(): void {
