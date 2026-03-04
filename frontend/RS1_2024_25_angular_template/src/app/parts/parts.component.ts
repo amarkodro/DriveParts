@@ -11,6 +11,7 @@ interface DropdownItem {
 }
 
 interface Part {
+  partId: number;
   id: number;
   name: string;
   price: number;
