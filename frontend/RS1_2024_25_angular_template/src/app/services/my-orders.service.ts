@@ -1,3 +1,4 @@
+import {MyConfig} from '../my-config';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -18,7 +19,7 @@ export interface Order {
   providedIn: 'root'
 })
 export class MyOrdersService {
-  private apiUrl = 'http://localhost:7000/api/Orders';
+  private apiUrl = MyConfig.api_address + '/api/Orders';
 
   constructor(private http: HttpClient) { }
 

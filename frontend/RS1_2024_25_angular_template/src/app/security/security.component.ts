@@ -149,7 +149,6 @@ export class SecurityComponent implements OnInit {
             this.sendSMS();
           },
           'expired-callback': () => {
-            console.warn('reCAPTCHA expired');
           }
         }
       );
@@ -303,7 +302,6 @@ export class SecurityComponent implements OnInit {
 
 
 }
-
 
 
 

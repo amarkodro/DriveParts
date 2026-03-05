@@ -1,3 +1,4 @@
+import {MyConfig} from '../my-config';
 import { Injectable } from '@angular/core';
 import {Observable} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
@@ -7,7 +8,7 @@ import {HttpClient} from '@angular/common/http';
 })
 export class UserService {
 
-  private apiUrl = 'http://localhost:7000/api/Users';
+  private apiUrl = MyConfig.api_address + '/api/Users';
 
   constructor(private http: HttpClient) { }
 

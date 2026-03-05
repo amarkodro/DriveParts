@@ -1,3 +1,4 @@
+import {MyConfig} from '../my-config';
 import { Injectable } from '@angular/core';
 import {loadStripe} from '@stripe/stripe-js';
 import {HttpClient} from '@angular/common/http';
@@ -14,7 +15,7 @@ export class StripeService {
   async redirectToCheckout(items: any[]) {
     const stripe = await this.stripePromise;
 
-    return this.http.post<any>('http://localhost:7000/api/stripe/create-checkout-session', { items: items })
+    return this.http.post<any>(MyConfig.api_address + '/api/stripe/create-checkout-session', { items: items })
       .toPromise()
       .then(async (res) => {
         return stripe?.redirectToCheckout({ sessionId: res.sessionId });

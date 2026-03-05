@@ -1,3 +1,4 @@
+import {MyConfig} from '../my-config';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import {Observable, Subject, BehaviorSubject} from 'rxjs';
@@ -7,7 +8,7 @@ import {tap} from 'rxjs/operators';
   providedIn: 'root'
 })
 export class CartService {
-  private apiUrl = 'http://localhost:7000/api/cart';
+  private apiUrl = MyConfig.api_address + '/api/cart';
   private cartUpdatedSoruce = new Subject<void>();
   cartUpdated$ = this.cartUpdatedSoruce.asObservable();
   private cartItemsSubject = new BehaviorSubject<any[]>([]);
@@ -108,14 +109,14 @@ export class CartService {
 
   saveForLater(cartItemId: number) {
     return this.http.put(
-      `http://localhost:7000/api/cart/${cartItemId}/save-to-later`,
+      `${MyConfig.api_address}/api/cart/${cartItemId}/save-to-later`,
       {}
     );
   }
 
   moveToCart(cartItemId: number) {
     return this.http.put(
-      `http://localhost:7000/api/cart/${cartItemId}/move-to-cart`,
+      `${MyConfig.api_address}/api/cart/${cartItemId}/move-to-cart`,
       {}
     );
   }

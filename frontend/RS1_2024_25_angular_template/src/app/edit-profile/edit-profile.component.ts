@@ -1,12 +1,14 @@
-import {Component, OnInit, ViewChild, ElementRef, HostListener} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import { MyConfig } from '../my-config';
+import { Component, OnInit, ViewChild, ElementRef, HostListener } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
-import {CitiesService} from '../services/cities.service';
-import {AuthService} from '../services/auth-services/auth.service';
-import {GenderService} from '../services/gender.service';
-import {Router} from '@angular/router';
-import {UserService} from '../services/user.service';
-import {debounceTime} from 'rxjs/operators';
+import { CitiesService } from '../services/cities.service';
+import { AuthService } from '../services/auth-services/auth.service';
+import { GenderService } from '../services/gender.service';
+import { Router } from '@angular/router';
+import { UserService } from '../services/user.service';
+import { debounceTime } from 'rxjs/operators';
+import Swal from 'sweetalert2';
 
 
 @Component({
@@ -23,12 +25,12 @@ export class EditProfileComponent implements OnInit {
   cities: any[] = [];
   selectedGenderId: number | null = null;
   selectedCityId: number | null = null;
-  dropdownState: {[key: string]: boolean} = {
-    gender:false,
-    city:false,
+  dropdownState: { [key: string]: boolean } = {
+    gender: false,
+    city: false,
   }
   selectedImageFile: File | null = null;
-  apiUrl: string = 'http://localhost:7000';
+  apiUrl: string = MyConfig.api_address;
   originalUser: any;
   isSubmitting: boolean = false;
 
@@ -41,7 +43,7 @@ export class EditProfileComponent implements OnInit {
     private eRef: ElementRef,
     private userService: UserService,
 
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.citiesService.getCity().subscribe(c => this.cities = c);
@@ -79,9 +81,8 @@ export class EditProfileComponent implements OnInit {
         this.selectedCityId = user.cityId;
         this.selectedGenderId = user.genderId;
 
-        this.previewUrl = 'http://localhost:7000/' + user.imageUrl;
+        this.previewUrl = MyConfig.api_address + '/' + user.imageUrl;
 
-        console.log(user);
       },
       error: err => {
         console.error('Error retrieving user:', err);
@@ -212,13 +213,13 @@ export class EditProfileComponent implements OnInit {
         next: (updatedUser) => {
           this.previewUrl = this.apiUrl + '/' + updatedUser.imageUrl;
           this.editProfileForm.patchValue(updatedUser);
-          alert('Profile updated successfully!');
+          Swal.fire('Success', 'Profile updated successfully!', 'success');
           this.isSubmitting = false;
           window.location.reload();
         },
         error: err => {
           console.error('Error updating profile:', err);
-          alert('Failed to update profile.');
+          Swal.fire('Error', 'Failed to update profile.', 'error');
           this.isSubmitting = false;
         }
       });

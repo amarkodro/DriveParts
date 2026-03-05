@@ -17,7 +17,7 @@ namespace RS1_2024_25.API.Endpoints
 
     [Route("api/[controller]")]
     [ApiController]
-    public class AuthController(ApplicationDbContext _db, IPasswordHasher<UserAccount> _passwordHasher) : ControllerBase
+    public class AuthController(ApplicationDbContext _db, IPasswordHasher<UserAccount> _passwordHasher, IConfiguration _configuration) : ControllerBase
     {
 
         public class RegisterRequest
@@ -148,7 +148,7 @@ namespace RS1_2024_25.API.Endpoints
         {
             var role = user.IsAdmin ? "Admin" : "User";
             var jwtTokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.UTF8.GetBytes("f8d2eV3r5/8nW1qR4xPqL6zM9xD5u2F8xM0a1pZ3wNk=");
+            var key = Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!);
             var identity = new ClaimsIdentity(new Claim[] {
 
                    new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
@@ -172,7 +172,7 @@ namespace RS1_2024_25.API.Endpoints
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = identity,
-                Expires = DateTime.Now.AddMinutes(15),
+                Expires = DateTime.UtcNow.AddMinutes(15),
                 SigningCredentials = credentials
             };
             var token = jwtTokenHandler.CreateToken(tokenDescriptor);
@@ -321,7 +321,7 @@ namespace RS1_2024_25.API.Endpoints
             }
             catch (Exception ex)
             {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                return StatusCode(500, "An internal server error occurred.");
             }
         }
 

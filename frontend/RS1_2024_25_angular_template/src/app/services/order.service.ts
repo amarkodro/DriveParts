@@ -1,3 +1,4 @@
+import {MyConfig} from '../my-config';
 import { Injectable } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
@@ -8,7 +9,7 @@ import { Order } from '@stripe/stripe-js';
 })
 export class OrderService {
 
-  private apiUrl = 'http://localhost:7000/api/Orders';
+  private apiUrl = MyConfig.api_address + '/api/Orders';
 
   constructor(private http: HttpClient, ) { }
 

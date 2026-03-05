@@ -7,12 +7,13 @@ public class OpenAIService
 {
     private readonly HttpClient _httpClient;
     private readonly LocalAIService _localAI;
-    private readonly string _apiKey = "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"; // Optional
+    private readonly string _apiKey;
 
-    public OpenAIService(HttpClient httpClient, LocalAIService localAI)
+    public OpenAIService(HttpClient httpClient, LocalAIService localAI, IConfiguration configuration)
     {
         _httpClient = httpClient;
         _localAI = localAI;
+        _apiKey = configuration["OpenAI:ApiKey"] ?? "";
 
         if (!string.IsNullOrEmpty(_apiKey))
         {
@@ -57,3 +58,4 @@ public class OpenAIService
         }
     }
 }
+

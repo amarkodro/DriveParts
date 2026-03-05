@@ -1,3 +1,4 @@
+import {MyConfig} from '../my-config';
 import { Component, OnInit } from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import { CartService } from '../services/cart.service';
@@ -49,7 +50,7 @@ export class CartComponent implements OnInit {
         name: item.partName || item.name,
         quantity: item.quantity,
         price: item.price,
-        image: 'http://localhost:7000/' + (item.image || 'images/placeholder.png'),
+        image: MyConfig.api_address + '/' + (item.image || 'images/placeholder.png'),
         isSavedForLater: item.isSavedForLater
       }));
 
@@ -127,7 +128,6 @@ export class CartComponent implements OnInit {
       }))
     };
 
-    console.log(order);
   }
 
   onQuantityChanged(item: any): void {

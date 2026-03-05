@@ -1,3 +1,4 @@
+import {MyConfig} from '../my-config';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -6,7 +7,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class DashboardService {
-  private apiUrl = 'http://localhost:7000/api/dashboard/stats'; // Change to your backend URL
+  private apiUrl = MyConfig.api_address + '/api/dashboard/stats'; // Change to your backend URL
 
   constructor(private http: HttpClient) {}
 

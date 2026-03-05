@@ -121,7 +121,10 @@ namespace RS1_2024_25.API.Endpoints
             var part = _db.Parts
        .Include(c => c.Manufacturer)
        .Include(c => c.Category)
-       .First(c => c.PartId == id);
+       .FirstOrDefault(c => c.PartId == id);
+
+            if (part == null) return NotFound("Part not found");
+
             return new PartResponse
             {
                 PartId = part.PartId,
@@ -132,18 +135,15 @@ namespace RS1_2024_25.API.Endpoints
                 ManufacturerId = part.ManufacturerId,
                 CategoryName = part.Category != null ? part.Category.Name : "Unknown",
                 ManufacturerName = part.Manufacturer != null ? part.Manufacturer.Name : "Unknown",
-                PartImage =part.PartImage, // Add full URL
+                PartImage =part.PartImage,
                 IsNewArrival = part.IsNewArrival,
                 IsOnSale = part.IsOnSale,
                 IsFeatured = part.IsFeatured
             };
-
-          
-           
         }
 
         [HttpPost]
-        public ActionResult<PartResponse> PostPart([FromForm] PartRequest request)
+        public async Task<ActionResult<PartResponse>> PostPart([FromForm] PartRequest request)
         {
             string imageUrl = null;
             if (request.PartImage != null)
@@ -152,7 +152,7 @@ namespace RS1_2024_25.API.Endpoints
                 var extension = Path.GetExtension(request.PartImage.FileName);
                 var uniqueFileName = $"{fileName}_{Guid.NewGuid()}{extension}";
                 var filePath = Path.Combine("wwwroot/images", uniqueFileName);
-                using (var stream = new FileStream(filePath, FileMode.Create)) { request.PartImage.CopyTo(stream); }
+                using (var stream = new FileStream(filePath, FileMode.Create)) { await request.PartImage.CopyToAsync(stream); }
                 imageUrl = $"/images/{uniqueFileName}";
             }
             
@@ -189,7 +189,7 @@ namespace RS1_2024_25.API.Endpoints
         }
 
         [HttpPut("{id}")]
-        public ActionResult<string> PutPart(int id, [FromForm] PartUpdateRequest request)
+        public async Task<ActionResult<string>> PutPart(int id, [FromForm] PartUpdateRequest request)
         {
             var part = _db.Parts.Find(id) ?? throw new KeyNotFoundException("Part not found");
             if (request.PartImage != null)
@@ -198,8 +198,8 @@ namespace RS1_2024_25.API.Endpoints
                 var extension = Path.GetExtension(request.PartImage.FileName);
                 var uniqueFileName = $"{fileName}_{Guid.NewGuid()}{extension}";
                 var filePath = Path.Combine("wwwroot/images", uniqueFileName);
-                using (var stream = new FileStream(filePath, FileMode.Create)) { request.PartImage.CopyTo(stream); }
-                part.PartImage = $"/images/{uniqueFileName}"; // Spremi URL slike kao string }
+                using (var stream = new FileStream(filePath, FileMode.Create)) { await request.PartImage.CopyToAsync(stream); }
+                part.PartImage = $"/images/{uniqueFileName}";
             }
             else if (!string.IsNullOrEmpty(request.ExistingImagePath))
             {
@@ -235,7 +235,7 @@ namespace RS1_2024_25.API.Endpoints
         }
         public class RequiredIfNoNewImageAttribute : ValidationAttribute
         {
-            protected override ValidationResult IsValid(object value, ValidationContext context)
+            protected override ValidationResult? IsValid(object? value, ValidationContext context)
             {
                 var model = (PartUpdateRequest)context.ObjectInstance;
                 if (model.PartImage == null && string.IsNullOrEmpty(value?.ToString()))

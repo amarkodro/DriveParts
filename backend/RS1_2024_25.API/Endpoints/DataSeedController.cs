@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using RS1_2024_25.API.Data;
 using RS1_2024_25.API.Data.Models;
 
@@ -7,6 +8,7 @@ namespace RS1_2024_25.API.Endpoints
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class DataSeedController(ApplicationDbContext _db, IPasswordHasher<UserAccount> _passwordHasher) : ControllerBase
     {
         [HttpPost("add")]

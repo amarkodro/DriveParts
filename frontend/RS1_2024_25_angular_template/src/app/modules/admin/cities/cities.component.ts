@@ -40,7 +40,6 @@ export class CitiesComponent {
     if (confirm('Are you sure you want to delete this city?')) {
       this.cityDeleteService.handleAsync(id).subscribe({
         next: () => {
-          console.log(`City with ID ${id} deleted successfully`);
           this.cities = this.cities.filter(city => city.id !== id); // Uklanjanje iz lokalne liste
         },
         error: (err) => console.error('Error deleting city:', err)

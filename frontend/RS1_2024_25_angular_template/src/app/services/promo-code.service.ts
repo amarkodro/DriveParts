@@ -1,3 +1,4 @@
+import {MyConfig} from '../my-config';
 import { Injectable } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 
@@ -6,7 +7,7 @@ import {HttpClient} from '@angular/common/http';
 })
 export class PromoCodeService {
 
-  private apiUrl = 'http://localhost:7000/api/PromoCode';
+  private apiUrl = MyConfig.api_address + '/api/PromoCode';
 
   constructor(private http: HttpClient) { }
 

@@ -1,3 +1,4 @@
+import {MyConfig} from '../my-config';
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {PartsService} from '../services/parts.service';
@@ -42,7 +43,6 @@ export class ViewPartsComponent implements OnInit {
   }
 
   openProductModal(part: any): void {
-    console.log("Select product: ", part)
     this.selectedProduct = part;
     this.selectedProduct = { ...part, quantity: this.selectedProduct?.quantity || 1 };
   }
@@ -54,14 +54,12 @@ export class ViewPartsComponent implements OnInit {
   increaseQuantity(): void {
     if (this.selectedProduct && this.selectedProduct.quantity < 10) {
       this.selectedProduct.quantity++;
-      console.log("Quantity is: ", this.selectedProduct.quantity);
     }
   }
 
   decreaseQuantity(): void {
     if (this.selectedProduct && this.selectedProduct.quantity > 1) {
       this.selectedProduct.quantity--;
-      console.log("Quantity is: ", this.selectedProduct.quantity);
     }
   }
 
@@ -73,7 +71,7 @@ export class ViewPartsComponent implements OnInit {
         this.cartService.notifyCartUpdate(); // Obavijesti navbar da se korpa ažurira
 
         if (this.selectedProduct) {
-          this.flyToCartFromModal('http://localhost:7000' + part.partImage);
+          this.flyToCartFromModal(MyConfig.api_address + part.partImage);
           this.closeProductModal();
         } else if (event) {
           this.flyToCart(event);

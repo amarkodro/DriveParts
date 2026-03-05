@@ -1,3 +1,4 @@
+import {MyConfig} from '../my-config';
 import { Injectable } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 
@@ -15,7 +16,7 @@ export interface FAQ {
 
 
 export class FaqService {
-  private apiUrl: string = 'http://localhost:7000/api/FAQ';
+  private apiUrl: string = MyConfig.api_address + '/api/FAQ';
 
   constructor(private http: HttpClient) { }
 

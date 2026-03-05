@@ -1,3 +1,4 @@
+import {MyConfig} from '../my-config';
 import { Injectable } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 
@@ -6,7 +7,7 @@ import {HttpClient} from '@angular/common/http';
 })
 export class GenderService {
 
-  private apiUrl = 'http://localhost:7000/api';
+  private apiUrl = MyConfig.api_address + '/api';
 
   constructor(private http: HttpClient) { }
 

@@ -1,3 +1,4 @@
+import {MyConfig} from '../my-config';
 import { Component, ElementRef, OnInit } from '@angular/core';
 import { PartsService } from '../services/parts.service';
 import { Router } from '@angular/router';
@@ -116,7 +117,6 @@ export class ProductSectionComponent implements OnInit {
   }
 
   openProductModal(part: any): void {
-    console.log("Select product: ", part)
     this.selectedProduct = part;
     this.selectedProduct = { ...part, quantity: this.selectedProduct?.quantity || 1 };
   }
@@ -148,7 +148,7 @@ export class ProductSectionComponent implements OnInit {
         this.cartService.notifyCartUpdate();
 
         if (this.selectedProduct) {
-          this.flyToCartFromModal('http://localhost:7000' + part.partImage);
+          this.flyToCartFromModal(MyConfig.api_address + part.partImage);
           this.closeProductModal();
         } else if (event) {
           this.flyToCart(event);
@@ -164,7 +164,6 @@ export class ProductSectionComponent implements OnInit {
   removeFromCart(part: any): void {
     this.cartItems = this.cartItems.filter(item => item.id !== part.id);
     this.saveCartToStorage();
-    console.log(`Removed from cart: ${part.name}`);
   }
 
   saveCartToStorage(): void {
@@ -196,14 +195,12 @@ export class ProductSectionComponent implements OnInit {
   increaseQuantity(): void {
     if (this.selectedProduct && this.selectedProduct.quantity < 10) {
       this.selectedProduct.quantity++;
-      console.log("Quantity is: ", this.selectedProduct.quantity);
     }
   }
 
   decreaseQuantity(): void {
     if (this.selectedProduct && this.selectedProduct.quantity > 1) {
       this.selectedProduct.quantity--;
-      console.log("Quantity is: ", this.selectedProduct.quantity);
     }
   }
 

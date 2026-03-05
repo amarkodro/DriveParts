@@ -71,18 +71,18 @@ export class OrdersComponent implements OnInit {
   }
   updateOrderStatus(orderId: number, statusId: number): void {
     if (!statusId || statusId === 0) {
-      alert('Invalid status!');
+      this.snackBar.open('Invalid status!', 'Close', { duration: 3000 });
       return;
     }
 
     this.ordersService.updateOrderStatus(orderId, statusId).subscribe({
       next: () => {
-        this.loadOrders(); // Refresh the list
-        alert('Status updated!'); // Temporary feedback
+        this.loadOrders();
+        this.snackBar.open('Status updated!', 'Close', { duration: 3000 });
       },
       error: (err) => {
         console.error('Update failed:', err);
-        alert('Update failed. Check console.');
+        this.snackBar.open('Update failed.', 'Close', { duration: 3000 });
       }
     });
   }
@@ -151,9 +151,5 @@ export class OrdersComponent implements OnInit {
     const startIndex = (this.currentPage - 1) * this.pageSize;
     const endIndex = startIndex + this.pageSize;
     this.paginatedOrders = this.filteredOrders.slice(startIndex, endIndex);
-
-    console.log(
-      `Filtered ${this.filteredOrders.length} orders, page ${this.currentPage}/${this.totalPages}, showing ${this.paginatedOrders.length}`
-    );
   }
 }

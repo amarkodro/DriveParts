@@ -17,7 +17,6 @@ export class LoginComponent {
   onLogin(): void {
     this.authLoginService.handleAsync(this.loginRequest).subscribe({
       next: () => {
-        console.log('Login successful');
         this.router.navigate(['/admin']); // Redirect to
       },
       error: (error: any) => {

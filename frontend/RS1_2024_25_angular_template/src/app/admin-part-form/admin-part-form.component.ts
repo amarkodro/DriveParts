@@ -1,3 +1,4 @@
+import { MyConfig } from '../my-config';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PartService, Part, CategoryResponse, ManufacturerResponse } from '../services/Adminpart.service';
@@ -53,7 +54,6 @@ export class AdminPartFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.partId = this.route.snapshot.params['id'];
-    console.log('AdminPartFormComponent initialized');
 
     // Load categories and manufacturers first
     forkJoin({
@@ -88,12 +88,11 @@ export class AdminPartFormComponent implements OnInit {
       IsNewArrival: part.isNewArrival
     });
 
-    console.log("Existing PartImage path:", part.partImage);
   }
 
   getImageUrl(): string {
     if (this.partForm.value.PartImage) {
-      return `http://localhost:7000${this.partForm.value.PartImage}`;
+      return `${MyConfig.api_address}${this.partForm.value.PartImage}`;
     }
     return 'https://via.placeholder.com/300x200';
   }
@@ -102,7 +101,6 @@ export class AdminPartFormComponent implements OnInit {
     if (this.partId) {
 
       this.partService.getPart(this.partId).subscribe(part => {
-        console.log('Loaded part:', part);
 
         this.partForm.patchValue({
           Name: part.name,
@@ -116,8 +114,6 @@ export class AdminPartFormComponent implements OnInit {
         });
         const category = this.categories.find(c => c.categoryId === part.categoryId);
         const manufacturer = this.manufacturers.find(m => m.manufacturerId === part.manufacturerId);
-        console.log('Category:', category?.name);
-        console.log('Manufacturer:', manufacturer?.name);
       });
 
     }
@@ -153,7 +149,6 @@ export class AdminPartFormComponent implements OnInit {
     } else {
       this.partService.addPart(formData).subscribe({
         next: (response) => {
-          console.log('Part added successfully', response);
           this.router.navigate(['/edit']);
         },
         error: (error) => {
@@ -174,21 +169,27 @@ export class AdminPartFormComponent implements OnInit {
   cancel(): void {
     this.router.navigate(['/edit']); // Cancel editing/adding and go back to parts list
   }
-  onFileSelected(event: Event): void {
+  onFileDropped(files: FileList) {
+    if (files && files.length > 0) {
+      this.handleFileMode(files[0]);
+    }
+  }
+
+  onFileSelected(event: any): void {
     const input = event.target as HTMLInputElement;
     if (input.files?.length) {
-      this.selectedFile = input.files[0];
-
-      // Generate preview
-      const reader = new FileReader();
-      reader.onload = () => {
-        this.previewUrl = reader.result;
-      };
-      reader.readAsDataURL(this.selectedFile);
-
-      // Optional: update PartImage with filename
-      this.partForm.patchValue({ PartImage: this.selectedFile.name });
+      this.handleFileMode(input.files[0]);
     }
+  }
+
+  private handleFileMode(file: File) {
+    this.selectedFile = file;
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.previewUrl = reader.result;
+    };
+    reader.readAsDataURL(this.selectedFile);
+    this.partForm.patchValue({ PartImage: this.selectedFile.name });
   }
 
 

@@ -8,9 +8,12 @@ namespace RS1_2024_25.API.Endpoints
     [Route("api/[controller]")]
     public class StripeController : ControllerBase
     {
-        public StripeController()
+        private readonly IConfiguration _configuration;
+
+        public StripeController(IConfiguration configuration)
         {
-            Stripe.StripeConfiguration.ApiKey = "sk_test_51RBGYXR0PL10ni1FNUh02XRIZ4HLl0SLWYI3PPi3pREaDi7I72T6WqOssx3uEXBt5sAEugIuUPWXr7Y4iPawIi3j00bppEb3cw";
+            _configuration = configuration;
+            Stripe.StripeConfiguration.ApiKey = _configuration["Stripe:SecretKey"];
         }
 
         [HttpPost("create-checkout-session")]
@@ -35,8 +38,8 @@ namespace RS1_2024_25.API.Endpoints
                         Quantity = item.Quantity
                     }).ToList(),
                     Mode = "payment",
-                    SuccessUrl = "http://localhost:4200/order-success",
-                    CancelUrl = "http://localhost:4200/checkout"
+                    SuccessUrl = _configuration["Stripe:SuccessUrl"],
+                    CancelUrl = _configuration["Stripe:CancelUrl"]
                 };
 
                 var service = new SessionService();
@@ -46,7 +49,7 @@ namespace RS1_2024_25.API.Endpoints
             }
             catch (Exception ex)
             {
-                return BadRequest(new { error = ex.Message });
+                return BadRequest(new { error = "Payment session creation failed." });
             }
         }
 
@@ -66,3 +69,4 @@ namespace RS1_2024_25.API.Endpoints
     }
     
 }
+

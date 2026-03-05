@@ -1,3 +1,4 @@
+import {MyConfig} from '../my-config';
 // orders.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
@@ -20,7 +21,7 @@ export interface Status {
 
 @Injectable({ providedIn: 'root' })
 export class OrdersService {
-  private apiUrl = 'http://localhost:7000/api/orders';
+  private apiUrl = MyConfig.api_address + '/api/orders';
 statusOptions = [
    { id: 1, name: 'Pending' },    // Must match seeded names
     { id: 2, name: 'Approved' },  // Exactly as in your database
@@ -43,7 +44,7 @@ statusOptions = [
 
   // Fetch statuses from backend
   getStatuses(): Observable<Status[]> {
-    return this.http.get<Status[]>('http://localhost:7000/api/statuses'); // Update endpoint to match your API
+    return this.http.get<Status[]>(MyConfig.api_address + '/api/statuses'); // Update endpoint to match your API
   }
 
   // Update order status
@@ -56,7 +57,7 @@ updateOrderStatus(orderId: number, statusId: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/${orderId}`);
   }
   downloadReceipt(orderId: number): Observable<Blob> {
-    return this.http.get(`http://localhost:7000/api/Orders/GenerateReceipt/${orderId}`, {
+    return this.http.get(`${MyConfig.api_address}/api/Orders/GenerateReceipt/${orderId}`, {
       responseType: 'blob' // Ensure response is treated as a Blob (binary data)
     });
   }

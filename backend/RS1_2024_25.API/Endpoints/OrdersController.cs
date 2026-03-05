@@ -1,15 +1,12 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RS1_2024_25.API.Data;
 using RS1_2024_25.API.Data.Models;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Drawing;
-using System.Reflection.Metadata;
-using System.Xml.Linq;
 using static RS1_2024_25.API.Endpoints.UsersController;
-using static System.Net.Mime.MediaTypeNames;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
 using System.IO;
@@ -58,8 +55,6 @@ namespace RS1_2024_25.API.Endpoints
 
         public class OrderItemRequest
         {
-            
-        
             [Required]
             [Range(1, int.MaxValue)]
             public int PartId { get; set; }
@@ -74,10 +69,11 @@ namespace RS1_2024_25.API.Endpoints
         }
         public class OrderUpdateRequest
         {
-            public int StatusId { get; set; } // Only include updatable fields
+            public int StatusId { get; set; }
         }
 
         [HttpGet]
+        [Authorize]
         public ActionResult<OrderResponse[]> GetOrders()
         {
             var orders = _db.Orders
@@ -104,15 +100,16 @@ namespace RS1_2024_25.API.Endpoints
 
 
         [HttpGet("{id}")]
+        [Authorize]
         public ActionResult<OrderResponse> GetOrder(int id)
         {
             var order = _db.Orders
- .AsNoTracking()
-     .Include(x => x.Status)
-     .Include(x => x.User)
-     .Include(x => x.Supplier)
-     .Include(x => x.Payment)
-     .FirstOrDefault(x => x.OrderId == id); // Filter first
+                .AsNoTracking()
+                .Include(x => x.Status)
+                .Include(x => x.User)
+                .Include(x => x.Supplier)
+                .Include(x => x.Payment)
+                .FirstOrDefault(x => x.OrderId == id);
 
             if (order == null) return NotFound();
 
@@ -129,6 +126,7 @@ namespace RS1_2024_25.API.Endpoints
         }
 
         [HttpGet("by-customer/{customerId}")]
+        [Authorize]
         public ActionResult<OrderResponse[]> GetOrdersByCustomer(int customerId)
         {
             var orders = _db.Orders
@@ -155,67 +153,79 @@ namespace RS1_2024_25.API.Endpoints
         }
 
         [HttpPost("add")]
+        [Authorize]
         public ActionResult<OrderResponse> PostOrder(OrderRequest request)
         {
-
-            if (request.PromoCodeId.HasValue)
+            using var transaction = _db.Database.BeginTransaction();
+            try
             {
-                var promo = _db.PromoCodes.Find(request.PromoCodeId.Value);
-                if (promo == null)
-                    return BadRequest("Invalid promo code.");
-            }
-            var order = new Order
-            {
-                Date = DateTime.Now,
-                StatusId = 1,
-                UserId = request.UserId,
-                SupplierId = request.SupplierId,
-                PaymentId = 1,
-                PromoCodeId = request.PromoCodeId,
-                TotalAmount = request.TotalAmount,
-            };
-
-            _db.Orders.Add(order);
-            _db.SaveChanges();
-
-            foreach (var item in request.Items)
-            {
-                var orderItem = new OrderItem
+                if (request.PromoCodeId.HasValue)
                 {
-                    OrderId = order.OrderId,
-                    PartId = item.PartId,
-                    Quantity = item.Quantity,
-                    Price = (long)item.Price,
+                    var promo = _db.PromoCodes.Find(request.PromoCodeId.Value);
+                    if (promo == null)
+                        return BadRequest("Invalid promo code.");
+                }
+                var order = new Order
+                {
+                    Date = DateTime.UtcNow,
+                    StatusId = 1,
+                    UserId = request.UserId,
+                    SupplierId = request.SupplierId,
+                    PaymentId = 1,
+                    PromoCodeId = request.PromoCodeId,
+                    TotalAmount = request.TotalAmount,
                 };
 
-                _db.OrderItems.Add(orderItem);
+                _db.Orders.Add(order);
+                _db.SaveChanges();
+
+                foreach (var item in request.Items)
+                {
+                    var orderItem = new OrderItem
+                    {
+                        OrderId = order.OrderId,
+                        PartId = item.PartId,
+                        Quantity = item.Quantity,
+                        Price = (long)item.Price,
+                    };
+
+                    _db.OrderItems.Add(orderItem);
+                }
+
+                var cartItems = _db.CartItems.Where(x => x.UserId == request.UserId).ToList();
+
+                if (cartItems.Any())
+                {
+                    _db.CartItems.RemoveRange(cartItems);
+                }
+
+                _db.SaveChanges();
+                transaction.Commit();
+
+                var response = new OrderResponse
+                {
+                    OrderId = order.OrderId,
+                    Date = order.Date,
+                    Username = _db.Users.Find(order.UserId)?.Username ?? "Unknown",
+                    SupplierName = _db.Suppliers.Find(order.SupplierId)?.Name ?? "Unknown",
+                    StatusName = _db.Statuses.Find(order.StatusId)?.Name ?? "Unknown",
+                    PaymentMethod = _db.Payments.Find(order.PaymentId)?.PaymentMethod ?? "Unknown",
+                };
+
+                return Ok(response);
             }
-
-            var cartItems = _db.CartItems.Where(x => x.UserId == request.UserId).ToList();
-
-            if (cartItems.Any())
+            catch (Exception)
             {
-                _db.CartItems.RemoveRange(cartItems);
+                transaction.Rollback();
+                return StatusCode(500, "An error occurred while creating the order.");
             }
-
-            _db.SaveChanges();
-            var response = new OrderResponse
-            {
-                Date = order.Date,
-                Username = _db.Users.Find(order.UserId)?.Username ?? "Unknown",
-                SupplierName = _db.Suppliers.Find(order.SupplierId)?.Name ?? "Unknown",
-                StatusName = _db.Statuses.Find(order.StatusId)?.Name ?? "Unknown",
-                PaymentMethod = _db.Payments.Find(order.PaymentId)?.PaymentMethod ?? "Unknown",
-            };
-
-            return Ok(response);
         }
 
         [HttpPost]
+        [Authorize]
         public ActionResult<OrderResponse> PostOrders(OrderRequest request)
         {
             using var transaction = _db.Database.BeginTransaction();
-            // Validate foreign keys
             if (!_db.Users.Any(u => u.Id == request.UserId))
                 return BadRequest("Invalid UserId");
 
@@ -228,7 +238,7 @@ namespace RS1_2024_25.API.Endpoints
             {
                 var order = new Order
                 {
-                    Date = DateTime.Now,
+                    Date = DateTime.UtcNow,
                     StatusId = request.StatusId,
                     UserId = request.UserId,
                     SupplierId = request.SupplierId,
@@ -237,13 +247,13 @@ namespace RS1_2024_25.API.Endpoints
                 };
                 
                 _db.Orders.Add(order);
-                _db.SaveChanges(); // Generates OrderId
+                _db.SaveChanges();
 
                 foreach (var item in request.Items)
                 {
                     _db.OrderItems.Add(new OrderItem
                     {
-                        OrderId = order.OrderId, // Use the generated ID
+                        OrderId = order.OrderId,
                         PartId = item.PartId,
                         Quantity = item.Quantity,
                         Price = item.Price
@@ -253,109 +263,27 @@ namespace RS1_2024_25.API.Endpoints
                 _db.SaveChanges();
                 transaction.Commit();
 
-                return Ok(/* Your response */);
-            }
-            catch (Exception ex)
-            {
-                transaction.Rollback();
-                return StatusCode(500, $"Error: {ex.Message}");
-            }
-        }
-        /*[HttpPost]
-        public ActionResult<OrderResponse> PostOrder(OrderRequest request)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-            var order = new Order
-            {
-                Date = DateTime.Now,
-                StatusId = 1,
-                UserId = request.UserId,
-                SupplierId = request.SupplierId,
-                PaymentId = 1,
-                PromoCodeId = request.PromoCodeId,
-                TotalAmount = request.TotalAmount,
-            };
-
-            _db.Orders.Add(order);
-            _db.SaveChanges();
-
-            return Ok(new OrderResponse
-            {
-                var orderItem = new OrderItem
+                var response = new OrderResponse
                 {
                     OrderId = order.OrderId,
-                    PartId = item.PartId,
-                    Quantity = item.Quantity,
-                    Price = (long)item.Price,               
+                    Date = order.Date,
+                    StatusName = _db.Statuses.Find(order.StatusId)?.Name ?? "Unknown",
+                    Username = _db.Users.Find(order.UserId)?.Username ?? "Unknown",
+                    SupplierName = _db.Suppliers.Find(order.SupplierId)?.Name ?? "Unknown",
+                    PaymentMethod = _db.Payments.Find(order.PaymentId)?.PaymentMethod ?? "Unknown",
                 };
 
-                _db.OrderItems.Add(orderItem);
+                return Ok(response);
             }
-
-            var cartItems = _db.CartItems.Where(x => x.UserId == request.UserId).ToList();
-
-            if (cartItems.Any())
+            catch (Exception)
             {
-                _db.CartItems.RemoveRange(cartItems);
+                transaction.Rollback();
+                return StatusCode(500, "An error occurred while creating the order.");
             }
-
-            _db.SaveChanges();
-            var response = new OrderResponse
-            { 
-                OrderId = order.OrderId,
-                Date = order.Date,
-                StatusName = _db.Statuses.Find(order.StatusId)?.Name ?? "Unknown",
-                Username = _db.Users.Find(order.UserId)?.Username ?? "Unknown",
-                SupplierName = _db.Suppliers.Find(order.SupplierId)?.Name ?? "Unknown",
-                PaymentMethod = _db.Payments.Find(order.PaymentId)?.PaymentMethod ?? "Unknown"
-            });
-
-             foreach(var item in request.Items)
-             {
-                 var orderItem = new OrderItem
-                 {
-                     OrderId = order.OrderId,
-                     PartId = item.PartId,
-                     Quantity = item.Quantity,
-                     Price = item.Price
-                 };
-
-                 _db.OrderItems.Add(orderItem);
-             }
-
-             _db.SaveChanges();
-             var response = new OrderResponse
-             { 
-                 Date = order.Date,
-                 Username=_db.Users.Find(order.UserId)?.Username ?? "Unknown",
-                 SupplierName=_db.Suppliers.Find(order.SupplierId)?.Name ?? "Unknown",
-                 StatusName=_db.Statuses.Find(order.StatusId)?.Name ?? "Unknown",
-                 PaymentMethod=_db.Payments.Find(order.PaymentId)?.PaymentMethod ?? "Unknown",
-             };
-
-             return Ok(response);
-        }*/
-
-        /*[HttpPut("{id}")]
-        public ActionResult<string> PutOrder(int id, OrderRequest request)
-        {
-            var order = _db.Orders.Find(id) ?? throw new KeyNotFoundException("Order not found");
-
-            order.UserId = request.UserId;
-            order.SupplierId = request.SupplierId;
-            order.StatusId = request.StatusId;
-            order.PaymentId = request.PaymentId;
-            order.PromoCodeId = request.PromoCodeId;
-
-            _db.SaveChanges();
-
-            return Ok("Order updated successfully");
-        }*/
+        }
 
         [HttpPut("{id}")]
+        [Authorize]
         public ActionResult<string> PutOrder(int id, OrderUpdateRequest request)
         {
             try
@@ -367,43 +295,41 @@ namespace RS1_2024_25.API.Endpoints
                 _db.SaveChanges();
                 return Ok(new { message = "Status updated successfully" });
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, $"Internal error: {ex.Message}");
+                return StatusCode(500, "An error occurred while updating the order.");
             }
         }
 
         [HttpDelete("{id}")]
+        [Authorize]
         public ActionResult<string> DeleteOrder(int id)
         {
             using var transaction = _db.Database.BeginTransaction();
             try
             {
-                // Find the order
                 var order = _db.Orders.Find(id);
                 if (order == null) return NotFound("Order not found");
 
-                // Delete all related OrderItems first
                 var orderItems = _db.OrderItems.Where(oi => oi.OrderId == id);
                 _db.OrderItems.RemoveRange(orderItems);
 
-                // Now delete the order
                 _db.Orders.Remove(order);
                 _db.SaveChanges();
                 transaction.Commit();
 
                 return Ok(new { message = "Order and related items deleted successfully" });
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 transaction.Rollback();
-                return StatusCode(500, $"Error: {ex.Message}");
+                return StatusCode(500, "An error occurred while deleting the order.");
             }
         }
         [HttpGet("GenerateReceipt/{orderId:int}")]
+        [Authorize]
         public IActionResult GenerateReceipt(int orderId)
         {
-            Console.WriteLine($"generating reciept for order id: {orderId}");
             try
             {
                 var order = _db.Orders
@@ -417,7 +343,6 @@ namespace RS1_2024_25.API.Endpoints
 
                 if (order == null)
                 {
-                    Console.WriteLine($"Order {orderId} not found.");
                     return NotFound();
                 }
                 decimal subtotal = order.Items.Sum(i => i.Price * i.Quantity);
@@ -426,12 +351,10 @@ namespace RS1_2024_25.API.Endpoints
 
                 using (MemoryStream ms = new MemoryStream())
                 {
-                    // Explicit iTextSharp references
                     var doc = new iTextSharp.text.Document(iTextSharp.text.PageSize.A4, 25, 25, 30, 30);
                     var writer = iTextSharp.text.pdf.PdfWriter.GetInstance(doc, ms);
                     doc.Open();
 
-                    // --- Logo ---
                     string logoPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot","UserImages", "11c809db-ab93-4353-9b43-f08dc8014cb9.png");
                     if (System.IO.File.Exists(logoPath))
                     {
@@ -441,7 +364,6 @@ namespace RS1_2024_25.API.Endpoints
                         doc.Add(logo);
                     }
 
-                    // --- Header ---
                     var header = new iTextSharp.text.Paragraph("DriveParts\nLacina 55\nMostar 88000\nBosna i Hercegovina",
                         iTextSharp.text.FontFactory.GetFont(iTextSharp.text.FontFactory.HELVETICA_BOLD, 10));
                     header.Alignment = iTextSharp.text.Element.ALIGN_CENTER;
@@ -452,7 +374,6 @@ namespace RS1_2024_25.API.Endpoints
                         FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 12));
                     doc.Add(orderIdParagraph);
 
-                    // --- Table ---
                     var table = new PdfPTable(4)
                     {
                         WidthPercentage = 100,
@@ -462,7 +383,6 @@ namespace RS1_2024_25.API.Endpoints
                     
                     table.SetWidths(new float[] { 50, 15, 15, 20 });
 
-                    // Add headers
                     AddHeaderCell(table, "Item");
                     AddHeaderCell(table, "Qty");
                     AddHeaderCell(table, "Price");
@@ -478,7 +398,6 @@ namespace RS1_2024_25.API.Endpoints
 
                     doc.Add(table);
 
-                    // Totals Section
                     var totals = new PdfPTable(2)
                     {
                         WidthPercentage = 40,
@@ -493,7 +412,6 @@ namespace RS1_2024_25.API.Endpoints
 
                     doc.Add(totals);
 
-                    // Signature Section
                     var footerTable = new PdfPTable(2)
                     {
                         WidthPercentage = 100,
@@ -501,14 +419,12 @@ namespace RS1_2024_25.API.Endpoints
                     };
                     footerTable.DefaultCell.Border = Rectangle.NO_BORDER;
 
-                    // Left Side - Company Director
                     var directorCell = new PdfPCell(new Phrase("Director Signature:\n________________\n\nAmar Kodro\nDirector, DriveParts",
                         FontFactory.GetFont(FontFactory.HELVETICA, 10)));
                     directorCell.Border = Rectangle.NO_BORDER;
                     directorCell.HorizontalAlignment = Element.ALIGN_LEFT;
                     footerTable.AddCell(directorCell);
 
-                    // Right Side - Client
                     var clientCell = new PdfPCell(new Phrase("Client Signature:\n________________\n\n" + order.User?.Username,
                         FontFactory.GetFont(FontFactory.HELVETICA, 10)));
                     clientCell.Border = Rectangle.NO_BORDER;
@@ -521,28 +437,24 @@ namespace RS1_2024_25.API.Endpoints
                     return File(ms.ToArray(), "application/pdf", $"Receipt_{order.OrderId}.pdf");
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Console.WriteLine($"Error: {ex.Message}");
-                return StatusCode(500, $"Error: {ex.Message}");
+                return StatusCode(500, "An error occurred while generating the receipt.");
             }
         }
 
         private void AddHeaderCell(PdfPTable table, string text)
         {
-            // 1. Create the phrase
             var phrase = new Phrase(
                 text,
                 FontFactory.GetFont(FontFactory.HELVETICA_BOLD, 10)
             );
 
-            // 2. Create the cell and set its border
             var cell = new PdfPCell(phrase)
             {
-                Border = Rectangle.BOTTOM_BORDER // ✅ Set border on the cell
+                Border = Rectangle.BOTTOM_BORDER
             };
 
-            // 3. Add the cell to the table
             table.AddCell(cell);
         }
         private void AddTotalRow(PdfPTable table, string label, decimal value, bool isBold = false)

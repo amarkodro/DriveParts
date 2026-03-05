@@ -181,7 +181,6 @@ export class RegisterComponent implements OnInit {
 
   onSubmit() {
     if (!this.registerForm.valid) {
-      console.log('Form is invalid');
       this.toastr.error("Please fill out the form correctly.");
       return;
     }
@@ -266,7 +265,6 @@ export class RegisterComponent implements OnInit {
 
   checkPhone() {
     const phone = this.registerForm.get('phoneNumber')?.value;
-    console.log("Checking phone number:", phone);
     if (!phone || phone === this.lastCheckedPhone) return;
 
     this.lastCheckedPhone = phone;
@@ -330,7 +328,6 @@ export class RegisterComponent implements OnInit {
     this.genderService.getGenders().subscribe({
       next: (data) => {
         this.genders = data;
-        console.log('Genders loaded:', this.genders);
 
         const existingGenderId = this.registerForm.get('genderId')?.value;
         if (existingGenderId) {
@@ -390,7 +387,6 @@ export class RegisterComponent implements OnInit {
       'B8xPgvirRSkYNmw9g'
     )
       .then(() => {
-        console.log('Email sent!');
 
         this.showVerificationOverlay = true;
       })

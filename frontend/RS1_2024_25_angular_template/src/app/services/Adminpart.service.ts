@@ -1,3 +1,4 @@
+import {MyConfig} from '../my-config';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -33,7 +34,7 @@ export class PartService {
   updatePartFormData(id: number, partData: FormData): Observable<any> {
     return this.http.put(`${this.apiUrl}/${id}`, partData);
   }
-  private apiUrl = 'http://localhost:7000/api/parts'; // adjust if needed
+  private apiUrl = MyConfig.api_address + '/api/parts'; // adjust if needed
   updatePartWithFormData(id: number, formData: FormData): Observable<any> {
     return this.http.put(`${this.apiUrl}/${id}/form`, formData);
   }
@@ -76,11 +77,11 @@ export class PartService {
     return this.http.delete(`${this.apiUrl}/${id}`);
   }
   getCategories(): Observable<any[]> {
-    return this.http.get<any[]>('http://localhost:7000/api/categories');
+    return this.http.get<any[]>(MyConfig.api_address + '/api/categories');
   }
 
   getManufacturers(): Observable<any[]> {
-    return this.http.get<any[]>('http://localhost:7000/api/manufacturers');
+    return this.http.get<any[]>(MyConfig.api_address + '/api/manufacturers');
   }
 
   getPartSuggestions(query: string): Observable<string[]> {

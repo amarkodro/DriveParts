@@ -22,7 +22,6 @@ export class PartDetailComponent implements OnInit {
   ngOnInit(): void {
     this.route.paramMap.subscribe((paramMap) => {
       this.partId = paramMap.get('id');
-      console.log('Part ID:', this.partId);
       if (this.partId) {
         this.fetchPartDetails(this.partId);
       }
@@ -32,7 +31,6 @@ export class PartDetailComponent implements OnInit {
   fetchPartDetails(id: string): void {
     this.partService.getPartById(id).subscribe(
       (data) => {
-        console.log('Fetched part details:', data); //
         this.part = data;
       },
       (error) => {

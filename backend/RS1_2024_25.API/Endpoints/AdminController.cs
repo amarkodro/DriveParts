@@ -3,6 +3,8 @@ using RS1_2024_25.API.Data.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using System.Collections;
 using System.Net;
 using static RS1_2024_25.API.Endpoints.UsersController;
@@ -11,7 +13,8 @@ namespace RS1_2024_25.API.Endpoints
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AdminController(ApplicationDbContext _db) : ControllerBase
+    [Authorize]
+    public class AdminController(ApplicationDbContext _db, IPasswordHasher<UserAccount> _passwordHasher) : ControllerBase
     {
         public class AdminRequest
         {
@@ -37,7 +40,6 @@ namespace RS1_2024_25.API.Endpoints
             public string PhoneNumber { get; set; }
             public string Address { get; set; }
             public string Username { get; set; }
-            public string Password { get; set; }
             public bool IsAdmin { get; set; }
             public bool isUser { get; set; }
             public bool is2FActive { get; set; }
@@ -57,7 +59,6 @@ namespace RS1_2024_25.API.Endpoints
                        PhoneNumber = c.PhoneNumber,
                        Address = c.Address,
                        Username = c.Username,
-                       Password = c.Password,
                        IsAdmin = c.IsAdmin,
                        isUser = c.isUser,
                        is2FActive = c.is2FActive ?? false,
@@ -80,12 +81,13 @@ namespace RS1_2024_25.API.Endpoints
                      PhoneNumber = c.PhoneNumber,
                      Address = c.Address,
                      Username = c.Username,
-                     Password = c.Password,
                      IsAdmin = c.IsAdmin,
                      isUser = c.isUser,
                      is2FActive = c.is2FActive ?? false,
                      AdminLevel= c.AdminLevel,
-                 }).First();
+                 }).FirstOrDefault();
+
+            if (admin == null) return NotFound("Admin not found");
 
             return admin;
         }
@@ -101,12 +103,13 @@ namespace RS1_2024_25.API.Endpoints
                 PhoneNumber = request.PhoneNumber,
                 Address = request.Address,
                 Username = request.Username,
-                Password = request.Password,
                 IsAdmin = request.IsAdmin,
                 isUser = request.isUser,
                 is2FActive = request.is2FActive,
                AdminLevel = request.AdminLevel,
             };
+
+            admin.Password = _passwordHasher.HashPassword(admin, request.Password);
 
             _db.Admins.Add(admin);
             _db.SaveChanges();
@@ -119,7 +122,6 @@ namespace RS1_2024_25.API.Endpoints
                 PhoneNumber = admin.PhoneNumber,
                 Address = admin.Address,
                 Username = admin.Username,
-                Password = admin.Password,
                 IsAdmin = admin.IsAdmin,
                 isUser = admin.isUser,
                 is2FActive = admin.is2FActive ?? false,

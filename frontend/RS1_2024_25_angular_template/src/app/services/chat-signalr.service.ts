@@ -1,3 +1,4 @@
+import {MyConfig} from '../my-config';
 import { Injectable } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
 import { BehaviorSubject } from 'rxjs';
@@ -25,7 +26,6 @@ export class ChatSignalRService {
   async startConnection(token: string): Promise<void> {
     // If already connected, don't reconnect
     if (this.hubConnection?.state === signalR.HubConnectionState.Connected) {
-      console.log('✅ Already connected to SignalR');
       return;
     }
 
@@ -35,7 +35,7 @@ export class ChatSignalRService {
     }
 
     this.hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl('http://localhost:7000/chathub', {
+      .withUrl(MyConfig.api_address + '/chathub', {
         accessTokenFactory: () => token,  // Pass JWT token
         skipNegotiation: false,
         transport: signalR.HttpTransportType.WebSockets | signalR.HttpTransportType.LongPolling
@@ -45,26 +45,21 @@ export class ChatSignalRService {
       .build();
 
     this.hubConnection.on('ReceiveMessage', (message: ChatMessage) => {
-      console.log('📨 SignalR received:', message);
       message.timestamp = new Date(message.timestamp);
       this.messageSubject.next(message);
     });
 
     this.hubConnection.onreconnected(() => {
-      console.log('🔄 SignalR reconnected');
     });
 
     this.hubConnection.onreconnecting(() => {
-      console.log('⏳ SignalR reconnecting...');
     });
 
     this.hubConnection.onclose(() => {
-      console.log('❌ SignalR connection closed');
     });
 
     try {
       await this.hubConnection.start();
-      console.log('✅ SignalR Connected successfully');
     } catch (err) {
       console.error('❌ SignalR Connection Error:', err);
       throw err;
@@ -75,7 +70,6 @@ export class ChatSignalRService {
     if (this.hubConnection?.state === signalR.HubConnectionState.Connected) {
       try {
         await this.hubConnection.invoke('SendMessageToAdmins', content, fileUrl, fileName);
-        console.log('✅ Message sent to admins');
       } catch (err) {
         console.error('❌ Error sending message:', err);
       }
@@ -88,7 +82,6 @@ export class ChatSignalRService {
     if (this.hubConnection?.state === signalR.HubConnectionState.Connected) {
       try {
         await this.hubConnection.invoke('SendMessageToUser', userId, content, fileUrl, fileName);
-        console.log('✅ Message sent to user', userId);
       } catch (err) {
         console.error('❌ Error sending message:', err);
       }
@@ -110,7 +103,6 @@ export class ChatSignalRService {
   async stopConnection(): Promise<void> {
     if (this.hubConnection) {
       await this.hubConnection.stop();
-      console.log('🛑 SignalR connection stopped');
     }
   }
 }

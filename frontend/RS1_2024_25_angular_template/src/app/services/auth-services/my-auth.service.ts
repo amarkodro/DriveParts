@@ -33,7 +33,6 @@ export class MyAuthService {
           isLoggedIn: true
         };
 
-        console.log('✅ Restoring token for:', payload.username, 'Admin:', authInfo.isAdmin);
 
         this.setLoggedInUser({
           token: jwtToken,
@@ -41,7 +40,6 @@ export class MyAuthService {
         });
       } else {
         // Token expired, clean up
-        console.log('⚠️ Token expired, cleaning up');
         localStorage.removeItem('jwtToken');
         sessionStorage.removeItem('jwtToken');
         localStorage.removeItem('my-auth-token');

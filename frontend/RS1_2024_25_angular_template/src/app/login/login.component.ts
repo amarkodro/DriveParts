@@ -141,7 +141,6 @@ export class LoginComponent implements OnInit  {
 
       this.authService.loginUser(credentials).subscribe({
         next: (res: any) => {
-          console.log('🔥 FULL RESPONSE:', res);
           const token = res?.token;
 
           if (!token || typeof token !== 'string') {
@@ -154,7 +153,6 @@ export class LoginComponent implements OnInit  {
           if(res.refreshToken) {
             this.authService.saveRefreshToken(res.refreshToken);
           }
-          console.log('⬇⬇ Received token ', res.token);
           this.authService.setLoginStatus(true);
 
           this.toastr.success(`Welcome back, ${credentials.username}!`, `Login successful`);
@@ -187,7 +185,6 @@ export class LoginComponent implements OnInit  {
       });
 
     } else {
-      console.log('Form not valid');
       this.loginForm.markAllAsTouched();
       this.toastr.error('Login failed');
       setTimeout(() => this.isLoading = false, 1000);

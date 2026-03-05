@@ -1,3 +1,4 @@
+import {MyConfig} from '../my-config';
 import { Component, HostListener, OnInit, ElementRef } from '@angular/core';
 import { PartService } from '../services/navbar-search.service';
 import { Router } from '@angular/router';
@@ -44,7 +45,6 @@ export class NavbarComponent implements OnInit {
     this.partService.getAllParts().subscribe({
       next: (data) => {
         this.allParts = data;
-        console.log('Loaded parts:', this.allParts.length); // Debug
       },
       error: (error) => {
         console.error('Error fetching parts:', error);
@@ -61,7 +61,7 @@ export class NavbarComponent implements OnInit {
           this.userName = `${user.name} ${user.surname}`;
           this.userProfileImage = user.imageUrl?.startsWith('http')
             ? user.imageUrl
-            : 'http://localhost:7000/' + user.imageUrl;
+            : MyConfig.api_address + '/' + user.imageUrl;
         },
         error: () => {
           this.userName = 'User';
@@ -92,7 +92,7 @@ export class NavbarComponent implements OnInit {
     this.authService.userInfo$.subscribe((user) => {
       if (user) {
         this.userName = `${user.name} ${user.surname}`;
-        this.userProfileImage = 'http://localhost:7000/' + user.imageUrl;
+        this.userProfileImage = MyConfig.api_address + '/' + user.imageUrl;
         this.isLoggedIn = true;
 
         this.cartService.loadCartItems();
@@ -111,13 +111,12 @@ export class NavbarComponent implements OnInit {
         name: item.partName || item.name,
         quantity: item.quantity,
         price: item.price,
-        image: 'http://localhost:7000' + (item.image || '/images/placeholder.png'),
+        image: MyConfig.api_address + (item.image || '/images/placeholder.png'),
       }));
     });
 
     // Debug token info
     const info = this.authService.getUserInfoFromToken();
-    console.log('Data from tokens', info);
     this.isAdmin = info?.role === 'Admin' || false;
     this.checkSpeechSupport();
   }
@@ -214,7 +213,6 @@ export class NavbarComponent implements OnInit {
 
     // Force UI update
     this.cdRef.detectChanges();
-    console.log('Voice search results:', this.filteredParts.length);
   }
   private triggerSearchUpdate() {
     // Create a shallow copy of the array to force change detection
@@ -345,14 +343,13 @@ export class NavbarComponent implements OnInit {
   loadCartItems(): void {
     this.cartService.getCartItems().subscribe({
       next: (items: any[]) => {
-        console.log('API ANSWER: ', items);
 
         this.cartItems = items.map(item => ({
           partId: item.partId,
           name: item.partName || item.name,
           quantity: item.quantity,
           price: item.price,
-          image: 'http://localhost:7000' + (item.image || '/images/placeholder.png'),
+          image: MyConfig.api_address + (item.image || '/images/placeholder.png'),
         }));
       },
       error: (err: any) => {

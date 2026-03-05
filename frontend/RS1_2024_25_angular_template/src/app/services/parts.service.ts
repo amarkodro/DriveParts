@@ -1,3 +1,4 @@
+import {MyConfig} from '../my-config';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -6,7 +7,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class PartsService {
-  private apiUrl = 'http://localhost:7000/api/parts';
+  private apiUrl = MyConfig.api_address + '/api/parts';
 
   constructor(private http: HttpClient) {}
 

@@ -44,7 +44,6 @@ export class ChatComponent implements AfterViewChecked, OnInit {
     if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
       this.setupRecognition();
     } else {
-      console.warn('Speech recognition not supported in this browser');
     }
   }
 

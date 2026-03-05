@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { PartService, Part } from '../services/Adminpart.service';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-admin-parts',
@@ -124,23 +125,31 @@ export class AdminPartsComponent implements OnInit {
   }
 
   deletePart(id: number): void {
-    console.log('Attempting to delete part with ID:', id);
     if (!id) {
       console.error('Invalid part ID:', id);
       return;
     }
-    if (confirm('Are you sure you want to delete this part?')) {
-      this.partService.deletePart(id).subscribe({
-        next: () => {
-          console.log('Part deleted successfully');
-          this.loadParts();
-        },
-        error: (err) => {
-          console.error('Error deleting part:', err);
-          alert('Failed to delete part');
-        }
-      });
-    }
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'This part will be permanently deleted.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'Cancel'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.partService.deletePart(id).subscribe({
+          next: () => {
+            this.loadParts();
+            Swal.fire('Deleted!', 'Part has been deleted.', 'success');
+          },
+          error: (err) => {
+            console.error('Error deleting part:', err);
+            Swal.fire('Error', 'Failed to delete part.', 'error');
+          }
+        });
+      }
+    });
   }
 
   openAddModal(): void {

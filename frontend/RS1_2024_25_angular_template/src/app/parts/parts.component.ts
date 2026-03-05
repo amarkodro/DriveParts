@@ -1,3 +1,4 @@
+import {MyConfig} from '../my-config';
 import { Component, OnInit, AfterViewInit, ElementRef, Renderer2, HostListener } from '@angular/core';
 import { DropdownService } from '../services/dropdown.service';
 import { Router } from '@angular/router';
@@ -189,7 +190,6 @@ export class PartsComponent implements OnInit, AfterViewInit {
       next: (data) => {
         this.filteredParts = data;
         setTimeout(() => this.checkVisibility(), 300);
-        console.log('filtered parts:', this.filteredParts);
       },
       error: (err) => {
         console.error('Error fetching filtered parts:', err);
@@ -235,7 +235,7 @@ export class PartsComponent implements OnInit, AfterViewInit {
         this.toastr.success(`${part.name} added to cart`, 'Success');
         this.cartService.loadCartItems();  // Refresh cart items across components
         if (this.selectedPart) {
-          this.flyToCartFromModal('http://localhost:7000' + part.partImage);
+          this.flyToCartFromModal(MyConfig.api_address + part.partImage);
           this.closeProductModal();
         } else {
           this.flyToCart(event);

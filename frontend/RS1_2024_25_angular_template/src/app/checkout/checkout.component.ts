@@ -1,14 +1,14 @@
-import {Component, HostListener, OnInit} from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import {CartService} from '../services/cart.service';
-import {loadStripe} from '@stripe/stripe-js';
-import {StripeService} from '../services/stripe.service';
-import {ToastrService} from 'ngx-toastr';
-import {AuthService} from '../services/auth-services/auth.service';
-import {CitiesService} from '../services/cities.service';
-import {UserService} from '../services/user.service';
-import {SuppliersService} from '../services/suppliers.service';
+import { CartService } from '../services/cart.service';
+import { loadStripe } from '@stripe/stripe-js';
+import { StripeService } from '../services/stripe.service';
+import { ToastrService } from 'ngx-toastr';
+import { AuthService } from '../services/auth-services/auth.service';
+import { CitiesService } from '../services/cities.service';
+import { UserService } from '../services/user.service';
+import { SuppliersService } from '../services/suppliers.service';
 
 @Component({
   selector: 'app-checkout',
@@ -19,12 +19,12 @@ export class CheckoutComponent implements OnInit {
   checkoutForm!: FormGroup;
   cartItems: any[] = [];
   discount: number = 0;
-  total: number=0;
+  total: number = 0;
   usedCode: string = '';
   isPlacingOrder: boolean = false;
   isEditable: boolean = false;
   cities: any[] = [];
-  selectedCityId : number | null = null;
+  selectedCityId: number | null = null;
   dropdownState: { [key: string]: boolean } = {
     city: false,
     supplier: false,
@@ -35,27 +35,27 @@ export class CheckoutComponent implements OnInit {
   selectedSupplierId: number | null = null;
   selectedPaymentMethod: number | null = null;
   triedSubmit: boolean = false;
-currentUser: any = null;
+  currentUser: any = null;
 
 
   constructor(private fb: FormBuilder,
-              private router: Router,
-              private cartService: CartService,
-              private stripeService: StripeService,
-              private toastr: ToastrService,
-              private authService: AuthService,
-              private cityService : CitiesService,
-              private userService : UserService,
-              private supplierService : SuppliersService
-              ) {}
+    private router: Router,
+    private cartService: CartService,
+    private stripeService: StripeService,
+    private toastr: ToastrService,
+    private authService: AuthService,
+    private cityService: CitiesService,
+    private userService: UserService,
+    private supplierService: SuppliersService
+  ) { }
 
   ngOnInit(): void {
     this.cityService.getCity().subscribe({
-      next: (data) =>
-      { this.cities = data;
-        },
+      next: (data) => {
+        this.cities = data;
+      },
       error: (error) => {
-        console.error('Error loading cities',error);
+        console.error('Error loading cities', error);
       }
 
     })
@@ -64,14 +64,13 @@ currentUser: any = null;
 
     const userId = this.authService.getUserId();
     this.promoCodeId = this.cartService.getPromoCodeId(userId);
-    console.log("Loaded promoCodeId:", this.promoCodeId);
 
     this.usedCode = this.cartService.getUsedCode(userId);
     this.checkoutForm = this.fb.group({
       fullName: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       phoneNumber: ['', [Validators.required,
-        Validators.pattern(/^\+387 6\d \d{3} \d{3,4}$/)
+      Validators.pattern(/^\+387 6\d \d{3} \d{3,4}$/)
       ]],
       address: ['', Validators.required],
       city: ['', Validators.required],
@@ -143,7 +142,7 @@ currentUser: any = null;
 
     this.checkoutForm.markAllAsTouched();
 
-    if(this.checkoutForm.invalid || !this.selectedSupplierId || !this.selectedPaymentMethod) {
+    if (this.checkoutForm.invalid || !this.selectedSupplierId || !this.selectedPaymentMethod) {
       this.toastr.info("Please enter the missing information before ordering.");
       this.isPlacingOrder = false;
       return;
@@ -171,11 +170,9 @@ currentUser: any = null;
       address: this.checkoutForm.get('address')?.value || user?.address || '',
       cityId: this.selectedCityId || user?.cityId || 0,
       username: user?.username || '',
-      password: user?.password || '',
       is2FActive: user?.is2FActive || false
     };
 
-    console.log("Updated user payload:", updatedUser);
 
     if (!updatedUser.username || !updatedUser.email) {
       this.toastr.error("Invalid user data. Please log out and log in again.");
@@ -184,7 +181,6 @@ currentUser: any = null;
 
     try {
       await this.userService.updateUser(userId, updatedUser).toPromise();
-      console.log("User info updated successfully.");
       this.toastr.info("User info updated successfully.");
     } catch (error) {
       console.error("User update failed:", error);
@@ -220,11 +216,11 @@ currentUser: any = null;
 
     setTimeout(async () => {
       try {
-        if(this.selectedPaymentMethod === 1) {
+        if (this.selectedPaymentMethod === 1) {
           await this.stripeService.redirectToCheckout(items);
           localStorage.removeItem('discount');
         }
-        else if(this.selectedPaymentMethod === 2){
+        else if (this.selectedPaymentMethod === 2) {
           this.router.navigate(['/order-success']);
         }
 
@@ -253,7 +249,6 @@ currentUser: any = null;
     });
     this.dropdownState['city'] = false;
 
-    console.log("Selected city ID: ", this.selectedCityId);
   }
 
   getSelectedCityName() {
@@ -272,7 +267,7 @@ currentUser: any = null;
     }
   }
 
-  loadSuppliers(){
+  loadSuppliers() {
     this.supplierService.getAllSuppliers().subscribe({
       next: (data) => (this.suppliers = data),
     })
@@ -283,7 +278,7 @@ currentUser: any = null;
     return selected ? selected.name : 'Select supplier';
   }
 
-  selectSupplier(supplier:any) :void{
+  selectSupplier(supplier: any): void {
     this.selectedSupplierId = supplier.supplierId;
     this.dropdownState['supplier'] = false;
     localStorage.setItem(`supplierId-${this.authService.getUserId()}`, supplier.supplierId.toString());

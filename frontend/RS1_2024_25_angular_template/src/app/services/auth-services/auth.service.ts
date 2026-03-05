@@ -1,3 +1,4 @@
+import {MyConfig} from '../../my-config';
 import { Injectable } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable, BehaviorSubject} from 'rxjs';
@@ -10,7 +11,7 @@ import { MyAuthService } from './my-auth.service';
   providedIn: 'root'
 })
 export class AuthService {
- private apiUrl = 'http://localhost:7000/api/Auth';
+ private apiUrl = MyConfig.api_address + '/api/Auth';
 
   constructor(private http: HttpClient, private myAuthService: MyAuthService) { }
 
@@ -94,7 +95,7 @@ export class AuthService {
   }
 
   getUserProfile(): Observable<any> {
-    return this.http.get<any>('http://localhost:7000/api/UserAccount/profile');
+    return this.http.get<any>(MyConfig.api_address + '/api/UserAccount/profile');
   }
 
   private userInfoSubject = new BehaviorSubject<any>(null);
@@ -137,14 +138,14 @@ export class AuthService {
   }
 
   changePassword(currentPassword: string, newPassword: string) {
-    return this.http.post(`http://localhost:7000/api/Auth/change-password`, {
+    return this.http.post(`${MyConfig.api_address}/api/Auth/change-password`, {
       currentPassword,
       newPassword
     });
   }
 
   enableTwoFactor(phoneNumber: string) {
-    return this.http.post(`http://localhost:7000/api/Auth/enable-2fa`, { phoneNumber });
+    return this.http.post(`${MyConfig.api_address}/api/Auth/enable-2fa`, { phoneNumber });
   }
 
   deactivate(username: string) {

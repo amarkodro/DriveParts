@@ -1,3 +1,4 @@
+import {MyConfig} from '../my-config';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -11,7 +12,7 @@ export interface CityResponse {
   providedIn: 'root'
 })
 export class CitiesService {
-  private apiUrl: string = 'http://localhost:7000/api/City';
+  private apiUrl: string = MyConfig.api_address + '/api/City';
 
   constructor(private http: HttpClient) {}
 

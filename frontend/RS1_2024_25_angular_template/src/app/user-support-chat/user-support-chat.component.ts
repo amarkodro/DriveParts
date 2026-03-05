@@ -1,3 +1,4 @@
+import {MyConfig} from '../my-config';
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { ChatSignalRService, ChatMessage } from '../services/chat-signalr.service';
 import { AuthService } from '../services/auth-services/auth.service';
@@ -34,7 +35,6 @@ export class UserSupportChatComponent implements OnInit, OnDestroy {
     const userInfo = this.authService.getUserInfoFromToken();
     this.isAdmin = userInfo?.role === 'Admin' || userInfo?.IsAdmin === true;
 
-    console.log('🔍 User Support Chat - Token:', !!token, 'isAdmin:', this.isAdmin);
 
     if (token && !this.isAdmin) {
       await this.chatService.startConnection(token);
@@ -81,17 +81,14 @@ export class UserSupportChatComponent implements OnInit, OnDestroy {
 
   async loadChatHistory() {
     try {
-      console.log('📥 Loading chat history...');
       const messages = await this.http.get<ChatMessage[]>(
-        'http://localhost:7000/api/SupportChat/user-messages'
+        MyConfig.api_address + '/api/SupportChat/user-messages'
       ).toPromise();
 
       if (messages && messages.length > 0) {
         this.messages = messages;
-        console.log('✅ Loaded', messages.length, 'messages');
         setTimeout(() => this.scrollToBottom(), 100);
       } else {
-        console.log('ℹ️ No previous messages found');
       }
     } catch (err: any) {
       console.error('❌ Error loading chat history:', err);
@@ -169,7 +166,6 @@ export class UserSupportChatComponent implements OnInit, OnDestroy {
   onFileDropped(files: FileList) {
     if (files && files.length > 0) {
       this.selectedFile = files[0];
-      console.log('File dropped:', this.selectedFile);
     }
   }
 
@@ -187,7 +183,7 @@ export class UserSupportChatComponent implements OnInit, OnDestroy {
     const formData = new FormData();
     formData.append('file', file);
 
-    return this.http.post<{ url: string, fileName: string }>('http://localhost:7000/api/storage/upload', formData)
+    return this.http.post<{ url: string, fileName: string }>(MyConfig.api_address + '/api/storage/upload', formData)
       .toPromise()
       .then(res => res!); // Non-null assertion for simplicity, handle properly in prod
   }

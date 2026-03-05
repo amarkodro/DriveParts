@@ -5,13 +5,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections;
 using System.Net;
+using Microsoft.AspNetCore.Identity;
 
 namespace RS1_2024_25.API.Endpoints
 {
 
     [Route("api/[controller]")]
     [ApiController]
-    public class UsersController(ApplicationDbContext _db) : ControllerBase
+    public class UsersController(ApplicationDbContext _db, IPasswordHasher<UserAccount> _passwordHasher) : ControllerBase
     {
         public class UserRequest
         {
@@ -39,7 +40,6 @@ namespace RS1_2024_25.API.Endpoints
             public string PhoneNumber { get; set; }
             public string Address { get; set; }
             public string Username { get; set; }
-            public string Password { get; set; }
             public bool IsAdmin { get; set; }
             public bool isUser { get; set; }
             public bool is2FActive { get; set; }
@@ -125,14 +125,15 @@ namespace RS1_2024_25.API.Endpoints
                      PhoneNumber = c.PhoneNumber,
                      Address = c.Address,
                      Username = c.Username,
-                     Password = c.Password,
                      IsAdmin = c.IsAdmin,
                      isUser = c.isUser,
                      is2FActive = c.is2FActive ?? false,
                      GenderName = c.Gender != null ? c.Gender.GenderName : "Unknown",
                      CityName = c.City != null ? c.City.Name : "Unknown"
 
-                 }).First();
+                 }).FirstOrDefault();
+
+            if (user == null) return NotFound("User not found");
 
             return user;
         }
@@ -149,13 +150,14 @@ namespace RS1_2024_25.API.Endpoints
                 PhoneNumber = request.PhoneNumber,
                 Address = request.Address,
                 Username = request.Username,
-                Password = request.Password,
                 IsAdmin = request.IsAdmin,
                 isUser = request.isUser,
                 is2FActive = request.is2FActive,
                 GenderId = request.GenderId,
                 CityId = request.CityId,
             };
+
+            user.Password = _passwordHasher.HashPassword(user, request.Password);
 
             _db.Users.Add(user);
             _db.SaveChanges();
@@ -168,12 +170,11 @@ namespace RS1_2024_25.API.Endpoints
                 PhoneNumber = user.PhoneNumber,
                 Address = user.Address,
                 Username = user.Username,
-                Password = user.Password,
                 IsAdmin = user.IsAdmin,
                 isUser = user.isUser,
                 is2FActive = user.is2FActive ?? false,
-                GenderName = _db.Genders.Find(user.CityId)?.GenderName ?? "Unknown",
-                CityName = _db.Users.Find(user.CityId)?.Name ?? "Unknown"
+                GenderName = _db.Genders.Find(user.GenderId)?.GenderName ?? "Unknown",
+                CityName = _db.Cities.Find(user.CityId)?.Name ?? "Unknown"
             };
 
             return Ok(response);

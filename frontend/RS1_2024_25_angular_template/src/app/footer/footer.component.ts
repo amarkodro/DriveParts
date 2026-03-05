@@ -49,7 +49,6 @@ this.router.navigate(['/dashboard']);
       if (element) {
         element.scrollIntoView({ behavior: 'smooth', block: 'start' });
       } else {
-        console.warn(`Element with id="${fragment}" not found.`);
       }
     });
   }

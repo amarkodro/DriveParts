@@ -53,7 +53,6 @@ export class OrderSuccessComponent implements OnInit {
 
     this.cartService.cartItems$.pipe(take(1)).subscribe(cartItems => {
       if (cartItems.length === 0) {
-        console.warn("No items in cart, order will not be sent.");
         return;
       }
 
@@ -80,7 +79,6 @@ export class OrderSuccessComponent implements OnInit {
         items: orderItems
       };
 
-      console.log("Data from cart: ", orderData)
 
       this.orderService.createOrder(orderData).subscribe({
         next: () => {
@@ -102,7 +100,6 @@ export class OrderSuccessComponent implements OnInit {
         },
         error: (error) => {
           this.toastr.error("Order creation failed.");
-          console.log("Order creation failed.", error);
         }
       });
     });

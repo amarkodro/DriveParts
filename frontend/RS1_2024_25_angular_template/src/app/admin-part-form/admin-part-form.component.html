@@ -1,77 +1,87 @@
 <h2>{{ isEditMode ? 'Edit Part' : 'Create Part' }}</h2>
- 
+
 <form [formGroup]="partForm" (ngSubmit)="onSubmit()">
-<div>
-<label>Part Name</label>
-<input type="text" formControlName="Name" />
-<div *ngIf="partForm.get('Name')?.touched && partForm.get('Name')?.invalid">
-<small class="text-danger">Part name is required.</small>
-</div>
-</div>
- 
   <div>
-<label>Price</label>
-<input type="number" formControlName="Price" />
-<div *ngIf="partForm.get('Price')?.touched && partForm.get('Price')?.invalid">
-<small class="text-danger" *ngIf="partForm.get('Price')?.errors?.['required']">Price is required.</small>
-<small class="text-danger" *ngIf="partForm.get('Price')?.errors?.['min']">Price must be at least 0.01.</small>
-</div>
-</div>
- 
+    <label>Part Name</label>
+    <input type="text" formControlName="Name" />
+    <div *ngIf="partForm.get('Name')?.touched && partForm.get('Name')?.invalid">
+      <small class="text-danger">Part name is required.</small>
+    </div>
+  </div>
+
   <div>
-<label>Category</label>
-<select formControlName="CategoryId">
-<option [ngValue]="null" disabled >-- Select Category --</option>
-<option *ngFor="let c of categories" [ngValue]="c.categoryId">{{ c.name }}</option>
-</select>
-<div *ngIf="partForm.get('CategoryId')?.touched && partForm.get('CategoryId')?.invalid">
-<small class="text-danger">Category is required.</small>
-</div>
-</div>
- 
+    <label>Price</label>
+    <input type="number" formControlName="Price" />
+    <div *ngIf="partForm.get('Price')?.touched && partForm.get('Price')?.invalid">
+      <small class="text-danger" *ngIf="partForm.get('Price')?.errors?.['required']">Price is required.</small>
+      <small class="text-danger" *ngIf="partForm.get('Price')?.errors?.['min']">Price must be at least 0.01.</small>
+    </div>
+  </div>
+
   <div>
-<label>Manufacturer</label>
-<select formControlName="ManufacturerId">
-<option [ngValue]="null" disabled >-- Select Manufacturer --</option>
-<option *ngFor="let m of manufacturers" [ngValue]="m.manufacturerId">{{ m.name }}</option>
-</select>
-<div *ngIf="partForm.get('ManufacturerId')?.touched && partForm.get('ManufacturerId')?.invalid">
-<small class="text-danger">Manufacturer is required.</small>
-</div>
-</div>
- <div *ngIf="previewUrl || partForm.value.PartImage">
-  <img 
-    [src]="previewUrl ? previewUrl : 'http://localhost:7000' + partForm.value.PartImage" 
-    class="product-image product-main-image"
-    alt="Part image" />
-</div>
+    <label>Category</label>
+    <select formControlName="CategoryId">
+      <option [ngValue]="null" disabled>-- Select Category --</option>
+      <option *ngFor="let c of categories" [ngValue]="c.categoryId">{{ c.name }}</option>
+    </select>
+    <div *ngIf="partForm.get('CategoryId')?.touched && partForm.get('CategoryId')?.invalid">
+      <small class="text-danger">Category is required.</small>
+    </div>
+  </div>
+
   <div>
-<label>Part Image</label>
-<input type="file" (change)="onFileSelected($event)" /></div>
- 
+    <label>Manufacturer</label>
+    <select formControlName="ManufacturerId">
+      <option [ngValue]="null" disabled>-- Select Manufacturer --</option>
+      <option *ngFor="let m of manufacturers" [ngValue]="m.manufacturerId">{{ m.name }}</option>
+    </select>
+    <div *ngIf="partForm.get('ManufacturerId')?.touched && partForm.get('ManufacturerId')?.invalid">
+      <small class="text-danger">Manufacturer is required.</small>
+    </div>
+  </div>
+  <div class="form-group row">
+    <label>Part Image</label>
+    <div class="drop-zone" appDragDrop (fileDropped)="onFileDropped($event)" (click)="fileInput.click()">
+      <div *ngIf="!(previewUrl || partForm.value.PartImage)" class="drop-zone-placeholder">
+        <i class="fa fa-cloud-upload upload-icon"></i>
+        <p>Drag and drop an image here, or <span class="browse-link">click to browse</span></p>
+      </div>
+
+      <div *ngIf="previewUrl || partForm.value.PartImage" class="preview-wrapper">
+        <img [src]="previewUrl ? previewUrl : getImageUrl()" class="product-image product-main-image"
+          alt="Part image" />
+        <div class="change-overlay">
+          <i class="fa fa-exchange"></i>
+          <span>Change Image</span>
+        </div>
+      </div>
+      <input type="file" #fileInput style="display: none;" (change)="onFileSelected($event)" accept="image/*" />
+    </div>
+  </div>
+
   <div>
-<label>Description</label>
-<input type="text" formControlName="Description" />
-<div *ngIf="partForm.get('Description')?.touched && partForm.get('Description')?.invalid">
-<small class="text-danger">Description is required.</small>
-</div>
-</div>
- 
+    <label>Description</label>
+    <input type="text" formControlName="Description" />
+    <div *ngIf="partForm.get('Description')?.touched && partForm.get('Description')?.invalid">
+      <small class="text-danger">Description is required.</small>
+    </div>
+  </div>
+
   <div>
-<label>Is Featured</label>
-<input type="checkbox" formControlName="IsFeatured" />
-</div>
- 
+    <label>Is Featured</label>
+    <input type="checkbox" formControlName="IsFeatured" />
+  </div>
+
   <div>
-<label>On Sale</label>
-<input type="checkbox" formControlName="IsOnSale" />
-</div>
- 
+    <label>On Sale</label>
+    <input type="checkbox" formControlName="IsOnSale" />
+  </div>
+
   <div>
-<label>New Arrival</label>
-<input type="checkbox" formControlName="IsNewArrival" />
-</div>
- 
+    <label>New Arrival</label>
+    <input type="checkbox" formControlName="IsNewArrival" />
+  </div>
+
   <button type="submit">{{ isEditMode ? 'Update' : 'Create' }}</button>
-<button type="button" (click)="cancel()">Cancel</button>
+  <button type="button" (click)="cancel()">Cancel</button>
 </form>
