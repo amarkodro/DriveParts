@@ -232,9 +232,10 @@ namespace RS1_2024_25.API.Endpoints
                     StatusId = request.StatusId,
                     UserId = request.UserId,
                     SupplierId = request.SupplierId,
-                    PaymentId = request.PaymentId
+                    PaymentId = request.PaymentId,
+                    PromoCodeId = request.PromoCodeId
                 };
-
+                
                 _db.Orders.Add(order);
                 _db.SaveChanges(); // Generates OrderId
 
