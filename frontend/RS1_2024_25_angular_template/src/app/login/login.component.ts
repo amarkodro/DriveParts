@@ -3,7 +3,6 @@ import { FormBuilder, FormGroup, Validators, FormsModule } from '@angular/forms'
 import {AuthService} from '../services/auth-services/auth.service';
 import {Router} from '@angular/router';
 import {ToastrService} from 'ngx-toastr';
-import {SocialAuthService, GoogleLoginProvider, SocialUser} from '@abacritt/angularx-social-login';
 import emailjs from '@emailjs/browser';
 
 
@@ -20,8 +19,6 @@ export class LoginComponent implements OnInit  {
   errorMessage= '';
   showPassword: boolean = false;
   isLoading: boolean = false;
-  socialUser! : SocialUser;
-  tokenClient: any;
   showForgotPasswordOverlay = false;
   showCodeVerificationOverlay = false;
   forgotPasswordEmail = '';
@@ -52,7 +49,7 @@ export class LoginComponent implements OnInit  {
 
 
 
-  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router, private toastr : ToastrService, private socialAuthService: SocialAuthService) {
+  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router, private toastr : ToastrService) {
     this.loginForm = this.fb.group({
       username: ['', [Validators.required, Validators.minLength(3)]],
       password: ['', [Validators.required, Validators.minLength(5)]],
@@ -62,7 +59,7 @@ export class LoginComponent implements OnInit  {
 
   ngOnInit(): void {
     google.accounts.id.initialize({
-      client_id: '875789338933-01mi71kk9dinvbc1lap0nila0u5m4q01.apps.googleusercontent.com',
+      client_id: '959296845152-bbe2v4cfuujfjfnqvsljbd7vv10advk3.apps.googleusercontent.com',
       callback: (response: any) => this.handleCredentialResponse(response)
     });
 
@@ -107,7 +104,7 @@ export class LoginComponent implements OnInit  {
 
         if (typeof backendMsg === 'string' && backendMsg.includes('deactivated')) {
           this.errorMessage = backendMsg;
-          this.reactivateEmail = this.extractEmailFromIdToken(idToken);  // ✅ automatski uzimamo email
+          this.reactivateEmail = this.extractEmailFromIdToken(idToken);
           this.showReactivateOverlay = true;
           this.toastr.warning("Your account is deactivated. You can reactivate below.");
         } else {

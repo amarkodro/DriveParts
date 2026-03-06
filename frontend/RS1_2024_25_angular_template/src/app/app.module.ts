@@ -20,8 +20,6 @@ import { RouterModule } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
 import { CartComponent } from './cart/cart.component';
-import { SocialLoginModule, SocialAuthServiceConfig } from '@abacritt/angularx-social-login';
-import { GoogleLoginProvider } from '@abacritt/angularx-social-login';
 import { CheckoutComponent } from './checkout/checkout.component';
 import { OrderSuccessComponent } from './order-success/order-success.component';
 import { EditProfileComponent } from './edit-profile/edit-profile.component';
@@ -105,7 +103,6 @@ import { MyFavoritesComponent } from './my-favorites/my-favorites.component';
     // NgChartsModule,
     NgOptimizedImage,
     BrowserAnimationsModule,
-    SocialLoginModule,
     ReactiveFormsModule,
     CommonModule,
     FormsModule,
@@ -135,18 +132,6 @@ import { MyFavoritesComponent } from './my-favorites/my-favorites.component';
 
   ],
   providers: [
-    {
-      provide: 'SocialAuthServiceConfig',
-      useValue: {
-        autoLogin: false,
-        providers: [
-          {
-            id: GoogleLoginProvider.PROVIDER_ID,
-            provider: new GoogleLoginProvider('609510374900-m9pfd5u7gvek04q0kr3f8g02spsn45ir.apps.googleusercontent.com'),
-          },
-        ],
-      } as SocialAuthServiceConfig
-    },
     {
       provide: HTTP_INTERCEPTORS,
       useClass: MyAuthInterceptor,

@@ -14,7 +14,7 @@ namespace RS1_2024_25.API.Endpoints
         [HttpPost("add")]
         public async Task<IActionResult> SeedUserAccount()
         {
-            if(_db.UserAccounts.Any()) return BadRequest("Users already exist.");
+           
 
             var admin1 = new Admin
             {               

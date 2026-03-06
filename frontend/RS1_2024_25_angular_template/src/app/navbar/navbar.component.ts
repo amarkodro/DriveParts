@@ -51,6 +51,16 @@ export class NavbarComponent implements OnInit {
       }
     });
 
+    this.partService.getAllParts().subscribe({
+      next: (data: any) => {
+        this.allParts = data.items || data;
+      },
+      error: (error) => {
+        console.error('Error fetching parts:', error);
+      }
+    });
+
+
 
     const token = this.authService.getTokenUser();
     if (token) {
@@ -59,9 +69,13 @@ export class NavbarComponent implements OnInit {
       this.authService.getUserProfile().subscribe({
         next: (user) => {
           this.userName = `${user.name} ${user.surname}`;
-          this.userProfileImage = user.imageUrl?.startsWith('http')
-            ? user.imageUrl
-            : MyConfig.api_address + '/' + user.imageUrl;
+          if (user.imageUrl) {
+            this.userProfileImage = user.imageUrl.startsWith('http')
+              ? user.imageUrl
+              : MyConfig.api_address + '/' + user.imageUrl;
+          } else {
+            this.userProfileImage = 'assets/user.png';
+          }
         },
         error: () => {
           this.userName = 'User';

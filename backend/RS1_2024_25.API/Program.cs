@@ -137,4 +137,39 @@ app.MapHub<ChatHub>("/chathub", options =>
     options.Transports = Microsoft.AspNetCore.Http.Connections.HttpTransportType.WebSockets |
                          Microsoft.AspNetCore.Http.Connections.HttpTransportType.LongPolling;
 });
+
+
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var db = services.GetRequiredService<ApplicationDbContext>();
+    var passwordHasher = services.GetRequiredService<IPasswordHasher<UserAccount>>();
+
+
+    if (!db.UserAccounts.Any())
+    {
+        var admin = new Admin
+        {
+            Username = "admin",
+            Email = "admin@edu.fit.ba",
+            Name = "System",
+            Surname = "Admin",
+            PhoneNumber = "+387 61 111 111",
+            Address = "Mostar",
+            IsAdmin = true,
+            is2FActive = true,
+            AdminLevel = "Moderator",
+            ImageUrl = "UserImages/default-admin.png",
+            CityId = 18
+        };
+
+        admin.Password = passwordHasher.HashPassword(admin, "admin123");
+
+        db.UserAccounts.Add(admin);
+        db.SaveChanges();
+    }
+}
+
+
+
 app.Run();
