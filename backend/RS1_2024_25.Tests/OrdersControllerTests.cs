@@ -26,7 +26,7 @@ namespace RS1_2024_25.Tests
                 Username = "testuser", Password = "hashed", PhoneNumber = "123",
                 Address = "Test St", IsAdmin = false, isUser = true
             });
-            db.Suppliers.Add(new Supplier { SupplierId = 1, Name = "Test Supplier" });
+            db.Suppliers.Add(new Supplier { SupplierId = 1, Name = "Test Supplier", Address = "Test Address", Contact = "123456789" });
             db.Payments.Add(new Payment { PaymentId = 1, PaymentMethod = "Card" });
             db.PromoCodes.Add(new PromoCode { Id = 1, Code = "SAVE10", Discount = 10 });
             db.Parts.Add(new Part
