@@ -36,7 +36,7 @@ namespace RS1_2024_25.API.Endpoints
 
         public class ChangePasswordRequest
         {
-            public int UserId { get; set; }
+
             public string CurrentPassword { get; set; }
             public string NewPassword { get; set; }
         }
@@ -88,7 +88,7 @@ namespace RS1_2024_25.API.Endpoints
                 PhoneNumber = request.PhoneNumber,
                 GenderId = request.GenderId,
                 CityId = request.CityId,
-                isUser =true,
+                isUser = true,
                 IsAdmin = false,
                 ImageUrl = imagePath
 
@@ -141,7 +141,7 @@ namespace RS1_2024_25.API.Endpoints
 
             _db.SaveChanges();
 
-            return Ok(new { Token = token, Role = role , RefreshToken = refreshToken, isAdmin=user.IsAdmin});
+            return Ok(new { Token = token, Role = role, RefreshToken = refreshToken, isAdmin = user.IsAdmin });
         }
 
         private string CreateJwt(UserAccount user)
@@ -182,11 +182,46 @@ namespace RS1_2024_25.API.Endpoints
 
         private string GenerateRefreshToken()
         {
-            var randomBytes = new byte [64];
+            var randomBytes = new byte[64];
             using var rng = RandomNumberGenerator.Create();
             rng.GetBytes(randomBytes);
             return Convert.ToBase64String(randomBytes);
         }
+
+        [Authorize]
+        [HttpPost("change-password")]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequest request)
+        {
+            if (string.IsNullOrWhiteSpace(request.CurrentPassword))
+                return BadRequest("Current password is required.");
+
+            if (string.IsNullOrWhiteSpace(request.NewPassword))
+                return BadRequest("New password is required.");
+
+            var userIdClaim = User.FindFirst("id")?.Value;
+            if (!int.TryParse(userIdClaim, out var userId))
+                return Unauthorized("Invalid token.");
+
+            var user = await _db.UserAccounts.FirstOrDefaultAsync(u => u.Id == userId);
+            if (user == null)
+                return NotFound("User not found.");
+
+            var verifyResult = _passwordHasher.VerifyHashedPassword(user, user.Password, request.CurrentPassword);
+
+            if (verifyResult == PasswordVerificationResult.Failed)
+                return Unauthorized("Current password is incorrect.");
+
+            if (request.CurrentPassword == request.NewPassword)
+                return BadRequest("New password must be different from current password.");
+
+            user.Password = _passwordHasher.HashPassword(user, request.NewPassword);
+
+            await _db.SaveChangesAsync();
+
+            return Ok(new { message = "Password changed successfully." });
+        }
+
+
 
 
 
@@ -209,13 +244,13 @@ namespace RS1_2024_25.API.Endpoints
         {
             bool exists;
 
-            if(userId.HasValue)
+            if (userId.HasValue)
             {
                 exists = _db.UserAccounts.Any(x => x.PhoneNumber == phoneNumber && x.Id != userId.Value);
             }
             else
             {
-                exists = _db.UserAccounts.Any(x=>x.PhoneNumber == phoneNumber);
+                exists = _db.UserAccounts.Any(x => x.PhoneNumber == phoneNumber);
             }
 
             return Ok(new { exists });
@@ -295,7 +330,7 @@ namespace RS1_2024_25.API.Endpoints
                         ImageUrl = localImageUrl
                     };
 
-                  
+
                     _db.Users.Add(user);
                     await _db.SaveChangesAsync();
                 }
@@ -339,7 +374,8 @@ namespace RS1_2024_25.API.Endpoints
             return username;
         }
 
-        
+
+
 
         public class UsernameRequest
         {
@@ -425,7 +461,7 @@ namespace RS1_2024_25.API.Endpoints
 
             var userId = int.Parse(User.FindFirst("id")?.Value ?? "0");
 
-            
+
             var phoneExists = _db.UserAccounts
                 .Any(x => x.PhoneNumber == request.PhoneNumber && x.Id != userId);
 
@@ -449,7 +485,8 @@ namespace RS1_2024_25.API.Endpoints
         }
 
         [HttpPost("refresh-token")]
-        public IActionResult Refresh([FromBody] RefreshTokenRequest request) {
+        public IActionResult Refresh([FromBody] RefreshTokenRequest request)
+        {
 
             if (string.IsNullOrWhiteSpace(request.Token))
                 return BadRequest("Refresh token is required.");
@@ -461,10 +498,10 @@ namespace RS1_2024_25.API.Endpoints
             if (storedToken == null || storedToken.Expires < DateTime.UtcNow)
                 return Unauthorized("Invalid or expired refresh token");
 
-            
+
             storedToken.isRevoked = true;
 
-            
+
             var newJwt = CreateJwt(storedToken.UserAccount);
             var newRefreshToken = GenerateRefreshToken();
 
@@ -484,5 +521,34 @@ namespace RS1_2024_25.API.Endpoints
             });
 
         }
+
+        public class ResetPasswordRequest
+        {
+            public string Email { get; set; }
+            public string NewPassword { get; set; }
+        }
+
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest request)
+        {
+            if (string.IsNullOrWhiteSpace(request.Email))
+                return BadRequest("Email is required.");
+
+            if (string.IsNullOrWhiteSpace(request.NewPassword))
+                return BadRequest("New password is required.");
+
+            var user = await _db.UserAccounts.FirstOrDefaultAsync(u => u.Email == request.Email);
+
+            if (user == null)
+                return NotFound("User not found.");
+
+            user.Password = _passwordHasher.HashPassword(user, request.NewPassword);
+
+            await _db.SaveChangesAsync();
+
+            return Ok(new { message = "Password reset successful." });
+        }
+
+
     }
 }
