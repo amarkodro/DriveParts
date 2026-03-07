@@ -2,6 +2,9 @@
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
+
+namespace RS1_2024_25.API.Services;
 
 public class OpenAIService
 {
@@ -58,4 +61,5 @@ public class OpenAIService
         }
     }
 }
+
 

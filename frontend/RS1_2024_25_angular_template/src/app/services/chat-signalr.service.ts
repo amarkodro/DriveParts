@@ -1,4 +1,4 @@
-import {MyConfig} from '../my-config';
+import { MyConfig } from '../my-config';
 import { Injectable } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
 import { BehaviorSubject } from 'rxjs';
@@ -22,6 +22,21 @@ export class ChatSignalRService {
   private hubConnection?: signalR.HubConnection;
   private messageSubject = new BehaviorSubject<ChatMessage | null>(null);
   public message$ = this.messageSubject.asObservable();
+
+  private unreadCountSubject = new BehaviorSubject<number>(0);
+  public unreadCount$ = this.unreadCountSubject.asObservable();
+
+  setUnreadCount(count: number) {
+    this.unreadCountSubject.next(count);
+  }
+
+  incrementUnreadCount() {
+    this.unreadCountSubject.next(this.unreadCountSubject.value + 1);
+  }
+
+  getUnreadCount(): number {
+    return this.unreadCountSubject.value;
+  }
 
   async startConnection(token: string): Promise<void> {
     // If already connected, don't reconnect

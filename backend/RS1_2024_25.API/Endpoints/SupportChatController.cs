@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 using RS1_2024_25.API.Data;
 using RS1_2024_25.API.Services;
 
@@ -10,22 +11,18 @@ namespace RS1_2024_25.API.Endpoints
     public class SupportChatController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
-        private readonly MyAuthService _authService;
 
-        public SupportChatController(ApplicationDbContext context, MyAuthService authService)
+        public SupportChatController(ApplicationDbContext context)
         {
             _context = context;
-            _authService = authService;
         }
 
         [HttpGet("conversations")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetConversations()
         {
-            var authInfo = _authService.GetAuthInfo();
-            if (!authInfo.IsAdmin)
-            {
-                return Unauthorized();
-            }
+            var userIdClaim = User.FindFirst("id")?.Value;
+            if (!int.TryParse(userIdClaim, out var adminId)) return Unauthorized();
 
             var conversations = await _context.Conversations
                 .Include(c => c.User)
@@ -38,7 +35,7 @@ namespace RS1_2024_25.API.Endpoints
                     UserName = $"{c.User.Name} {c.User.Surname}",
                    LastMessage = c.Messages.OrderByDescending(m => m.Timestamp).Select(m => m.Content).FirstOrDefault() ?? "",
                     c.LastMessageAt,
-                    UnreadCount = c.Messages.Count(m => !m.IsRead && m.SenderId != authInfo.UserId)
+                    UnreadCount = c.Messages.Count(m => !m.IsRead && m.SenderId != adminId)
                 })
                 .ToListAsync();
 
@@ -46,13 +43,13 @@ namespace RS1_2024_25.API.Endpoints
         }
 
         [HttpGet("messages/{conversationId}")]
+        [Authorize]
         public async Task<IActionResult> GetMessages(int conversationId)
         {
-            var authInfo = _authService.GetAuthInfo();
-            if (!authInfo.IsLoggedIn)
-            {
-                return Unauthorized();
-            }
+            var userIdClaim = User.FindFirst("id")?.Value;
+            if (!int.TryParse(userIdClaim, out var userId)) return Unauthorized();
+            
+            bool isAdmin = User.IsInRole("Admin");
 
             var conversation = await _context.Conversations
                 .Include(c => c.Messages)
@@ -65,7 +62,7 @@ namespace RS1_2024_25.API.Endpoints
             }
 
             // Check authorization: either admin or the user who owns the conversation
-            if (!authInfo.IsAdmin && conversation.UserId != authInfo.UserId)
+            if (!isAdmin && conversation.UserId != userId)
             {
                 return Forbid();
             }
@@ -90,19 +87,17 @@ namespace RS1_2024_25.API.Endpoints
         }
 
         [HttpGet("user-messages")]
+        [Authorize]
         public async Task<IActionResult> GetUserMessages()
         {
-            var authInfo = _authService.GetAuthInfo();
-            if (!authInfo.IsLoggedIn)
-            {
-                return Unauthorized();
-            }
+            var userIdClaim = User.FindFirst("id")?.Value;
+            if (!int.TryParse(userIdClaim, out var userId)) return Unauthorized();
 
             // Find user's conversation
             var conversation = await _context.Conversations
                 .Include(c => c.Messages)
                     .ThenInclude(m => m.Sender)
-                .FirstOrDefaultAsync(c => c.UserId == authInfo.UserId);
+                .FirstOrDefaultAsync(c => c.UserId == userId);
 
             if (conversation == null)
             {
@@ -127,6 +122,26 @@ namespace RS1_2024_25.API.Endpoints
                 .ToList();
 
             return Ok(messages);
+        }
+
+        [HttpGet("unread-count")]
+        [Authorize]
+        public async Task<IActionResult> GetUnreadCount()
+        {
+            var userIdClaim = User.FindFirst("id")?.Value;
+            if (!int.TryParse(userIdClaim, out var userId)) return Unauthorized();
+
+            var conversation = await _context.Conversations
+                .Include(c => c.Messages)
+                .FirstOrDefaultAsync(c => c.UserId == userId);
+
+            if (conversation == null)
+            {
+                return Ok(new { count = 0 });
+            }
+
+            var count = conversation.Messages.Count(m => !m.IsRead && m.SenderId != userId);
+            return Ok(new { count });
         }
     }
 }

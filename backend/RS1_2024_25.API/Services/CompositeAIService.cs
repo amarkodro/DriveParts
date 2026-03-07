@@ -1,4 +1,7 @@
 ﻿using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration; // Might be needed for consistency, but checking dependencies
+
+namespace RS1_2024_25.API.Services;
 
 public class CompositeAIService
 {

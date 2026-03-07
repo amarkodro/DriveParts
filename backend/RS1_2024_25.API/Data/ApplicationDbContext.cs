@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RS1_2024_25.API.Data.Models;
-using RS1_2024_25.API.Data.Models.Auth;
+
 
 namespace RS1_2024_25.API.Data
 {
@@ -8,8 +8,6 @@ namespace RS1_2024_25.API.Data
     {
         public DbSet<City> Cities { get; set; }
         public DbSet<Country> Countries { get; set; }
-        public DbSet<MyAppUser> MyAppUsers { get; set; }
-        public DbSet<MyAuthenticationToken> MyAuthenticationTokens { get; set; }
         public DbSet<Journey> Journeys { get; set; }
         public DbSet<DashboardStats> Dashboards { get; set; }
         public DbSet<Admin> Admins { get; set; }

@@ -2,6 +2,9 @@
     <button class="chat-toggle-btn" (click)="toggleChat()">
         <i class="fa fa-comments"></i>
         <span>Support</span>
+        <span class="unread-badge" *ngIf="((chatService.unreadCount$ | async) ?? 0) > 0">
+    {{ chatService.unreadCount$ | async }}
+</span>
     </button>
 </div>
 

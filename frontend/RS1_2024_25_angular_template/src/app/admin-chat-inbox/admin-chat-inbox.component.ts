@@ -1,4 +1,4 @@
-import {MyConfig} from '../my-config';
+import { MyConfig } from '../my-config';
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { ChatSignalRService, ChatMessage } from '../services/chat-signalr.service';
 import { AuthService } from '../services/auth-services/auth.service';
@@ -106,7 +106,11 @@ export class AdminChatInboxComponent implements OnInit, OnDestroy {
       }
 
       // Avoid duplicates
-      const exists = conversation.messages.some(m => m.messageId === message.messageId);
+      const exists = conversation.messages.some(m =>
+        m.messageId === message.messageId ||
+        (m.content === message.content &&
+          Math.abs(new Date(m.timestamp).getTime() - new Date(message.timestamp).getTime()) < 1000)
+      );
       if (!exists) {
         conversation.messages.push(message);
       }
@@ -159,23 +163,11 @@ export class AdminChatInboxComponent implements OnInit, OnDestroy {
     const userId = this.authService.getUserId();
     const userInfo = this.authService.getUserInfoFromToken();
 
-    // Add message to local display immediately (optimistic update)
-    const localMessage: ChatMessage = {
-      messageId: Date.now(), // Temporary ID
-      conversationId: this.selectedConversation.id,
-      senderId: userId,
-      senderName: userInfo ? `${userInfo.name} ${userInfo.surname}` : 'Admin',
-      content: messageContent,
-      timestamp: new Date(),
-      isFromUser: false,
-      fileUrl: fileUrl,
-      fileName: fileName
-    };
-
-    this.selectedConversation.messages.push(localMessage);
+    // No longer adding message locally (signalr will broadcast it back to us)
     this.newMessage = '';
     this.selectedFile = null;
-    setTimeout(() => this.scrollToBottom(), 100);
+    // SignalR will handle adding the message via handleIncomingMessage
+    // as admins receive all broadcasts in the 'Admins' group.
 
     // Send to server
     await this.chatService.sendMessageToUser(this.selectedConversation.userId, messageContent, fileUrl, fileName);

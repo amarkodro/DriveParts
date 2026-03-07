@@ -1,4 +1,4 @@
-import {MyConfig} from '../my-config';
+import { MyConfig } from '../my-config';
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { ChatSignalRService, ChatMessage } from '../services/chat-signalr.service';
 import { AuthService } from '../services/auth-services/auth.service';
@@ -23,7 +23,7 @@ export class UserSupportChatComponent implements OnInit, OnDestroy {
   private messageSubscription?: Subscription;
 
   constructor(
-    private chatService: ChatSignalRService,
+    public chatService: ChatSignalRService,
     private authService: AuthService,
     private http: HttpClient
   ) { }
@@ -39,6 +39,9 @@ export class UserSupportChatComponent implements OnInit, OnDestroy {
     if (token && !this.isAdmin) {
       await this.chatService.startConnection(token);
       this.isConnected = this.chatService.isConnected();
+
+      // Load initial unread count
+      this.loadUnreadCount();
 
       // CRITICAL: Load existing messages FIRST
       await this.loadChatHistory();
@@ -56,6 +59,11 @@ export class UserSupportChatComponent implements OnInit, OnDestroy {
           if (!exists) {
             this.messages.push(message);
             setTimeout(() => this.scrollToBottom(), 100);
+
+            // Increment unread count if chat is not open and message is from admin
+            if (!this.isOpen && !message.isFromUser) {
+              this.chatService.incrementUnreadCount();
+            }
           }
         }
       });
@@ -98,6 +106,19 @@ export class UserSupportChatComponent implements OnInit, OnDestroy {
     }
   }
 
+  async loadUnreadCount() {
+    try {
+      const res = await this.http.get<{ count: number }>(
+        MyConfig.api_address + '/api/SupportChat/unread-count'
+      ).toPromise();
+      if (res) {
+        this.chatService.setUnreadCount(res.count);
+      }
+    } catch (err) {
+      console.error('❌ Error loading unread count:', err);
+    }
+  }
+
   ngOnDestroy() {
     this.messageSubscription?.unsubscribe();
   }
@@ -106,6 +127,13 @@ export class UserSupportChatComponent implements OnInit, OnDestroy {
     this.isOpen = !this.isOpen;
     if (this.isOpen) {
       this.isMinimized = false;
+      this.chatService.setUnreadCount(0);
+
+      // Also mark as read on server if we have messages
+      if (this.messages.length > 0) {
+        this.chatService.markMessagesAsRead(this.messages[0].conversationId);
+      }
+
       setTimeout(() => this.scrollToBottom(), 100);
     }
   }

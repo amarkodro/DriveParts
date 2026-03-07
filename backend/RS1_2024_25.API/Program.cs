@@ -61,8 +61,6 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddHttpContextAccessor();
 
 // Add your services
-builder.Services.AddTransient<MyAuthService>();
-builder.Services.AddTransient<MyTokenGenerator>();
 builder.Services.AddScoped<IPasswordHasher<UserAccount>, PasswordHasher<UserAccount>>();
 builder.Services.AddHttpClient<OpenAIService>();
 builder.Services.AddHttpClient();

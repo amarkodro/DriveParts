@@ -3,6 +3,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
+namespace RS1_2024_25.API.Services;
+
 public class LocalAIService
 {
     private readonly HttpClient _httpClient = new HttpClient();
