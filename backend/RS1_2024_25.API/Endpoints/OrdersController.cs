@@ -192,7 +192,7 @@ namespace RS1_2024_25.API.Endpoints
                     _db.OrderItems.Add(orderItem);
                 }
 
-                var cartItems = _db.CartItems.Where(x => x.UserId == request.UserId).ToList();
+                var cartItems = _db.CartItems.Where(x => x.UserId == request.UserId && !x.IsSavedForLater).ToList();
 
                 if (cartItems.Any())
                 {

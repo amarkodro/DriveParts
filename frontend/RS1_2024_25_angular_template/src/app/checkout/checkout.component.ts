@@ -131,8 +131,9 @@ export class CheckoutComponent implements OnInit {
 
 
     this.cartService.cartItems$.subscribe(items => {
-      this.cartItems = items;
-      this.total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+      const activeCartItems = items.filter(item => !item.isSavedForLater);
+      this.cartItems = activeCartItems;
+      this.total = activeCartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
       this.discount = this.cartService.getDiscount(userId);
     });
   }

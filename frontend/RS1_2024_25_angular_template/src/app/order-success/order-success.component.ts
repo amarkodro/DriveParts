@@ -52,7 +52,9 @@ export class OrderSuccessComponent implements OnInit {
 
 
     this.cartService.cartItems$.pipe(take(1)).subscribe(cartItems => {
-      if (cartItems.length === 0) {
+      const activeCartItems = cartItems.filter(item => !item.isSavedForLater);
+
+      if (activeCartItems.length === 0) {
         return;
       }
 
@@ -62,7 +64,7 @@ export class OrderSuccessComponent implements OnInit {
         price: item.price
       }));
 
-      const subtotal = cartItems.reduce(
+      const subtotal = activeCartItems.reduce(
         (sum, item) => sum + item.price * item.quantity, 0
       );
 
@@ -89,8 +91,7 @@ export class OrderSuccessComponent implements OnInit {
             confirmButtonText: 'OK',
             confirmButtonColor: '#28a745'
           });
-
-          this.cartService.clearCart();
+          
           this.cartService.loadCartItems();
           localStorage.removeItem(`promoCodeId-${userId}`);
           localStorage.removeItem(`usedCode-${userId}`);
