@@ -1,3 +1,4 @@
+import { MyConfig } from '../my-config';
 import { Component, OnInit, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { PartService, Part } from '../services/Adminpart.service';
@@ -11,6 +12,7 @@ import Swal from 'sweetalert2';
   styleUrls: ['./admin-parts.component.css']
 })
 export class AdminPartsComponent implements OnInit {
+  apiUrl = MyConfig.api_address;
   searchTerm = '';
   categoryFilter: number | undefined;
   manufacturerFilter: number | undefined;

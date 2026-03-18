@@ -97,8 +97,8 @@
       </div>
 
       <!-- Product Image -->
-      <img [src]="'http://localhost:7000' + part.partImage || 'https://via.placeholder.com/300x200'"
-        alt="{{ part.name }}" class="product-image product-main-image" />
+      <img [src]="apiUrl + part.partImage || 'https://via.placeholder.com/300x200'" alt="{{ part.name }}"
+        class="product-image product-main-image" />
 
       <!-- Product Info -->
       <div class="product-info">
@@ -123,7 +123,7 @@
     <div class="modal-body">
       <!-- Picture's product -->
       <div class="modal-image-container">
-        <img [src]="'http://localhost:7000' + selectedPart.partImage || 'https://via.placeholder.com/300x200'"
+        <img [src]="apiUrl + selectedPart.partImage || 'https://via.placeholder.com/300x200'"
           alt="{{ selectedPart.name }}" class="modal-image modal-product-image" />
       </div>
 

@@ -3,7 +3,7 @@
   <div class="container px-4 px-lg-5 my-5">
     <div class="row gx-4 gx-lg-5 align-items-center">
       <div class="col-md-5">
-        <img class="card-img-top mb-5 mb-md-0 part-image" [src]="'http://localhost:7000' + p.partImage" alt="{{ p.name }}" />
+        <img class="card-img-top mb-5 mb-md-0 part-image" [src]="apiUrl + p.partImage" alt="{{ p.name }}" />
       </div>
       <div class="col-md-1 d-flex justify-content-center">
 
@@ -27,7 +27,8 @@
         </div>
 
         <div class="actions mb-4">
-          <button class="btn btn-outline-dark me-3 add-to-cart" (click)="addToCart($event); $event.stopPropagation();">Add to Cart</button>
+          <button class="btn btn-outline-dark me-3 add-to-cart"
+            (click)="addToCart($event); $event.stopPropagation();">Add to Cart</button>
           <button class="btn btn-outline-primary add-to-favorites">Add to Favorites</button>
         </div>
         <div class="reviews">

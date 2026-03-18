@@ -11,6 +11,7 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./user-support-chat.component.css']
 })
 export class UserSupportChatComponent implements OnInit, OnDestroy {
+  apiUrl = MyConfig.api_address;
   @ViewChild('messagesContainer') private messagesContainer!: ElementRef;
 
   isOpen = false;

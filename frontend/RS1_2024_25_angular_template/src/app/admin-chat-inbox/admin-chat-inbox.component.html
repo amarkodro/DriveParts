@@ -49,7 +49,7 @@
                             <strong>{{ msg.senderName }}</strong>
                             <p *ngIf="msg.content">{{ msg.content }}</p>
                             <div *ngIf="msg.fileUrl" class="message-attachment">
-                                <img [src]="'http://localhost:7000' + msg.fileUrl" [alt]="msg.fileName" class="attachment-img" />
+                                <img [src]="apiUrl + msg.fileUrl" [alt]="msg.fileName" class="attachment-img" />
                             </div>
                             <span class="timestamp">{{ msg.timestamp | date:'short' }}</span>
                         </div>
@@ -70,11 +70,13 @@
                     <button class="attach-btn" (click)="fileInput.click()">
                         <i class="fa fa-paperclip"></i>
                     </button>
-                    <input type="file" #fileInput style="display: none;" (change)="onFileSelected($event)" accept="image/*" />
-                    
+                    <input type="file" #fileInput style="display: none;" (change)="onFileSelected($event)"
+                        accept="image/*" />
+
                     <input type="text" [(ngModel)]="newMessage" (keyup.enter)="sendMessage()"
                         placeholder="Type your reply..." [disabled]="!isConnected || isUploading" />
-                    <button (click)="sendMessage()" [disabled]="!isConnected || (!newMessage.trim() && !selectedFile) || isUploading">
+                    <button (click)="sendMessage()"
+                        [disabled]="!isConnected || (!newMessage.trim() && !selectedFile) || isUploading">
                         <i class="fa fa-paper-plane" *ngIf="!isUploading"></i>
                         <i class="fa fa-spinner fa-spin" *ngIf="isUploading"></i>
                     </button>

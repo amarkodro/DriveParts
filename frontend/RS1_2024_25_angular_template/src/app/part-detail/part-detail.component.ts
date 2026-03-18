@@ -1,11 +1,12 @@
+import { MyConfig } from '../my-config';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { PartService } from '../services/navbar-search.service';
 import { Router } from '@angular/router';
 import { UserService } from '../services/user.service';
-import {CartService} from '../services/cart.service';
-import {ToastrService} from 'ngx-toastr';
-import {AuthService} from '../services/auth-services/auth.service';
+import { CartService } from '../services/cart.service';
+import { ToastrService } from 'ngx-toastr';
+import { AuthService } from '../services/auth-services/auth.service';
 
 
 @Component({
@@ -14,10 +15,11 @@ import {AuthService} from '../services/auth-services/auth.service';
   styleUrls: ['./part-detail.component.css']
 })
 export class PartDetailComponent implements OnInit {
+  apiUrl = MyConfig.api_address;
   partId: string | null = null;
   part: any = null;
 
-  constructor(private route: ActivatedRoute, private partService: PartService, private cartService: CartService, private toastr: ToastrService, private authService: AuthService, private router: Router) {}
+  constructor(private route: ActivatedRoute, private partService: PartService, private cartService: CartService, private toastr: ToastrService, private authService: AuthService, private router: Router) { }
 
   ngOnInit(): void {
     this.route.paramMap.subscribe((paramMap) => {

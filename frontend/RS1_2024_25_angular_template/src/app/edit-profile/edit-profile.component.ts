@@ -133,14 +133,24 @@ export class EditProfileComponent implements OnInit {
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files[0]) {
-      this.selectedImageFile = input.files[0];
-
-      const reader = new FileReader();
-      reader.onload = () => {
-        this.previewUrl = reader.result;
-      };
-      reader.readAsDataURL(this.selectedImageFile);
+      this.handleFile(input.files[0]);
     }
+  }
+
+  onFileDropped(files: FileList): void {
+    if (files && files.length > 0) {
+      this.handleFile(files[0]);
+    }
+  }
+
+  private handleFile(file: File): void {
+    this.selectedImageFile = file;
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.previewUrl = reader.result;
+    };
+    reader.readAsDataURL(this.selectedImageFile);
   }
 
   triggerFileUpload(): void {

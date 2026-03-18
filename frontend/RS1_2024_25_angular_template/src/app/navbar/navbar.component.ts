@@ -1,4 +1,4 @@
-import {MyConfig} from '../my-config';
+import { MyConfig } from '../my-config';
 import { Component, HostListener, OnInit, ElementRef } from '@angular/core';
 import { PartService } from '../services/navbar-search.service';
 import { Router } from '@angular/router';
@@ -13,6 +13,7 @@ import { ChangeDetectorRef } from '@angular/core';
   styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent implements OnInit {
+  apiUrl = MyConfig.api_address;
   searchString: string = '';
   allParts: any[] = [];
   filteredParts: any[] = [];

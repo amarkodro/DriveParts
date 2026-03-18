@@ -13,8 +13,8 @@
                 </div>
 
                 <!-- Image -->
-                <img [src]="'http://localhost:7000' + part.partImage || 'https://via.placeholder.com/300x200'"
-                    alt="{{ part.name }}" class="product-image product-main-image" />
+                <img [src]="apiUrl + part.partImage || 'https://via.placeholder.com/300x200'" alt="{{ part.name }}"
+                    class="product-image product-main-image" />
 
                 <!-- Info -->
                 <div class="product-info">
@@ -45,7 +45,7 @@
 
             <div class="modal-body">
                 <div class="modal-image-container">
-                    <img [src]="'http://localhost:7000' + selectedPart.partImage || 'https://via.placeholder.com/300x200'"
+                    <img [src]="apiUrl + selectedPart.partImage || 'https://via.placeholder.com/300x200'"
                         class="modal-image modal-product-image" />
                 </div>
 

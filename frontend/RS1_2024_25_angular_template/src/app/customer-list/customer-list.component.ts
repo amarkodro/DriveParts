@@ -1,3 +1,4 @@
+import { MyConfig } from '../my-config';
 import { Component, HostListener, OnInit } from '@angular/core';
 import { CustomerService } from '../services/customer.service';
 import { Subject } from 'rxjs';
@@ -9,6 +10,7 @@ import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
   styleUrls: ['./customer-list.component.css']
 })
 export class CustomerListComponent implements OnInit {
+  apiUrl = MyConfig.api_address;
   customers: any[] = [];
   paginatedCustomers: any[] = [];
   searchTerm = '';

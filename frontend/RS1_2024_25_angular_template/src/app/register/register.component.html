@@ -146,13 +146,21 @@
           <h4>Step 3: Account Details</h4>
 
           <div class="form-group">
-            <input type="file" (change)="onFileSelected($event)" accept="image/*" />
             <label>Upload Profile Image</label>
-          </div>
-
-          <!-- Image Preview -->
-          <div *ngIf="previewUrl" style="margin-top: 10px; text-align:center;">
-            <img [src]="previewUrl" alt="Profile Preview" width="120" style="border-radius: 50%; box-shadow: 0 0 5px rgba(0,0,0,0.3);" />
+            <div class="drop-zone" appDragDrop (fileDropped)="onFileDropped($event)" (click)="fileInput.click()">
+              <div *ngIf="!previewUrl" class="drop-zone-placeholder">
+                <i class="fa fa-cloud-upload upload-icon"></i>
+                <p>Drag and drop an image here, or <span class="browse-link">click to browse</span></p>
+              </div>
+              <div *ngIf="previewUrl" class="preview-wrapper">
+                <img [src]="previewUrl" alt="Profile Preview" class="preview-image" />
+                <div class="change-overlay">
+                  <i class="fa fa-exchange"></i>
+                  <span>Change Image</span>
+                </div>
+              </div>
+              <input type="file" #fileInput style="display: none;" (change)="onFileSelected($event)" accept="image/*" />
+            </div>
           </div>
 
           <!-- Username -->

@@ -21,6 +21,7 @@ interface Conversation {
   styleUrls: ['./admin-chat-inbox.component.css']
 })
 export class AdminChatInboxComponent implements OnInit, OnDestroy {
+  apiUrl = MyConfig.api_address;
   @ViewChild('messagesContainer') private messagesContainer!: ElementRef;
 
   conversations: Conversation[] = [];

@@ -3,8 +3,8 @@
         <i class="fa fa-comments"></i>
         <span>Support</span>
         <span class="unread-badge" *ngIf="((chatService.unreadCount$ | async) ?? 0) > 0">
-    {{ chatService.unreadCount$ | async }}
-</span>
+            {{ chatService.unreadCount$ | async }}
+        </span>
     </button>
 </div>
 
@@ -39,8 +39,7 @@
                     <strong>{{ msg.senderName }}</strong>
                     <p *ngIf="msg.content">{{ msg.content }}</p>
                     <div *ngIf="msg.fileUrl" class="message-attachment">
-                        <img [src]="'http://localhost:7000' + msg.fileUrl" [alt]="msg.fileName"
-                            class="attachment-img" />
+                        <img [src]="apiUrl + msg.fileUrl" [alt]="msg.fileName" class="attachment-img" />
                     </div>
                     <span class="timestamp">{{ msg.timestamp | date:'short' }}</span>
                 </div>

@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import {AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
-import {CitiesService} from '../services/cities.service';
-import {AuthService} from '../services/auth-services/auth.service';
-import {Router} from '@angular/router';
-import {ToastrService} from 'ngx-toastr';
-import {GenderService} from '../services/gender.service';
+import { CitiesService } from '../services/cities.service';
+import { AuthService } from '../services/auth-services/auth.service';
+import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
+import { GenderService } from '../services/gender.service';
 import emailjs from '@emailjs/browser';
-import {debounceTime} from 'rxjs/operators';
+import { debounceTime } from 'rxjs/operators';
 
 
 @Component({
@@ -30,7 +30,7 @@ export class RegisterComponent implements OnInit {
     city: false,
   };
   selectedGenderId: number | null = null;
-  selectedCityId:number | null = null;
+  selectedCityId: number | null = null;
   generatedCode: string = '';
   showVerificationOverlay: boolean = false;
   userEnteredCode: string = '';
@@ -46,20 +46,20 @@ export class RegisterComponent implements OnInit {
   lastCheckedPhone: string | null = null;
 
   constructor(private fb: FormBuilder,
-              private http: HttpClient,
-              private cityService:CitiesService,
-              private authService: AuthService,
-              private router: Router,
-              private toastr: ToastrService,
-              private genderService: GenderService,
-              ) {
+    private http: HttpClient,
+    private cityService: CitiesService,
+    private authService: AuthService,
+    private router: Router,
+    private toastr: ToastrService,
+    private genderService: GenderService,
+  ) {
     this.registerForm = this.fb.group({
       name: ['', Validators.required],
       surname: ['', Validators.required],
       genderId: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       phoneNumber: ['', [Validators.required,
-        Validators.pattern(/^\+387 6\d \d{3} \d{3,4}$/)
+      Validators.pattern(/^\+387 6\d \d{3} \d{3,4}$/)
       ]],
       address: ['', Validators.required],
       profileImage: [null],
@@ -89,9 +89,9 @@ export class RegisterComponent implements OnInit {
   }
 
   loadCities() {
-   this.cityService.getCity().subscribe({
-     next: (data) => (this.cities = data),
-   });
+    this.cityService.getCity().subscribe({
+      next: (data) => (this.cities = data),
+    });
 
     const existingCityId = this.registerForm.get('cityId')?.value;
     if (existingCityId) {
@@ -222,15 +222,25 @@ export class RegisterComponent implements OnInit {
   onFileSelected(event: any) {
     const file: File = event.target.files[0];
     if (file) {
-      this.selectedFile = file;
-      this.registerForm.patchValue({ profileImage: file });
-
-      const reader = new FileReader();
-      reader.onload = () => {
-        this.previewUrl = reader.result;
-      };
-      reader.readAsDataURL(file);
+      this.handleFile(file);
     }
+  }
+
+  onFileDropped(files: FileList) {
+    if (files && files.length > 0) {
+      this.handleFile(files[0]);
+    }
+  }
+
+  private handleFile(file: File) {
+    this.selectedFile = file;
+    this.registerForm.patchValue({ profileImage: file });
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.previewUrl = reader.result;
+    };
+    reader.readAsDataURL(file);
   }
 
   passwordMatchValidator: ValidatorFn = (group: AbstractControl): ValidationErrors | null => {

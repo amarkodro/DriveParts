@@ -1,4 +1,4 @@
-import {MyConfig} from '../my-config';
+import { MyConfig } from '../my-config';
 import { Component, ElementRef, OnInit } from '@angular/core';
 import { PartsService } from '../services/parts.service';
 import { Router } from '@angular/router';
@@ -13,6 +13,7 @@ import { FavoritesService } from '../services/favorites.service';
   styleUrls: ['./product-section.component.css'],
 })
 export class ProductSectionComponent implements OnInit {
+  apiUrl = MyConfig.api_address;
   featuredParts: any[] = [];
   newArrivalParts: any[] = [];
   onSaleParts: any[] = [];

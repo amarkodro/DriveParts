@@ -1,4 +1,4 @@
-import {MyConfig} from '../my-config';
+import { MyConfig } from '../my-config';
 import { Component, OnInit, AfterViewInit, ElementRef, Renderer2, HostListener } from '@angular/core';
 import { DropdownService } from '../services/dropdown.service';
 import { Router } from '@angular/router';
@@ -33,6 +33,7 @@ interface Part {
   styleUrls: ['./parts.component.css'],
 })
 export class PartsComponent implements OnInit, AfterViewInit {
+  apiUrl = MyConfig.api_address;
   cars: DropdownItem[] = [];
   categories: DropdownItem[] = [];
   parts: DropdownItem[] = [];

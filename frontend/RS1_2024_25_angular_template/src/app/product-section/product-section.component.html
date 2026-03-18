@@ -20,8 +20,8 @@
                 {{ isFavorite(part.partId || part.id) ? '♥' : '♡' }}
               </span>
             </div>
-            <img [src]="'http://localhost:7000' + part.partImage || 'https://via.placeholder.com/300x200'"
-              alt="{{ part.name }}" class="product-image">
+            <img [src]="apiUrl + part.partImage || 'https://via.placeholder.com/300x200'" alt="{{ part.name }}"
+              class="product-image">
             <div class="product-info">
               <h3 class="product-name">{{ part.name }}</h3>
               <p class="product-description">{{ part.description }}</p>
@@ -55,8 +55,8 @@
               {{ isFavorite(part.partId || part.id) ? '♥' : '♡' }}
             </span>
           </div>
-          <img [src]="'http://localhost:7000' + part.partImage || 'https://via.placeholder.com/300x200'"
-            alt="{{ part.name }}" class="product-image">
+          <img [src]="apiUrl + part.partImage || 'https://via.placeholder.com/300x200'" alt="{{ part.name }}"
+            class="product-image">
           <div class="product-info">
             <h3 class="product-name">{{ part.name }}</h3>
             <p class="product-description">{{ part.description }}</p>
@@ -88,8 +88,8 @@
               {{ isFavorite(part.partId || part.id) ? '♥' : '♡' }}
             </span>
           </div>
-          <img [src]="'http://localhost:7000' + part.partImage || 'https://via.placeholder.com/300x200'"
-            alt="{{ part.name }}" class="product-image">
+          <img [src]="apiUrl + part.partImage || 'https://via.placeholder.com/300x200'" alt="{{ part.name }}"
+            class="product-image">
           <div class="product-info">
             <h3 class="product-name">{{ part.name }}</h3>
             <p class="product-description">{{ part.description }}</p>
@@ -116,7 +116,7 @@
     <div class="modal-body">
       <!-- Slika proizvoda -->
       <div class="modal-image-container">
-        <img [src]="'http://localhost:7000' + selectedProduct.partImage || 'https://via.placeholder.com/300x200'"
+        <img [src]="apiUrl + selectedProduct.partImage || 'https://via.placeholder.com/300x200'"
           alt="{{ selectedProduct.name }}" class="modal-image" />
       </div>
 

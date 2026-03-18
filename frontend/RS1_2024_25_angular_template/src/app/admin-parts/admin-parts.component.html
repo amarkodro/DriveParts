@@ -104,9 +104,9 @@
         <tbody>
           <tr *ngFor="let part of paginatedParts">
             <td>
-              <img [src]="part.partImage ? 'http://localhost:7000' + part.partImage : 'https://via.placeholder.com/50'"
+              <img [src]="part.partImage ? apiUrl + part.partImage : 'https://via.placeholder.com/50'"
                 alt="{{ part.name }}" class="table-thumbnail"
-                (click)="enlargeImage(part.partImage ? 'http://localhost:7000' + part.partImage : 'https://via.placeholder.com/300')">
+                (click)="enlargeImage(part.partImage ? apiUrl + part.partImage : 'https://via.placeholder.com/300')">
             </td>
             <td>{{ part.partId }}</td>
             <td>{{ part.name }}</td>
@@ -153,11 +153,8 @@
   <div class="image-modal-content" (click)="$event.stopPropagation()">
     <span class="image-modal-close" (click)="closeEnlargedImage()">&times;</span>
     <div class="zoom-container">
-      <img [src]="enlargedImage" alt="Enlarged view" class="enlarged-image"
-        [class.zoomed]="isZoomed"
-        [style.transform-origin]="zoomOrigin"
-        (click)="toggleZoom($event)"
-        (error)="handleImageError($event)">
+      <img [src]="enlargedImage" alt="Enlarged view" class="enlarged-image" [class.zoomed]="isZoomed"
+        [style.transform-origin]="zoomOrigin" (click)="toggleZoom($event)" (error)="handleImageError($event)">
       <div class="zoom-hint">
         {{ isZoomed ? 'Click to zoom out' : 'Click to zoom in on details' }}
       </div>

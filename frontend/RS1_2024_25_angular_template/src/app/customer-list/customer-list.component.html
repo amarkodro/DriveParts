@@ -66,9 +66,9 @@
           <tr *ngFor="let customer of paginatedCustomers">
             <td>
               <img
-                [src]="customer.imageUrl && customer.imageUrl.trim() !== '' ? 'http://localhost:7000/' + customer.imageUrl : 'assets/default-user.png'"
+                [src]="customer.imageUrl && customer.imageUrl.trim() !== '' ? apiUrl + '/' + customer.imageUrl : 'assets/default-user.png'"
                 alt="{{ customer.username }}" class="table-thumbnail"
-                (click)="enlargeImage(customer.imageUrl && customer.imageUrl.trim() !== '' ? 'http://localhost:7000/' + customer.imageUrl : 'assets/default-user.png')"
+                (click)="enlargeImage(customer.imageUrl && customer.imageUrl.trim() !== '' ? apiUrl + '/' + customer.imageUrl : 'assets/default-user.png')"
                 (error)="handleImageError($event)">
             </td>
             <td>{{customer.id}}</td>

@@ -1,15 +1,17 @@
-﻿using RS1_2024_25.API.Data;
+using RS1_2024_25.API.Data;
 using RS1_2024_25.API.Data.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace RS1_2024_25.API.Endpoints
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserAccountController(ApplicationDbContext _db) : ControllerBase
+    [Authorize]
+    public class UserAccountController(ApplicationDbContext _db, IPasswordHasher<UserAccount> _passwordHasher) : ControllerBase
     {
         public class UserAccountRequest
         {
@@ -39,7 +41,7 @@ namespace RS1_2024_25.API.Endpoints
             public string PhoneNumber { get; set; }
             public string Address { get; set; }
             public string Username { get; set; }
-            public string Password { get; set; }
+
             public bool IsAdmin { get; set; }
             public bool isUser { get; set; }
             public bool is2FActive { get; set; }
@@ -52,6 +54,7 @@ namespace RS1_2024_25.API.Endpoints
 
         // GET: api/UserAccount
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public ActionResult<UserAccountResponse[]> GetUserAccounts()
         {
             var users = _db.UserAccounts.OfType<User>()
@@ -66,7 +69,7 @@ namespace RS1_2024_25.API.Endpoints
                     PhoneNumber = u.PhoneNumber,
                     Address = u.Address,
                     Username = u.Username,
-                    Password = u.Password,
+
                     IsAdmin = u.IsAdmin,
                     isUser = u.isUser,
                     is2FActive = u.is2FActive ?? false,
@@ -86,7 +89,7 @@ namespace RS1_2024_25.API.Endpoints
                     PhoneNumber = a.PhoneNumber,
                     Address = a.Address,
                     Username = a.Username,
-                    Password = a.Password,
+
                     IsAdmin = a.IsAdmin,
                     isUser = a.isUser,
                     is2FActive = a.is2FActive ?? false,
@@ -98,6 +101,7 @@ namespace RS1_2024_25.API.Endpoints
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = "Admin")]
         public ActionResult<UserAccountResponse> GetUserAccount(int id)
         {
             var userAccount = _db.UserAccounts
@@ -118,7 +122,7 @@ namespace RS1_2024_25.API.Endpoints
                 PhoneNumber = userAccount.PhoneNumber,
                 Address = userAccount.Address,
                 Username = userAccount.Username,
-                Password = userAccount.Password,
+
                 IsAdmin = userAccount.IsAdmin,
                 isUser = userAccount.isUser,
                 is2FActive = userAccount.is2FActive ?? false,
@@ -134,6 +138,7 @@ namespace RS1_2024_25.API.Endpoints
 
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public ActionResult<UserAccountResponse> PostUserAccount(UserAccountRequest request)
         {
             UserAccount newUserAccount;
@@ -146,7 +151,7 @@ namespace RS1_2024_25.API.Endpoints
                     return BadRequest("AdminLevel is required for admin accounts.");
                 }
 
-                newUserAccount = new Admin
+                var admin = new Admin
                 {
                     Name = request.Name,
                     Surname = request.Surname,
@@ -154,17 +159,17 @@ namespace RS1_2024_25.API.Endpoints
                     PhoneNumber = request.PhoneNumber,
                     Address = request.Address,
                     Username = request.Username,
-                    Password = request.Password,
                     IsAdmin = true,
                     isUser = false,
                     is2FActive = request.is2FActive,
                     AdminLevel = request.AdminLevel,
-
                 };
+                admin.Password = _passwordHasher.HashPassword(admin, request.Password);
+                newUserAccount = admin;
             }
             else
             {
-                newUserAccount = new User
+                var user = new User
                 {
                     Name = request.Name,
                     Surname = request.Surname,
@@ -172,13 +177,14 @@ namespace RS1_2024_25.API.Endpoints
                     PhoneNumber = request.PhoneNumber,
                     Address = request.Address,
                     Username = request.Username,
-                    Password = request.Password,
                     IsAdmin = false,
                     isUser = true,
                     is2FActive = request.is2FActive,
                     GenderId = request.GenderId,
                     CityId = request.CityId
                 };
+                user.Password = _passwordHasher.HashPassword(user, request.Password);
+                newUserAccount = user;
             }
 
             _db.UserAccounts.Add(newUserAccount);
@@ -188,7 +194,6 @@ namespace RS1_2024_25.API.Endpoints
         }
 
         [HttpGet("profile")]
-        [Authorize]
         public async Task<IActionResult> GetProfile()
         {
             var userIdClaim = User.FindFirst("id")?.Value;
@@ -254,6 +259,7 @@ namespace RS1_2024_25.API.Endpoints
 
         // DELETE: api/UserAccount/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         public ActionResult<string> DeleteUserAccount(int id)
         {
             var userAccount = _db.UserAccounts.Find(id) ?? throw new KeyNotFoundException("User account not found");

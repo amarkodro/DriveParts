@@ -1,3 +1,4 @@
+import { MyConfig } from '../my-config';
 import { Component, OnInit, ElementRef, Renderer2 } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth-services/auth.service';
@@ -23,6 +24,7 @@ interface Part {
     styleUrls: ['./my-favorites.component.css']
 })
 export class MyFavoritesComponent implements OnInit {
+    apiUrl = MyConfig.api_address;
     favoriteParts: Part[] = [];
     selectedPart: Part | null = null;
 

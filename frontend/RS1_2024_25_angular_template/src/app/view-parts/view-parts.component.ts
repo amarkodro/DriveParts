@@ -1,11 +1,11 @@
-import {MyConfig} from '../my-config';
-import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
-import {PartsService} from '../services/parts.service';
-import {CartService} from '../services/cart.service';
-import {ToastrService} from 'ngx-toastr';
-import {Router} from '@angular/router';
-import {AuthService} from '../services/auth-services/auth.service';
+import { MyConfig } from '../my-config';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { PartsService } from '../services/parts.service';
+import { CartService } from '../services/cart.service';
+import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
+import { AuthService } from '../services/auth-services/auth.service';
 
 @Component({
   selector: 'app-view-parts',
@@ -13,24 +13,25 @@ import {AuthService} from '../services/auth-services/auth.service';
   styleUrl: './view-parts.component.css'
 })
 export class ViewPartsComponent implements OnInit {
-  parts: any[]=[];
+  apiUrl = MyConfig.api_address;
+  parts: any[] = [];
   category: string = '';
   selectedProduct: any;
 
-  constructor(private route : ActivatedRoute,
-              private partsService : PartsService,
-              private cartService : CartService,
-              private toastr: ToastrService,
-              private router : Router
-              ) {}
-    ngOnInit(): void {
-      this.route.queryParams.subscribe(params => {
-        this.category = params['category'] || 'all';
-        this.category = this.category.replace('-',' ');
-        this.loadParts();
-      });
+  constructor(private route: ActivatedRoute,
+    private partsService: PartsService,
+    private cartService: CartService,
+    private toastr: ToastrService,
+    private router: Router
+  ) { }
+  ngOnInit(): void {
+    this.route.queryParams.subscribe(params => {
+      this.category = params['category'] || 'all';
+      this.category = this.category.replace('-', ' ');
+      this.loadParts();
+    });
 
-    }
+  }
 
   private loadParts() {
     if (this.category === 'featured') {
