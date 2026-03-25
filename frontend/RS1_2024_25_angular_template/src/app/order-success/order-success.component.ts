@@ -76,11 +76,10 @@ export class OrderSuccessComponent implements OnInit {
         userId: userId,
         supplierId: this.selectedSupplierId,
         paymentId: paymentId,
-        promoCodeId: this.promoCodeId,
+        promoCodeId: this.promoCodeId && this.promoCodeId > 0 ? this.promoCodeId : null,
         totalAmount: totalAmount,
         items: orderItems
       };
-
 
       this.orderService.createOrder(orderData).subscribe({
         next: () => {
@@ -91,7 +90,7 @@ export class OrderSuccessComponent implements OnInit {
             confirmButtonText: 'OK',
             confirmButtonColor: '#28a745'
           });
-          
+
           this.cartService.loadCartItems();
           localStorage.removeItem(`promoCodeId-${userId}`);
           localStorage.removeItem(`usedCode-${userId}`);

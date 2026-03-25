@@ -159,12 +159,22 @@ namespace RS1_2024_25.API.Endpoints
             using var transaction = _db.Database.BeginTransaction();
             try
             {
-                if (request.PromoCodeId.HasValue)
+                if (!_db.Users.Any(u => u.Id == request.UserId))
+                    return BadRequest("Invalid UserId");
+
+                if (!_db.Suppliers.Any(s => s.SupplierId == request.SupplierId))
+                    return BadRequest("Invalid SupplierId");
+
+                if (!_db.Payments.Any(p => p.PaymentId == request.PaymentId))
+                    return BadRequest("Invalid PaymentId");
+
+                if (request.PromoCodeId.HasValue && request.PromoCodeId.Value > 0)
                 {
                     var promo = _db.PromoCodes.Find(request.PromoCodeId.Value);
                     if (promo == null)
                         return BadRequest("Invalid promo code.");
                 }
+            
                 var order = new Order
                 {
                     Date = DateTime.UtcNow,
@@ -214,10 +224,10 @@ namespace RS1_2024_25.API.Endpoints
 
                 return Ok(response);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 transaction.Rollback();
-                return StatusCode(500, "An error occurred while creating the order.");
+                return StatusCode(500, ex.Message);
             }
         }
 
