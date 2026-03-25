@@ -120,24 +120,6 @@ namespace RS1_2024_25.API.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "MyAppUsers",
-                columns: table => new
-                {
-                    ID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Username = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    IsAdmin = table.Column<bool>(type: "bit", nullable: false),
-                    IsManager = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_MyAppUsers", x => x.ID);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Payments",
                 columns: table => new
                 {
@@ -249,27 +231,6 @@ namespace RS1_2024_25.API.Migrations
                         column: x => x.EngineId,
                         principalTable: "Engines",
                         principalColumn: "EngineId");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "MyAuthenticationTokens",
-                columns: table => new
-                {
-                    ID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Value = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    IpAddress = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    RecordedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    MyAppUserId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_MyAuthenticationTokens", x => x.ID);
-                    table.ForeignKey(
-                        name: "FK_MyAuthenticationTokens_MyAppUsers_MyAppUserId",
-                        column: x => x.MyAppUserId,
-                        principalTable: "MyAppUsers",
-                        principalColumn: "ID");
                 });
 
             migrationBuilder.CreateTable(
@@ -1042,11 +1003,6 @@ namespace RS1_2024_25.API.Migrations
                 column: "EngineId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_MyAuthenticationTokens_MyAppUserId",
-                table: "MyAuthenticationTokens",
-                column: "MyAppUserId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_MyParts_PartId",
                 table: "MyParts",
                 column: "PartId");
@@ -1164,9 +1120,6 @@ namespace RS1_2024_25.API.Migrations
                 name: "ModelParts");
 
             migrationBuilder.DropTable(
-                name: "MyAuthenticationTokens");
-
-            migrationBuilder.DropTable(
                 name: "MyParts");
 
             migrationBuilder.DropTable(
@@ -1186,9 +1139,6 @@ namespace RS1_2024_25.API.Migrations
 
             migrationBuilder.DropTable(
                 name: "Models");
-
-            migrationBuilder.DropTable(
-                name: "MyAppUsers");
 
             migrationBuilder.DropTable(
                 name: "Orders");
