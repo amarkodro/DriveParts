@@ -16,8 +16,8 @@ export class OrdersComponent implements OnInit {
   selectedStatusId = 0;
   filteredOrders: Order[] = [];  // holds all filtered orders
   statusOptions = [
-    { id: 1, name: 'Pending' },    // Must match seeded names
-    { id: 2, name: 'Approved' },  // Exactly as in your database
+    { id: 1, name: 'Pending' },    
+    { id: 2, name: 'Approved' },  
     { id: 3, name: 'Rejected' },
     { id: 4, name: 'In Progress' },
     { id: 5, name: 'Completed' },
