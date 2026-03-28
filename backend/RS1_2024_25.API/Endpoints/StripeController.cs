@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using RS1_2024_25.API.Data;
 using Stripe.Checkout;
 
 namespace RS1_2024_25.API.Endpoints
@@ -9,10 +10,12 @@ namespace RS1_2024_25.API.Endpoints
     public class StripeController : ControllerBase
     {
         private readonly IConfiguration _configuration;
+        private readonly ApplicationDbContext _db;
 
-        public StripeController(IConfiguration configuration)
+        public StripeController(IConfiguration configuration, ApplicationDbContext db)
         {
             _configuration = configuration;
+            _db = db;
             Stripe.StripeConfiguration.ApiKey = _configuration["Stripe:SecretKey"];
         }
 
@@ -21,22 +24,34 @@ namespace RS1_2024_25.API.Endpoints
         {
             try
             {
-                var options = new SessionCreateOptions
+                var lineItems = new List<SessionLineItemOptions>();
+
+                foreach (var item in order.Items)
                 {
-                    PaymentMethodTypes = new List<string> { "card" },
-                    LineItems = order.Items.Select(item => new SessionLineItemOptions
+                    
+                    var part = _db.Parts.Find(item.PartId);
+                    if (part == null)
+                        return BadRequest($"Part {item.PartId} not found.");
+
+                    lineItems.Add(new SessionLineItemOptions
                     {
                         PriceData = new SessionLineItemPriceDataOptions
                         {
                             Currency = "bam",
-                            UnitAmount = item.Price,
+                            UnitAmount = (long)(part.Price * 100), 
                             ProductData = new SessionLineItemPriceDataProductDataOptions
                             {
-                                Name = item.Name
+                                Name = part.Name
                             }
                         },
                         Quantity = item.Quantity
-                    }).ToList(),
+                    });
+                }
+
+                var options = new SessionCreateOptions
+                {
+                    PaymentMethodTypes = new List<string> { "card" },
+                    LineItems = lineItems,
                     Mode = "payment",
                     SuccessUrl = _configuration["Stripe:SuccessUrl"],
                     CancelUrl = _configuration["Stripe:CancelUrl"]
@@ -52,21 +67,24 @@ namespace RS1_2024_25.API.Endpoints
                 return BadRequest(new { error = "Payment session creation failed." });
             }
         }
-
     }
 
-    
     public class StripeOrderItem
     {
-        public string Name { get; set; }
-        public long Price { get; set; }
+        public int PartId { get; set; }  
         public int Quantity { get; set; }
+       
     }
 
     public class StripeOrderItemRequest
     {
-         public List<StripeOrderItem> Items { get; set; }
+        public List<StripeOrderItem> Items { get; set; }
     }
-    
 }
+
+    
+
+    
+    
+
 

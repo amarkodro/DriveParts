@@ -199,19 +199,12 @@ export class CheckoutComponent implements OnInit {
       return;
     }
 
-    const discountRatio = discount / subtotal;
 
-    const items = this.cartItems.map(item => {
-      const itemTotal = item.price * item.quantity;
-      const discountedTotal = itemTotal - (itemTotal * discountRatio);
-      const unitPrice = discountedTotal / item.quantity;
 
-      return {
-        name: item.partName,
-        quantity: item.quantity,
-        price: Math.round(unitPrice * 100)
-      };
-    });
+    const items = this.cartItems.map(item => ({
+      partId: item.partId,
+      quantity: item.quantity
+    }));
 
     localStorage.setItem(`paymentId-${userId}`, this.selectedPaymentMethod!.toString());
 

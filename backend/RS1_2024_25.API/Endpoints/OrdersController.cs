@@ -62,10 +62,6 @@ namespace RS1_2024_25.API.Endpoints
             [Required]
             [Range(1, 1000)]
             public int Quantity { get; set; }
-
-            [Required]
-            [Range(0.01, 1000000)]
-            public decimal Price { get; set; }
         }
         public class OrderUpdateRequest
         {
@@ -161,10 +157,8 @@ namespace RS1_2024_25.API.Endpoints
             {
                 if (!_db.Users.Any(u => u.Id == request.UserId))
                     return BadRequest("Invalid UserId");
-
                 if (!_db.Suppliers.Any(s => s.SupplierId == request.SupplierId))
                     return BadRequest("Invalid SupplierId");
-
                 if (!_db.Payments.Any(p => p.PaymentId == request.PaymentId))
                     return BadRequest("Invalid PaymentId");
 
@@ -174,55 +168,73 @@ namespace RS1_2024_25.API.Endpoints
                     if (promo == null)
                         return BadRequest("Invalid promo code.");
                 }
-            
+
+                decimal calculatedTotal = 0;
+                var orderItemsToAdd = new List<OrderItem>();
+
+                foreach (var item in request.Items)
+                {
+                    var part = _db.Parts.Find(item.PartId);
+                    if (part == null)
+                        return BadRequest($"Part with ID {item.PartId} not found.");
+
+                    var realPrice = (decimal)part.Price;
+                    calculatedTotal += realPrice * item.Quantity;
+
+                    orderItemsToAdd.Add(new OrderItem
+                    {
+                        PartId = item.PartId,
+                        Quantity = item.Quantity,
+                        Price = realPrice
+                    });
+                }
+
+
+                if (request.PromoCodeId.HasValue && request.PromoCodeId.Value > 0)
+                {
+                    var promo = _db.PromoCodes.Find(request.PromoCodeId.Value);
+                    if (promo != null)
+                        calculatedTotal -= (calculatedTotal * (decimal)promo.Discount / 100);
+                }
+
                 var order = new Order
                 {
                     Date = DateTime.UtcNow,
                     StatusId = 1,
                     UserId = request.UserId,
                     SupplierId = request.SupplierId,
-                    PaymentId = 1,
+                    PaymentId = request.PaymentId,
                     PromoCodeId = request.PromoCodeId,
-                    TotalAmount = request.TotalAmount,
+                    TotalAmount = calculatedTotal
                 };
 
                 _db.Orders.Add(order);
                 _db.SaveChanges();
 
-                foreach (var item in request.Items)
+                foreach (var item in orderItemsToAdd)
                 {
-                    var orderItem = new OrderItem
-                    {
-                        OrderId = order.OrderId,
-                        PartId = item.PartId,
-                        Quantity = item.Quantity,
-                        Price = (long)item.Price,
-                    };
-
-                    _db.OrderItems.Add(orderItem);
+                    item.OrderId = order.OrderId;
+                    _db.OrderItems.Add(item);
                 }
 
-                var cartItems = _db.CartItems.Where(x => x.UserId == request.UserId && !x.IsSavedForLater).ToList();
-
+                var cartItems = _db.CartItems
+                    .Where(x => x.UserId == request.UserId && !x.IsSavedForLater)
+                    .ToList();
                 if (cartItems.Any())
-                {
                     _db.CartItems.RemoveRange(cartItems);
-                }
 
                 _db.SaveChanges();
                 transaction.Commit();
 
-                var response = new OrderResponse
+                return Ok(new OrderResponse
                 {
                     OrderId = order.OrderId,
                     Date = order.Date,
-                    Username = _db.UserAccounts.Find(order.UserId)?.Username ?? "Unknown",
+                    Username = _db.Users.Find(order.UserId)?.Username ?? "Unknown",
                     SupplierName = _db.Suppliers.Find(order.SupplierId)?.Name ?? "Unknown",
                     StatusName = _db.Statuses.Find(order.StatusId)?.Name ?? "Unknown",
                     PaymentMethod = _db.Payments.Find(order.PaymentId)?.PaymentMethod ?? "Unknown",
-                };
-
-                return Ok(response);
+                });
             }
             catch (Exception ex)
             {
@@ -255,7 +267,7 @@ namespace RS1_2024_25.API.Endpoints
                     PaymentId = request.PaymentId,
                     PromoCodeId = request.PromoCodeId
                 };
-                
+
                 _db.Orders.Add(order);
                 _db.SaveChanges();
 
@@ -266,7 +278,7 @@ namespace RS1_2024_25.API.Endpoints
                         OrderId = order.OrderId,
                         PartId = item.PartId,
                         Quantity = item.Quantity,
-                        Price = item.Price
+
                     });
                 }
 
@@ -365,7 +377,7 @@ namespace RS1_2024_25.API.Endpoints
                     var writer = iTextSharp.text.pdf.PdfWriter.GetInstance(doc, ms);
                     doc.Open();
 
-                    string logoPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot","UserImages", "11c809db-ab93-4353-9b43-f08dc8014cb9.png");
+                    string logoPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "UserImages", "11c809db-ab93-4353-9b43-f08dc8014cb9.png");
                     if (System.IO.File.Exists(logoPath))
                     {
                         var logo = iTextSharp.text.Image.GetInstance(logoPath);
@@ -390,7 +402,7 @@ namespace RS1_2024_25.API.Endpoints
                         SpacingBefore = 10f,
                         SpacingAfter = 15f
                     };
-                    
+
                     table.SetWidths(new float[] { 50, 15, 15, 20 });
 
                     AddHeaderCell(table, "Item");
@@ -476,5 +488,5 @@ namespace RS1_2024_25.API.Endpoints
             table.AddCell(new Phrase(label, font));
             table.AddCell(new Phrase(value.ToString("C"), font));
         }
-    } 
+    }
 }

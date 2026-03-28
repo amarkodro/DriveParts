@@ -61,15 +61,11 @@ export class OrderSuccessComponent implements OnInit {
 
       const orderItems = cartItems.map(item => ({
         partId: item.partId,
-        quantity: item.quantity,
-        price: item.price
+        quantity: item.quantity
       }));
 
-      const subtotal = activeCartItems.reduce(
-        (sum, item) => sum + item.price * item.quantity, 0
-      );
 
-      const totalAmount = subtotal - discount;
+
 
       const orderData = {
         date: new Date(),
@@ -78,7 +74,6 @@ export class OrderSuccessComponent implements OnInit {
         supplierId: this.selectedSupplierId,
         paymentId: paymentId,
         promoCodeId: this.promoCodeId && this.promoCodeId > 0 ? this.promoCodeId : null,
-        totalAmount: totalAmount,
         items: orderItems
       };
 
