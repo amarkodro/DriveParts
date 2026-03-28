@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RS1_2024_25.API.Data;
 using RS1_2024_25.API.Data.Models;
+using RS1_2024_25.API.Helper.FileUpload;
 using System.ComponentModel.DataAnnotations;
 using static RS1_2024_25.API.Endpoints.PartsController;
 
@@ -22,7 +23,7 @@ namespace RS1_2024_25.API.Endpoints
             public IFormFile PartImage { get; set; }
             public bool IsFeatured { get; set; }
             public bool IsOnSale { get; set; }
-            public bool IsNewArrival { get; set; } 
+            public bool IsNewArrival { get; set; }
             public int TypeId { get; set; }
 
         }
@@ -135,7 +136,7 @@ namespace RS1_2024_25.API.Endpoints
                 ManufacturerId = part.ManufacturerId,
                 CategoryName = part.Category != null ? part.Category.Name : "Unknown",
                 ManufacturerName = part.Manufacturer != null ? part.Manufacturer.Name : "Unknown",
-                PartImage =part.PartImage,
+                PartImage = part.PartImage,
                 IsNewArrival = part.IsNewArrival,
                 IsOnSale = part.IsOnSale,
                 IsFeatured = part.IsFeatured
@@ -149,6 +150,10 @@ namespace RS1_2024_25.API.Endpoints
             string imageUrl = null;
             if (request.PartImage != null)
             {
+                var (isValid, errrorMessage) = FileValidationHelper.Validate(request.PartImage);
+                if (!isValid)
+                    return BadRequest(errrorMessage);
+
                 var fileName = Path.GetFileNameWithoutExtension(request.PartImage.FileName);
                 var extension = Path.GetExtension(request.PartImage.FileName);
                 var uniqueFileName = $"{fileName}_{Guid.NewGuid()}{extension}";
@@ -156,19 +161,19 @@ namespace RS1_2024_25.API.Endpoints
                 using (var stream = new FileStream(filePath, FileMode.Create)) { await request.PartImage.CopyToAsync(stream); }
                 imageUrl = $"/images/{uniqueFileName}";
             }
-            
-                var part = new Part
-                {
-                    Name = request.Name,
-                    Price = request.Price,
-                    Description = request.Description,
-                    CategoryId = request.CategoryId,
-                    ManufacturerId = request.ManufacturerId,
-                    PartImage = imageUrl,
-                    IsOnSale = request.IsOnSale,
-                    IsFeatured = request.IsFeatured,
-                    IsNewArrival = request.IsNewArrival,
-                };
+
+            var part = new Part
+            {
+                Name = request.Name,
+                Price = request.Price,
+                Description = request.Description,
+                CategoryId = request.CategoryId,
+                ManufacturerId = request.ManufacturerId,
+                PartImage = imageUrl,
+                IsOnSale = request.IsOnSale,
+                IsFeatured = request.IsFeatured,
+                IsNewArrival = request.IsNewArrival,
+            };
 
             _db.Parts.Add(part);
             _db.SaveChanges();
@@ -181,9 +186,9 @@ namespace RS1_2024_25.API.Endpoints
                 CategoryName = _db.Categories.Find(part.CategoryId)?.Name ?? "Unknown",
                 ManufacturerName = _db.Manufacturers.Find(part.ManufacturerId)?.Name ?? "Unknown",
                 PartImage = part.PartImage,
-                IsOnSale=part.IsOnSale,
-                IsNewArrival=part.IsNewArrival,
-                IsFeatured=part.IsFeatured
+                IsOnSale = part.IsOnSale,
+                IsNewArrival = part.IsNewArrival,
+                IsFeatured = part.IsFeatured
             };
 
             return Ok(response);
@@ -196,6 +201,9 @@ namespace RS1_2024_25.API.Endpoints
             var part = _db.Parts.Find(id) ?? throw new KeyNotFoundException("Part not found");
             if (request.PartImage != null)
             {
+                var (isValid, errrorMessage) = FileValidationHelper.Validate(request.PartImage);
+                if (!isValid)
+                    return BadRequest(errrorMessage);
                 var fileName = Path.GetFileNameWithoutExtension(request.PartImage.FileName);
                 var extension = Path.GetExtension(request.PartImage.FileName);
                 var uniqueFileName = $"{fileName}_{Guid.NewGuid()}{extension}";
@@ -267,7 +275,7 @@ namespace RS1_2024_25.API.Endpoints
                          .Where(c => c.IsFeatured == true)
                          .Select(c => new PartResponse
                          {
-                             PartId=c.PartId,
+                             PartId = c.PartId,
                              Name = c.Name,
                              Price = c.Price,
                              Description = c.Description,
@@ -325,7 +333,7 @@ namespace RS1_2024_25.API.Endpoints
             public int Quantity { get; set; }
         }
 
-       
+
 
 
         [HttpGet("suggestions")]

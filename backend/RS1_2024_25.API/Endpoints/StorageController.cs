@@ -1,9 +1,12 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using RS1_2024_25.API.Helper.FileUpload;
 
 namespace RS1_2024_25.API.Endpoints
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class StorageController : ControllerBase
     {
         private readonly IWebHostEnvironment _env;
@@ -16,18 +19,17 @@ namespace RS1_2024_25.API.Endpoints
         [HttpPost("upload")]
         public async Task<IActionResult> UploadFile(IFormFile file)
         {
-            if (file == null || file.Length == 0)
-                return BadRequest("No file uploaded.");
 
-            // Create uploads directory if it doesn't exist
+            var (isValid, errorMessage) = FileValidationHelper.Validate(file);
+            if (!isValid)
+                return BadRequest(errorMessage);
+
             var uploadsFolder = Path.Combine(_env.WebRootPath, "uploads");
             if (!Directory.Exists(uploadsFolder))
-            {
                 Directory.CreateDirectory(uploadsFolder);
-            }
 
-            // Generate unique filename
-            var fileName = $"{Guid.NewGuid()}_{file.FileName}";
+
+            var fileName = FileValidationHelper.GenerateSafeFileName(file);
             var filePath = Path.Combine(uploadsFolder, fileName);
 
             using (var stream = new FileStream(filePath, FileMode.Create))
@@ -35,9 +37,8 @@ namespace RS1_2024_25.API.Endpoints
                 await file.CopyToAsync(stream);
             }
 
-            // Return the URL
-            var fileUrl = $"/uploads/{fileName}";
-            return Ok(new { url = fileUrl, fileName = file.FileName });
+            return Ok(new { url = $"/uploads/{fileName}" });
         }
     }
 }
+

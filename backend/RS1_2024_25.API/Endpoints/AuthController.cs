@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.VisualBasic;
+using RS1_2024_25.API.Helper.FileUpload;
 
 namespace RS1_2024_25.API.Endpoints
 {
@@ -63,6 +64,10 @@ namespace RS1_2024_25.API.Endpoints
 
             if (request.ProfileImage != null)
             {
+                var (isValid, errorMessage) = FileValidationHelper.Validate(request.ProfileImage);
+                if (!isValid)
+                    return BadRequest(errorMessage);
+
                 var folder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "UserImages");
                 if (!Directory.Exists(folder))
                     Directory.CreateDirectory(folder);

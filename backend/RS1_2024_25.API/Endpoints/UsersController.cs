@@ -7,6 +7,7 @@ using System.Collections;
 using System.Net;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
+using RS1_2024_25.API.Helper.FileUpload;
 
 namespace RS1_2024_25.API.Endpoints
 {
@@ -112,7 +113,7 @@ namespace RS1_2024_25.API.Endpoints
             });
         }
         // GET: api/User/5
-        
+
         [HttpGet("{id}")]
         public ActionResult<UserResponse> GetUser(int id)
         {
@@ -240,6 +241,10 @@ namespace RS1_2024_25.API.Endpoints
 
             if (request.Image != null && request.Image.Length > 0)
             {
+                var (isValid, errorMessage) = FileValidationHelper.Validate(request.Image);
+                if (!isValid)
+                    return BadRequest(errorMessage);
+
                 var imageName = Guid.NewGuid().ToString() + Path.GetExtension(request.Image.FileName);
                 var savePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/UserImages", imageName);
 
