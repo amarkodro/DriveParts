@@ -30,7 +30,6 @@ export class OrderSuccessComponent implements OnInit {
 
     this.authService.getUserProfile().subscribe({
       next: user => {
-        console.log('User profile:' ,user)
         this.authService.setUserInfo(user);
       },
       error: err => {
@@ -40,9 +39,25 @@ export class OrderSuccessComponent implements OnInit {
 
     const userId = this.authService.getUserId();
 
+
+    const orderKey = localStorage.getItem(`orderKey-${userId}`);
+    if (!orderKey) {
+      console.warn("No order key found — possible duplicate request.");
+      return;
+    }
+
+    const alreadyUsed = localStorage.getItem(`orderKey-used-${orderKey}`);
+    if (alreadyUsed === 'true') {
+      console.warn("Order already processed — skipping duplicate.");
+      return;
+    }
+
+
+    localStorage.setItem(`orderKey-used-${orderKey}`, 'true');
+
     this.promoCodeId = this.cartService.getPromoCodeId(userId);
     const discount = this.cartService.getDiscount(userId) || 0;
-    const savedId = localStorage.getItem(`supplierId-${this.authService.getUserId()}`);
+    const savedId = localStorage.getItem(`supplierId-${userId}`);
     if (savedId) {
       this.selectedSupplierId = parseInt(savedId, 10);
     }
@@ -50,12 +65,11 @@ export class OrderSuccessComponent implements OnInit {
     const paymentIdFromStorage = localStorage.getItem(`paymentId-${userId}`);
     const paymentId = paymentIdFromStorage ? parseInt(paymentIdFromStorage, 10) : 1;
 
-
-
     this.cartService.cartItems$.pipe(take(1)).subscribe(cartItems => {
       const activeCartItems = cartItems.filter(item => !item.isSavedForLater);
 
       if (activeCartItems.length === 0) {
+        console.warn("Cart is empty — skipping order creation.");
         return;
       }
 
@@ -63,9 +77,6 @@ export class OrderSuccessComponent implements OnInit {
         partId: item.partId,
         quantity: item.quantity
       }));
-
-
-
 
       const orderData = {
         date: new Date(),
@@ -93,14 +104,16 @@ export class OrderSuccessComponent implements OnInit {
           localStorage.removeItem(`discount-${userId}`);
           localStorage.removeItem(`supplierId-${userId}`);
           localStorage.removeItem(`paymentId-${userId}`);
+          localStorage.removeItem(`orderKey-${userId}`);
+
         },
-        error: (error) => {
+        error: () => {
           this.toastr.error("Order creation failed.");
+
+          localStorage.setItem(`orderKey-used-${orderKey}`, 'false');
         }
       });
     });
-
-
   }
 
 

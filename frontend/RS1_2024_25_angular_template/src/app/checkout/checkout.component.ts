@@ -208,6 +208,10 @@ export class CheckoutComponent implements OnInit {
 
     localStorage.setItem(`paymentId-${userId}`, this.selectedPaymentMethod!.toString());
 
+    const orderKey = `order-${userId}-${Date.now()}`;
+    localStorage.setItem(`orderKey-${userId}`, orderKey);
+    localStorage.setItem(`orderKey-used-${orderKey}`, 'false');
+
     setTimeout(async () => {
       try {
         if (this.selectedPaymentMethod === 1) {
