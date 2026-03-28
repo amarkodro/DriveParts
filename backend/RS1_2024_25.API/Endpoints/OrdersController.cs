@@ -318,6 +318,7 @@ namespace RS1_2024_25.API.Endpoints
                     .Include(o => o.User)
                     .Include(o => o.Supplier)
                     .Include(o => o.Payment)
+                    .Include(o => o.PromoCode)
                     .Include(o => o.Items)
                     .ThenInclude(i => i.Part)
                     .FirstOrDefault(o => o.OrderId == orderId);
@@ -331,8 +332,9 @@ namespace RS1_2024_25.API.Endpoints
                     return Forbid();
 
                 decimal subtotal = order.Items.Sum(i => i.Price * i.Quantity);
-                decimal tax = subtotal * 0.17m;
-                decimal total = subtotal + tax;
+                decimal discount = subtotal - (order.TotalAmount ?? subtotal);
+                decimal tax = (order.TotalAmount ?? subtotal) * 0.17m;
+                decimal total = (order.TotalAmount ?? subtotal) + tax;
 
                 using (MemoryStream ms = new MemoryStream())
                 {
@@ -392,6 +394,8 @@ namespace RS1_2024_25.API.Endpoints
                     totals.DefaultCell.Border = Rectangle.NO_BORDER;
 
                     AddTotalRow(totals, "Subtotal:", subtotal);
+                    if (discount > 0)
+                        AddTotalRow(totals, $"Discount ({order.PromoCode?.Code ?? "Promo"}):", -discount);
                     AddTotalRow(totals, "Tax (17%):", tax);
                     AddTotalRow(totals, "Total:", total, true);
 
