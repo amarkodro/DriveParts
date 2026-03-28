@@ -141,7 +141,7 @@ namespace RS1_2024_25.API.Endpoints
             }
 
             // Hashiranje nove lozinke
-            admin.Password = BCrypt.Net.BCrypt.EnhancedHashPassword(newPassword);
+            admin.Password =_passwordHasher.HashPassword(admin, newPassword);
 
             _db.SaveChanges();
 
