@@ -1,22 +1,31 @@
+using iTextSharp.text;
+using iTextSharp.text.pdf;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RS1_2024_25.API.Data;
 using RS1_2024_25.API.Data.Models;
+using Stripe;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using static RS1_2024_25.API.Endpoints.UsersController;
-using iTextSharp.text;
-using iTextSharp.text.pdf;
 using System.IO;
+using static RS1_2024_25.API.Endpoints.UsersController;
 using Rectangle = iTextSharp.text.Rectangle;
+using Order = RS1_2024_25.API.Data.Models.Order;
+
 namespace RS1_2024_25.API.Endpoints
 {
     [Route("api/[controller]")]
     [ApiController]
     public class OrdersController(ApplicationDbContext _db) : ControllerBase
     {
+        private int GetCurrentUserId() => int.Parse(User.FindFirst("id")?.Value ?? "0");
+        private bool IsAdmin() =>
+            User.IsInRole("Admin") ||
+            User.FindFirst("role")?.Value == "Admin" ||
+             User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value == "Admin";
+
         public class OrderRequest
         {
             public DateTime Date { get; set; }
@@ -109,6 +118,9 @@ namespace RS1_2024_25.API.Endpoints
 
             if (order == null) return NotFound();
 
+            if (!IsAdmin() && order.UserId != GetCurrentUserId())
+                return Forbid();
+
             return Ok(new OrderResponse
             {
                 OrderId = order.OrderId,
@@ -125,6 +137,9 @@ namespace RS1_2024_25.API.Endpoints
         [Authorize]
         public ActionResult<OrderResponse[]> GetOrdersByCustomer(int customerId)
         {
+            if (!IsAdmin() && customerId != GetCurrentUserId())
+                return Forbid();
+
             var orders = _db.Orders
                 .AsNoTracking()
                 .Include(x => x.Status)
@@ -313,6 +328,9 @@ namespace RS1_2024_25.API.Endpoints
                 var order = _db.Orders.Find(id);
                 if (order == null) return NotFound("Order not found");
 
+                if (!IsAdmin() && order.UserId != GetCurrentUserId())
+                    return Forbid();
+
                 order.StatusId = request.StatusId;
                 _db.SaveChanges();
                 return Ok(new { message = "Status updated successfully" });
@@ -367,6 +385,10 @@ namespace RS1_2024_25.API.Endpoints
                 {
                     return NotFound();
                 }
+
+                if (!IsAdmin() && order.UserId != GetCurrentUserId())
+                    return Forbid();
+
                 decimal subtotal = order.Items.Sum(i => i.Price * i.Quantity);
                 decimal tax = subtotal * 0.17m;
                 decimal total = subtotal + tax;

@@ -109,11 +109,16 @@ namespace RS1_2024_25.API.Endpoints
         [HttpPut("{id}/move-to-cart")]
         public async Task<IActionResult> MoveToCart(int id)
         {
+            var userId = int.Parse(User.FindFirst("id")?.Value ?? "0");
+
             var item = await _db.CartItems.FindAsync(id);
             if (item == null)
             {
                 return NotFound(new { message = "Item not found in cart." });
             }
+
+            if (item.UserId != userId)
+                return Forbid();
 
             item.IsSavedForLater = false;
             await _db.SaveChangesAsync();
@@ -124,11 +129,16 @@ namespace RS1_2024_25.API.Endpoints
         [HttpPut("{id}/save-to-later")]
         public async Task<IActionResult> SaveToLater(int id)
         {
+            var userId = int.Parse(User.FindFirst("id")?.Value ?? "0");
+
             var item = await _db.CartItems.FindAsync(id);
             if (item == null)
             {
                 return NotFound(new { message = "Item not found in cart." });
             }
+
+            if (item.UserId != userId)
+                return Forbid();
 
             item.IsSavedForLater = true;
             await _db.SaveChangesAsync();
