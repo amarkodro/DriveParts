@@ -73,7 +73,7 @@ export class OrderSuccessComponent implements OnInit {
         return;
       }
 
-      const orderItems = cartItems.map(item => ({
+      const orderItems = activeCartItems.map(item => ({
         partId: item.partId,
         quantity: item.quantity
       }));
