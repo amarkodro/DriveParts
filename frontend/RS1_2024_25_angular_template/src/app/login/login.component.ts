@@ -40,7 +40,8 @@ export class LoginComponent implements OnInit  {
   codeAttemptCount: number = 0;
   showReactivateOverlay: boolean = false;
   showReactivateCodeOverlay: boolean = false;
-
+  visualResetCode = '';
+  reactivatePassword: string = '';
   reactivateEmail: string = '';
   reactivationCode: string = '';
   enteredReactivationCode: string = '';
@@ -138,6 +139,14 @@ export class LoginComponent implements OnInit  {
 
       this.authService.loginUser(credentials).subscribe({
         next: (res: any) => {
+          if (res?.requiresReactivation) {
+            this.reactivateEmail = res.email;
+            this.reactivatePassword = credentials.password;
+            this.showReactivateOverlay = true;
+            this.isLoading = false;
+            return;
+          }
+
           const token = res?.token;
 
           if (!token || typeof token !== 'string') {
@@ -213,48 +222,46 @@ export class LoginComponent implements OnInit  {
 
     this.overlayLoading = true;
 
-    this.authService.checkEmail(this.forgotPasswordEmail).subscribe({
-      next: (res: any) => {
-        if (res.exists) {
-          this.generatedResetCode = Math.floor(100000 + Math.random() * 900000).toString();
-           this.codeAttemptCount = 0;
-          emailjs.send(
-            'service_xh0d98k',
-            'template_hishzyg',
-            {
-              verification_code: this.generatedResetCode,
-              to_email: this.forgotPasswordEmail,
-            },
-            'B8xPgvirRSkYNmw9g'
-          ).then(() => {
-            setTimeout(() => {
-              this.toastr.success('Verification code sent!');
-              this.overlayLoading = false;
-              this.showForgotPasswordOverlay = false;
-              this.showCodeVerificationOverlay = true;
-              this.startCodeTimer()
-            }, 2000);
-          }).catch((error) => {
-            setTimeout(() => {
-              this.toastr.error('Failed to send email');
-              console.error(error);
-              this.overlayLoading = false;
-            }, 2000);
-          });
 
-        } else {
+    this.authService.requestPasswordReset(this.forgotPasswordEmail).subscribe({
+      next: (res: any) => {
+
+        this.generatedResetCode = res.resetToken;
+        this.codeAttemptCount = 0;
+
+
+        const sixDigitCode = Math.floor(100000 + Math.random() * 900000).toString();
+
+        emailjs.send(
+          'service_xh0d98k',
+          'template_hishzyg',
+          {
+            verification_code: sixDigitCode,
+            to_email: this.forgotPasswordEmail,
+          },
+          'B8xPgvirRSkYNmw9g'
+        ).then(() => {
+
+          this.visualResetCode = sixDigitCode;
+
           setTimeout(() => {
-            this.emailError = "This email is not registered.";
-            this.forgotPasswordEmail += " ";
-            this.forgotPasswordEmail = this.forgotPasswordEmail.trim();
-            this.toastr.error("This email is not registered.");
+            this.toastr.success('Verification code sent!');
+            this.overlayLoading = false;
+            this.showForgotPasswordOverlay = false;
+            this.showCodeVerificationOverlay = true;
+            this.startCodeTimer();
+          }, 2000);
+        }).catch((error) => {
+          setTimeout(() => {
+            this.toastr.error('Failed to send email');
+            console.error(error);
             this.overlayLoading = false;
           }, 2000);
-        }
+        });
       },
       error: (err) => {
         setTimeout(() => {
-          this.toastr.error("Error while checking email.");
+          this.toastr.error("Error while requesting password reset.");
           console.error(err);
           this.overlayLoading = false;
         }, 2000);
@@ -277,7 +284,8 @@ export class LoginComponent implements OnInit  {
     this.overlayLoading = true;
 
     setTimeout(() => {
-      if (this.enteredResetCode === this.generatedResetCode) {
+
+      if (this.enteredResetCode === this.visualResetCode) {
         this.toastr.success('Code verified! Proceed to reset password.');
         this.showCodeVerificationOverlay = false;
         this.showResetPasswordOverlay = true;
@@ -295,7 +303,6 @@ export class LoginComponent implements OnInit  {
           this.showForgotPasswordOverlay = true;
         }
       }
-
       this.overlayLoading = false;
     }, 2000);
   }
@@ -312,7 +319,7 @@ export class LoginComponent implements OnInit  {
   }
 
   validateCode() {
-    const codeRegex = /^\d{6}$/; // Tačno 6 cifara
+    const codeRegex = /^\d{6}$/;
     if (!this.enteredResetCode) {
       this.codeError = 'Verification code is required.';
     } else if (!codeRegex.test(this.enteredResetCode)) {
@@ -342,8 +349,9 @@ export class LoginComponent implements OnInit  {
       return;
     }
 
+
     const payload = {
-      email: this.forgotPasswordEmail,
+      token: this.generatedResetCode,
       newPassword: this.newPassword
     };
 
@@ -358,6 +366,8 @@ export class LoginComponent implements OnInit  {
           this.confirmNewPassword = '';
           this.forgotPasswordEmail = '';
           this.enteredResetCode = '';
+          this.generatedResetCode = '';
+          this.visualResetCode = '';
           this.overlayLoading = false;
         },
         error: (err) => {
@@ -447,6 +457,7 @@ export class LoginComponent implements OnInit  {
   }
 
   verifyReactivationCode() {
+    console.log('reactivateEmail' , this.reactivateEmail);
     const codeRegex = /^\d{6}$/;
 
     if (!this.enteredReactivationCode.trim()) {
@@ -463,8 +474,8 @@ export class LoginComponent implements OnInit  {
 
     setTimeout(() => {
       if (this.enteredReactivationCode === this.reactivationCode) {
-        this.authService.reactivateProfile(this.reactivateEmail).subscribe({
-          next: () => {
+        this.authService.reactivateProfile(this.reactivateEmail, this.reactivatePassword).subscribe({
+          next: (res: any) => {
             this.toastr.success("Your account has been reactivated. You can now log in.");
             this.showReactivateCodeOverlay = false;
             this.reactivationError = '';
@@ -489,6 +500,26 @@ export class LoginComponent implements OnInit  {
     if (this.reactivationError) {
       this.reactivationError = '';
     }
+  }
+
+
+  confirmReactivation() {
+    this.reactivationLoading = true;
+
+    this.authService.reactivateProfile(this.reactivateEmail, this.reactivatePassword).subscribe({
+      next: () => {
+        this.toastr.success("Your account has been reactivated. You can now log in.");
+        this.showReactivateOverlay = false;
+        this.reactivateEmail = '';
+        this.reactivatePassword = '';
+        this.reactivationError = '';
+        this.reactivationLoading = false;
+      },
+      error: () => {
+        this.reactivationError = "Failed to reactivate account. Try again.";
+        this.reactivationLoading = false;
+      }
+    });
   }
 
 

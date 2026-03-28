@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualBasic;
 using RS1_2024_25.API.Data;
 using RS1_2024_25.API.Data.Models;
@@ -47,6 +48,7 @@ namespace RS1_2024_25.API.Endpoints
             return category;
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public ActionResult<CategoryResponse> PostCategory(CategoryRequest request)
         {
@@ -67,6 +69,7 @@ namespace RS1_2024_25.API.Endpoints
             return Ok(response);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
         public ActionResult<string>PutCategory(int id,CategoryRequest request)
         {
@@ -79,6 +82,7 @@ namespace RS1_2024_25.API.Endpoints
             return Ok("Category updated successfully");
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public ActionResult<string> DeleteCategory(int id)
         {

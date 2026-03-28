@@ -94,10 +94,8 @@
                   </div>
                 </div>
 
-                <div class="text-danger" *ngIf="editProfileForm.get('city')?.touched">
-                  <ng-container *ngIf="editProfileForm.get('city')?.hasError('required')">
-                    City is required.
-                  </ng-container>
+                <div class="text-danger" *ngIf="editProfileForm.get('cityId')?.invalid && editProfileForm.get('cityId')?.touched">
+                  City is required.
                 </div>
 
               </div>
@@ -168,10 +166,8 @@
                   </div>
                 </div>
 
-                <div class="text-danger" *ngIf="editProfileForm.get('gender')?.touched">
-                  <ng-container *ngIf="editProfileForm.get('gender')?.hasError('required')">
-                    Gender is required.
-                  </ng-container>
+                <div class="text-danger" *ngIf="editProfileForm.get('genderId')?.invalid && editProfileForm.get('genderId')?.touched">
+                  Gender is required.
                 </div>
 
               </div>

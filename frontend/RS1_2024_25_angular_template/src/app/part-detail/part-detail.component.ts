@@ -70,7 +70,6 @@ export class PartDetailComponent implements OnInit {
         this.toastr.success(`${this.part.name} has been added to cart`, 'Success');
         this.cartService.notifyCartUpdate();
 
-        // animacija: sa slike na detail stranici do cart ikone
         if (event) this.flyToCartFromDetail();
       },
       error: (err) => {

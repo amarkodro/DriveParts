@@ -181,7 +181,7 @@ export class CheckoutComponent implements OnInit {
     }
 
     try {
-      await this.userService.updateUser(userId, updatedUser).toPromise();
+      await this.userService.updateInfo(userId, updatedUser).toPromise();
       this.toastr.info("User info updated successfully.");
     } catch (error) {
       console.error("User update failed:", error);

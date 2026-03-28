@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Identity.Client;
 using RS1_2024_25.API.Data;
 using RS1_2024_25.API.Data.Models;
-
-using Microsoft.Identity.Client;
 
 namespace RS1_2024_25.API.Endpoints
 {
@@ -61,6 +61,7 @@ namespace RS1_2024_25.API.Endpoints
         }
 
         //POST: api/Car
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public ActionResult<CarResponse> PostCar(CarRequest request)
         {
@@ -82,6 +83,7 @@ namespace RS1_2024_25.API.Endpoints
         }
 
         //PUT: api/Car/5
+        [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
         public ActionResult<string> PatchCar(int id, CarRequest request)
         {
@@ -94,9 +96,8 @@ namespace RS1_2024_25.API.Endpoints
             return Ok("Car updated successfully");
         }
 
-
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
-
         public ActionResult<string> DeleteCar(int id)
         {
             var car = _db.Cars.Find(id) ?? throw new KeyNotFoundException("Car not found");

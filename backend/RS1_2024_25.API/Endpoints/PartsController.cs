@@ -142,6 +142,7 @@ namespace RS1_2024_25.API.Endpoints
             };
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<ActionResult<PartResponse>> PostPart([FromForm] PartRequest request)
         {
@@ -188,6 +189,7 @@ namespace RS1_2024_25.API.Endpoints
             return Ok(response);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
         public async Task<ActionResult<string>> PutPart(int id, [FromForm] PartUpdateRequest request)
         {
@@ -245,6 +247,8 @@ namespace RS1_2024_25.API.Endpoints
                 return ValidationResult.Success;
             }
         }
+
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public ActionResult<string> DeletePart(int id)
         {

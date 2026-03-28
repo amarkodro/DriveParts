@@ -126,7 +126,12 @@ export class AuthService {
     return this.http.post(`${this.apiUrl}/google-login`, { IdToken: token });
   }
 
-  resetPassword(data: { email: string, newPassword: string }) {
+  requestPasswordReset(email:string)
+  {
+    return this.http.post<{resetToken: string}>(`${this.apiUrl}/request-reset`, {email})
+  }
+
+  resetPassword(data: {token: string, newPassword: string})  {
     return this.http.post(`${this.apiUrl}/reset-password`, data);
   }
 
@@ -152,8 +157,12 @@ export class AuthService {
     return this.http.post(`${this.apiUrl}/deactivate`, {username} );
   }
 
-  reactivateProfile(email: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/reactivate`, { email }, { responseType: 'text' });
+  reactivateProfile(email: string, password: string): Observable<any> {
+    return this.http.post(
+      `${this.apiUrl}/reactivate`,
+      { email, password },
+      { responseType: 'text' }
+    );
   }
 
   refreshToken(token: string) {
@@ -177,7 +186,7 @@ export class AuthService {
 getCurrentUserId(): number | null {
   const token = this.getTokenUser();
   if (!token) return null;
-  
+
   try {
     const payload = JSON.parse(atob(token.split('.')[1]));
     return Number(payload['sub'] || payload['id'] || 0);

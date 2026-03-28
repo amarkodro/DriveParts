@@ -125,7 +125,7 @@ namespace RS1_2024_25.API.Endpoints
                 return Unauthorized("Invalid username or password");
 
             if (user.isDeleted == true)
-                return Unauthorized("Your account is deactivated. Click 'Activate my profile' to restore access.");
+                return Ok(new { requiresReactivation = true, email = user.Email });
 
             var token = CreateJwt(user);
             var role = user.IsAdmin ? "Admin" : "User";
@@ -374,9 +374,6 @@ namespace RS1_2024_25.API.Endpoints
             return username;
         }
 
-
-
-
         public class UsernameRequest
         {
             public string Username { get; set; }
@@ -411,18 +408,18 @@ namespace RS1_2024_25.API.Endpoints
             return Ok(new { message = "Your account has been deactivated successfully." });
         }
 
-
         public class ReactivateRequest
         {
             public string Email { get; set; }
+            public string Password { get; set; }
         }
 
 
         [HttpPost("reactivate")]
         public async Task<IActionResult> ReactivateByEmail([FromBody] ReactivateRequest request)
         {
-            if (string.IsNullOrWhiteSpace(request.Email))
-                return BadRequest("Email is required.");
+            if (string.IsNullOrWhiteSpace(request.Email) || string.IsNullOrWhiteSpace(request.Password))
+                return BadRequest("Email and password are required.");
 
             var user = await _db.UserAccounts
                 .IgnoreQueryFilters()
@@ -430,6 +427,10 @@ namespace RS1_2024_25.API.Endpoints
 
             if (user == null)
                 return NotFound("User not found.");
+
+            var result = _passwordHasher.VerifyHashedPassword(user, user.Password, request.Password);
+            if (result == PasswordVerificationResult.Failed)
+                return Unauthorized("Invalid credentials.");
 
             if (user.isDeleted == false)
                 return BadRequest("Account is already active.");
@@ -439,12 +440,6 @@ namespace RS1_2024_25.API.Endpoints
 
             return Ok(new { message = "Account reactivated." });
         }
-
-
-
-
-
-
 
         public class TwoFactorRequest
         {
@@ -522,27 +517,64 @@ namespace RS1_2024_25.API.Endpoints
 
         }
 
-        public class ResetPasswordRequest
+        public class RequestPasswordResetRequest
         {
             public string Email { get; set; }
+        }
+
+        public class ResetPasswordRequest
+        {
+            public string Token { get; set; }
             public string NewPassword { get; set; }
         }
 
-        [HttpPost("reset-password")]
-        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest request)
+        [HttpPost("request-reset")]
+        public async Task<IActionResult> RequestPasswordReset(RequestPasswordResetRequest request)
         {
             if (string.IsNullOrWhiteSpace(request.Email))
                 return BadRequest("Email is required.");
-
-            if (string.IsNullOrWhiteSpace(request.NewPassword))
-                return BadRequest("New password is required.");
 
             var user = await _db.UserAccounts.FirstOrDefaultAsync(u => u.Email == request.Email);
 
             if (user == null)
                 return NotFound("User not found.");
 
-            user.Password = _passwordHasher.HashPassword(user, request.NewPassword);
+            var oldTokens = _db.PasswordResetTokens.Where(t => t.UserAccountId == user.Id);
+
+            foreach (var t in oldTokens) t.IsUsed = true;
+
+            var rawToken = Guid.NewGuid().ToString("N");
+            var resetToken = new PasswordResetToken
+            {
+                UserAccountId = user.Id,
+                Token = rawToken,
+                ExpiresAt = DateTime.UtcNow.AddMinutes(30),
+                IsUsed = false
+            };
+
+            _db.PasswordResetTokens.Add(resetToken);
+            await _db.SaveChangesAsync();
+
+            return Ok(new { resetToken = rawToken });
+        }
+
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest request)
+        {
+            if (string.IsNullOrWhiteSpace(request.Token) || string.IsNullOrWhiteSpace(request.NewPassword))
+                return BadRequest("Token and new password are required.");
+
+            var tokenEntry = await _db.PasswordResetTokens.Include(t => t.UserAccount).FirstOrDefaultAsync(t => t.Token == request.Token);
+
+            if (tokenEntry == null || tokenEntry.IsUsed)
+                return BadRequest("Invalid or already used token.");
+
+            if (tokenEntry.ExpiresAt < DateTime.UtcNow)
+                return BadRequest("Token has expired.");
+
+            tokenEntry.UserAccount.Password = _passwordHasher.HashPassword(tokenEntry.UserAccount, request.NewPassword);
+
+            tokenEntry.IsUsed = true;
 
             await _db.SaveChangesAsync();
 

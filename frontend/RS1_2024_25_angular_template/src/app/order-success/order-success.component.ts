@@ -30,6 +30,7 @@ export class OrderSuccessComponent implements OnInit {
 
     this.authService.getUserProfile().subscribe({
       next: user => {
+        console.log('User profile:' ,user)
         this.authService.setUserInfo(user);
       },
       error: err => {

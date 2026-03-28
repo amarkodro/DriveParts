@@ -13,7 +13,7 @@ namespace RS1_2024_25.API.Endpoints
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     public class AdminController(ApplicationDbContext _db, IPasswordHasher<UserAccount> _passwordHasher) : ControllerBase
     {
         public class AdminRequest

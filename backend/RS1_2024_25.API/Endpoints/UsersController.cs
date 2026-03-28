@@ -6,12 +6,14 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections;
 using System.Net;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace RS1_2024_25.API.Endpoints
 {
 
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class UsersController(ApplicationDbContext _db, IPasswordHasher<UserAccount> _passwordHasher) : ControllerBase
     {
         public class UserRequest
@@ -50,7 +52,7 @@ namespace RS1_2024_25.API.Endpoints
 
         }
 
-
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public ActionResult<UserResponse[]> GetUsers(
             [FromQuery] string? search,
@@ -110,6 +112,7 @@ namespace RS1_2024_25.API.Endpoints
             });
         }
         // GET: api/User/5
+        
         [HttpGet("{id}")]
         public ActionResult<UserResponse> GetUser(int id)
         {
@@ -139,6 +142,7 @@ namespace RS1_2024_25.API.Endpoints
         }
 
         //POST: api/User
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public ActionResult<UserResponse> PostUser(UserRequest request)
         {
@@ -181,6 +185,7 @@ namespace RS1_2024_25.API.Endpoints
         }
 
         //PUT: api/User/5
+        [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
         public ActionResult<string> PutUser(int id, [FromBody] UserRequest request)
         {
@@ -251,7 +256,41 @@ namespace RS1_2024_25.API.Endpoints
         }
 
 
+        public class UpdateProfileRequest
+        {
+            public string? Username { get; set; }
+            public string? Name { get; set; }
+            public string? Surname { get; set; }
+            public string? Email { get; set; }
+            public string? PhoneNumber { get; set; }
+            public string? Address { get; set; }
+            public int? CityId { get; set; }
+            public int? GenderId { get; set; }
+            public bool is2FActive { get; set; }
+        }
 
+        [HttpPut("update-info/{id}")]
+        public async Task<IActionResult> UpdateInfo(int id, [FromBody] UpdateProfileRequest request)
+        {
+            var user = await _db.Users.FindAsync(id);
+            if (user == null)
+                return NotFound("User not found.");
+
+            user.Username = request.Username;
+            user.Name = request.Name;
+            user.Surname = request.Surname;
+            user.Email = request.Email;
+            user.PhoneNumber = request.PhoneNumber;
+            user.Address = request.Address;
+            user.CityId = request.CityId;
+            user.GenderId = request.GenderId;
+            user.is2FActive = request.is2FActive;
+
+            await _db.SaveChangesAsync();
+            return Ok(new { message = "Profile updated successfully" });
+        }
+
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public ActionResult<string> DeleteUser(int id)
         {

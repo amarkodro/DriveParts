@@ -196,6 +196,9 @@ export class EditProfileComponent implements OnInit {
 
 
   onSubmit(): void {
+
+    this.editProfileForm.markAllAsTouched();
+
     if (this.editProfileForm.invalid) return;
 
     this.isSubmitting = true;

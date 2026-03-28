@@ -23,5 +23,8 @@ export class UserService {
     return this.http.get(`${this.apiUrl}/${id}`);
   }
 
+  updateInfo(id: number, data: any): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/update-info/${id}`, data);
+  }
 
 }

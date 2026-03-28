@@ -214,32 +214,30 @@
 <div class="overlay" *ngIf="showReactivateOverlay">
   <div class="overlay-content">
     <h3>Reactivate Account</h3>
-    <p>Enter your email to receive a verification code.</p>
+    <p>Your account is deactivated. Would you like to reactivate it?</p>
 
     <div class="input-group">
       <input
-        autofocus
         type="email"
         [(ngModel)]="reactivateEmail"
-        placeholder="Enter your email"
-        class="form-input"
+        placeholder=" "
+        readonly
+        style="background: #f5f5f5; cursor: not-allowed;"
       />
+      <label>Your email</label>
     </div>
 
-    <div class="error-message" *ngIf="reactivationError">
+    <div class="error-message" *ngIf="reactivationError"
+         style="position: static; margin: 10px 0;">
       {{ reactivationError }}
     </div>
 
-    <div class="overlay-buttons">
-      <button class="cancel-btn" (click)="showReactivateOverlay = false">Cancel</button>
-      <button class="verify-btn" (click)="sendReactivationCode()">
-        <span *ngIf="reactivationLoading" class="spinner"></span>
-        {{ reactivationLoading ? 'Sending...' : 'Send Code' }}
-      </button>
-    </div>
+    <button class="verify-btn" [disabled]="reactivationLoading" (click)="sendReactivationCode()">
+      <span *ngIf="reactivationLoading" class="spinner"></span>
+      {{ reactivationLoading ? 'Sending...' : 'Send Code' }}
+    </button>
   </div>
 </div>
-
 
 <div class="overlay" *ngIf="showReactivateCodeOverlay">
   <div class="overlay-content">
@@ -251,13 +249,13 @@
         type="text"
         maxlength="6"
         [(ngModel)]="enteredReactivationCode"
-        placeholder="Enter code"
-        class="form-input"
+        placeholder=" "
+        id="reactivationCode"
+        [class.invalid]="reactivationError"
         (input)="onCodeInputChange()"
       />
-      <div class="error-message" *ngIf="reactivationError">
-        {{ reactivationError }}
-      </div>
+      <label for="reactivationCode">Enter code</label>
+      <div class="error-message" *ngIf="reactivationError">{{ reactivationError }}</div>
     </div>
 
     <div class="overlay-buttons">
@@ -269,4 +267,7 @@
     </div>
   </div>
 </div>
+
+
+
 

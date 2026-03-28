@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Identity.Client;
 using RS1_2024_25.API.Data;
 using RS1_2024_25.API.Data.Models;
-
-using Microsoft.Identity.Client;
 using static RS1_2024_25.API.Endpoints.CarsController;
 
 namespace RS1_2024_25.API.Endpoints
@@ -57,7 +57,8 @@ namespace RS1_2024_25.API.Endpoints
             return supplier;
         }
 
-        
+
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public ActionResult<SupplierResponse> PostSupplier(SupplierRequest request)
         {
@@ -84,7 +85,7 @@ namespace RS1_2024_25.API.Endpoints
             return Ok(response);
         }
 
-     
+        [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
         public ActionResult<string> PatchSupplier(int id, SupplierRequest request)
         {
@@ -99,9 +100,8 @@ namespace RS1_2024_25.API.Endpoints
             return Ok("Supplier updated successfully");
         }
 
-
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
-
         public ActionResult<string> DeleteSupplier(int id)
         {
             var supplier = _db.Suppliers.Find(id) ?? throw new KeyNotFoundException("Supplier not found");
