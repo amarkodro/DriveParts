@@ -258,66 +258,7 @@ namespace RS1_2024_25.API.Endpoints
             }
         }
 
-        [HttpPost]
-        [Authorize]
-        public ActionResult<OrderResponse> PostOrders(OrderRequest request)
-        {
-            using var transaction = _db.Database.BeginTransaction();
-            if (!_db.Users.Any(u => u.Id == request.UserId))
-                return BadRequest("Invalid UserId");
 
-            if (!_db.Suppliers.Any(s => s.SupplierId == request.SupplierId))
-                return BadRequest("Invalid SupplierId");
-
-            if (!_db.Payments.Any(p => p.PaymentId == request.PaymentId))
-                return BadRequest("Invalid PaymentId");
-            try
-            {
-                var order = new Order
-                {
-                    Date = DateTime.UtcNow,
-                    StatusId = request.StatusId,
-                    UserId = request.UserId,
-                    SupplierId = request.SupplierId,
-                    PaymentId = request.PaymentId,
-                    PromoCodeId = request.PromoCodeId
-                };
-
-                _db.Orders.Add(order);
-                _db.SaveChanges();
-
-                foreach (var item in request.Items)
-                {
-                    _db.OrderItems.Add(new OrderItem
-                    {
-                        OrderId = order.OrderId,
-                        PartId = item.PartId,
-                        Quantity = item.Quantity,
-
-                    });
-                }
-
-                _db.SaveChanges();
-                transaction.Commit();
-
-                var response = new OrderResponse
-                {
-                    OrderId = order.OrderId,
-                    Date = order.Date,
-                    StatusName = _db.Statuses.Find(order.StatusId)?.Name ?? "Unknown",
-                    Username = _db.UserAccounts.Find(order.UserId)?.Username ?? "Unknown",
-                    SupplierName = _db.Suppliers.Find(order.SupplierId)?.Name ?? "Unknown",
-                    PaymentMethod = _db.Payments.Find(order.PaymentId)?.PaymentMethod ?? "Unknown",
-                };
-
-                return Ok(response);
-            }
-            catch (Exception)
-            {
-                transaction.Rollback();
-                return StatusCode(500, "An error occurred while creating the order.");
-            }
-        }
 
         [HttpPut("{id}")]
         [Authorize]

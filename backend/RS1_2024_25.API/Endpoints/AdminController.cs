@@ -84,7 +84,7 @@ namespace RS1_2024_25.API.Endpoints
                      IsAdmin = c.IsAdmin,
                      isUser = c.isUser,
                      is2FActive = c.is2FActive ?? false,
-                     AdminLevel= c.AdminLevel,
+                     AdminLevel = c.AdminLevel,
                  }).FirstOrDefault();
 
             if (admin == null) return NotFound("Admin not found");
@@ -106,7 +106,7 @@ namespace RS1_2024_25.API.Endpoints
                 IsAdmin = request.IsAdmin,
                 isUser = request.isUser,
                 is2FActive = request.is2FActive,
-               AdminLevel = request.AdminLevel,
+                AdminLevel = request.AdminLevel,
             };
 
             admin.Password = _passwordHasher.HashPassword(admin, request.Password);
@@ -125,7 +125,7 @@ namespace RS1_2024_25.API.Endpoints
                 IsAdmin = admin.IsAdmin,
                 isUser = admin.isUser,
                 is2FActive = admin.is2FActive ?? false,
-                AdminLevel= admin.AdminLevel,
+                AdminLevel = admin.AdminLevel,
             };
 
             return Ok(response);
@@ -140,8 +140,10 @@ namespace RS1_2024_25.API.Endpoints
                 return NotFound("Admin not found");
             }
 
-            // Hashiranje nove lozinke
-            admin.Password =_passwordHasher.HashPassword(admin, newPassword);
+            if (string.IsNullOrWhiteSpace(newPassword))
+                return BadRequest("New password is required.");
+
+            admin.Password = _passwordHasher.HashPassword(admin, newPassword);
 
             _db.SaveChanges();
 
@@ -158,7 +160,7 @@ namespace RS1_2024_25.API.Endpoints
             admin.PhoneNumber = request.PhoneNumber;
             admin.Address = request.Address;
             admin.Username = request.Username;
-            
+
             admin.is2FActive = request.is2FActive;
 
             _db.SaveChanges();
