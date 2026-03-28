@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -216,7 +216,7 @@ namespace RS1_2024_25.API.Endpoints
                 {
                     OrderId = order.OrderId,
                     Date = order.Date,
-                    Username = _db.Users.Find(order.UserId)?.Username ?? "Unknown",
+                    Username = _db.UserAccounts.Find(order.UserId)?.Username ?? "Unknown",
                     SupplierName = _db.Suppliers.Find(order.SupplierId)?.Name ?? "Unknown",
                     StatusName = _db.Statuses.Find(order.StatusId)?.Name ?? "Unknown",
                     PaymentMethod = _db.Payments.Find(order.PaymentId)?.PaymentMethod ?? "Unknown",
@@ -278,7 +278,7 @@ namespace RS1_2024_25.API.Endpoints
                     OrderId = order.OrderId,
                     Date = order.Date,
                     StatusName = _db.Statuses.Find(order.StatusId)?.Name ?? "Unknown",
-                    Username = _db.Users.Find(order.UserId)?.Username ?? "Unknown",
+                    Username = _db.UserAccounts.Find(order.UserId)?.Username ?? "Unknown",
                     SupplierName = _db.Suppliers.Find(order.SupplierId)?.Name ?? "Unknown",
                     PaymentMethod = _db.Payments.Find(order.PaymentId)?.PaymentMethod ?? "Unknown",
                 };

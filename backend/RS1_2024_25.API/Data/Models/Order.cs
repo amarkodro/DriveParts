@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RS1_2024_25.API.Data.Models
@@ -14,7 +14,7 @@ namespace RS1_2024_25.API.Data.Models
 
         [ForeignKey(nameof(User))]
         public int UserId { get; set; }
-        public User User { get; set; }
+        public UserAccount User { get; set; }
 
         [ForeignKey(nameof(Supplier))]
         public int SupplierId { get; set; }
