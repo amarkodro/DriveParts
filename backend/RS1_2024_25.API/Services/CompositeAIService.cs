@@ -7,7 +7,9 @@ public class CompositeAIService
 {
     private readonly OpenAIService _openAIService;
     private readonly LocalAIService _localAIService;
-    private bool _useFallback = false;
+    private static bool _useFallback = false;
+    private DateTime _fallbackUntil = DateTime.MinValue;
+    private static readonly TimeSpan FallbackDuration = TimeSpan.FromMinutes(5);
 
     public CompositeAIService(OpenAIService openAIService, LocalAIService localAIService)
     {
@@ -17,33 +19,30 @@ public class CompositeAIService
 
     public async Task<string> AskQuestionAsync(string question)
     {
-        // If we're in fallback mode, use local AI immediately
-        if (_useFallback)
-        {
+
+        if (_useFallback && DateTime.UtcNow < _fallbackUntil)
             return await _localAIService.AskQuestionAsync(question);
-        }
+
+
+        _useFallback = false;
 
         try
         {
-            // First try OpenAI
             var response = await _openAIService.AskQuestionAsync(question);
-
-            // Reset fallback if successful after failure
-            _useFallback = false;
             return response;
         }
         catch
         {
-            // Switch to fallback mode
+
             _useFallback = true;
+            _fallbackUntil = DateTime.UtcNow.Add(FallbackDuration);
             return await _localAIService.AskQuestionAsync(question);
         }
     }
 
-    // Method to check current AI status
     public string GetCurrentAIStatus()
     {
-        return _useFallback
+        return _useFallback && DateTime.UtcNow < _fallbackUntil
             ? "Using local AI (Ollama)"
             : "Using OpenAI";
     }

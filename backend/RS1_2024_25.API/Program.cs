@@ -65,7 +65,6 @@ builder.Services.AddScoped<IPasswordHasher<UserAccount>, PasswordHasher<UserAcco
 builder.Services.AddHttpClient<OpenAIService>();
 builder.Services.AddHttpClient();
 builder.Services.AddScoped<LocalAIService>();
-builder.Services.AddScoped<OpenAIService>();
 builder.Services.AddScoped<ChatController>();
 builder.Services.AddScoped<CompositeAIService>();
 builder.Services.AddSignalR();
