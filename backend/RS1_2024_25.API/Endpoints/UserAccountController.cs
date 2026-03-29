@@ -264,6 +264,24 @@ namespace RS1_2024_25.API.Endpoints
         {
             var userAccount = _db.UserAccounts.Find(id) ?? throw new KeyNotFoundException("User account not found");
 
+            var cartItems = _db.CartItems.Where(c => c.UserId == id);
+            _db.CartItems.RemoveRange(cartItems);
+
+            var orderItems = _db.OrderItems.Where(oi => _db.Orders.Any(o => o.OrderId == oi.OrderId && o.UserId == id));
+            _db.OrderItems.RemoveRange(orderItems);
+
+            var orders = _db.Orders.Where(o => o.UserId == id);
+            _db.Orders.RemoveRange(orders);
+
+            var reviews = _db.Reviews.Where(r => r.UserId == id);
+            _db.Reviews.RemoveRange(reviews);
+
+            var refreshTokens = _db.RefreshTokens.Where(r => r.UserAccountId == id);
+            _db.RefreshTokens.RemoveRange(refreshTokens);
+
+            var promoUsages = _db.PromoCodeUsages.Where(p => p.UserId == id);
+            _db.PromoCodeUsages.RemoveRange(promoUsages);
+
             _db.UserAccounts.Remove(userAccount);
             _db.SaveChanges();
 
