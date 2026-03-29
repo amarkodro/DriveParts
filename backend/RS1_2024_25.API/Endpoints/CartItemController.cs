@@ -11,15 +11,24 @@ namespace RS1_2024_25.API.Endpoints
     [Authorize]
     public class CartItemController(ApplicationDbContext _db) : ControllerBase
     {
+        private int? GetCurrentUserId()
+        {
+            var claims = User.FindFirst("id")?.Value;
+            if (string.IsNullOrEmpty(claims) || !int.TryParse(claims, out var userId))
+                return null;
+            return userId;
+        }
+
         [HttpPost("add")]
 
         public IActionResult AddToCart([FromBody] CartItemRequests requests)
         {
-            var userId = int.Parse(User.FindFirst("id")?.Value ?? "0");
+            var userId = GetCurrentUserId();
+            if (userId == null) return Unauthorized("Invalid token");
 
             var cartItem = new CartItem
             {
-                UserId = userId,
+                UserId = userId.Value,
                 PartId = requests.PartId,
                 Quantity = requests.Quantity,
             };
@@ -36,7 +45,8 @@ namespace RS1_2024_25.API.Endpoints
 
         public IActionResult GetCart()
         {
-            var userId = int.Parse(User.FindFirst("id")?.Value ?? "0");
+            var userId = GetCurrentUserId();
+            if (userId == null) return Unauthorized("Invalid token.");
 
             var items = _db.CartItems
                 .Include(c => c.Part)
@@ -63,7 +73,8 @@ namespace RS1_2024_25.API.Endpoints
 
         public IActionResult RemoveFromCart(int partId)
         {
-            var userId = int.Parse(User.FindFirst("id")?.Value ?? "0");
+            var userId = GetCurrentUserId();
+            if (userId == null) return Unauthorized("Invalid token.");
 
             var item = _db.CartItems.FirstOrDefault(c => c.UserId == userId && c.PartId == partId);
             if (item == null) return NotFound(new { message = "Item not fount in cart." });
@@ -78,7 +89,8 @@ namespace RS1_2024_25.API.Endpoints
         [HttpDelete("clear")]
         public IActionResult ClearCart()
         {
-            var userId = int.Parse(User.FindFirst("id")?.Value ?? "0");
+            var userId = GetCurrentUserId();
+            if (userId == null) return Unauthorized("Invalid token.");
 
             var items = _db.CartItems.Where(c => c.UserId == userId).ToList();
 
@@ -95,7 +107,8 @@ namespace RS1_2024_25.API.Endpoints
         public IActionResult UpdateQuantity([FromBody] CartItemRequests requests)
         {
 
-            var userId = int.Parse(User.FindFirst("id").Value ?? "0");
+            var userId = GetCurrentUserId();
+            if (userId == null) return Unauthorized("Invalid token.");
 
             var item = _db.CartItems.FirstOrDefault(c => c.UserId == userId && c.PartId == requests.PartId);
             if (item == null) return NotFound(new { message = "Item not found in cart." });
@@ -109,7 +122,8 @@ namespace RS1_2024_25.API.Endpoints
         [HttpPut("{id}/move-to-cart")]
         public async Task<IActionResult> MoveToCart(int id)
         {
-            var userId = int.Parse(User.FindFirst("id")?.Value ?? "0");
+            var userId = GetCurrentUserId();
+            if (userId == null) return Unauthorized("Invalid token.");
 
             var item = await _db.CartItems.FindAsync(id);
             if (item == null)
@@ -129,7 +143,8 @@ namespace RS1_2024_25.API.Endpoints
         [HttpPut("{id}/save-to-later")]
         public async Task<IActionResult> SaveToLater(int id)
         {
-            var userId = int.Parse(User.FindFirst("id")?.Value ?? "0");
+            var userId = GetCurrentUserId();
+            if (userId == null) return Unauthorized("Invalid token.");
 
             var item = await _db.CartItems.FindAsync(id);
             if (item == null)

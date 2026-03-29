@@ -43,8 +43,6 @@ namespace RS1_2024_25.API.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            base.OnModelCreating(modelBuilder);
-
             modelBuilder.Entity<OrderItem>()
                 .HasOne(oi => oi.Part)
                 .WithMany() // Add if Part has no collection of OrderItems
