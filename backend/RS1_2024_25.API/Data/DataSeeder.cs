@@ -161,7 +161,7 @@ namespace RS1_2024_25.API.Data
                 new ModelPart { ModelPartId = 19, ModelId = 19, PartId = 28 },//s63->headlight
                 new ModelPart { ModelPartId = 20, ModelId = 20, PartId = 29 },//A6-Taillight
                 new ModelPart { ModelPartId = 21, ModelId = 21, PartId = 30 },//7 series->Battery
-                new ModelPart { ModelPartId = 22, ModelId = 3, PartId = 31},//Tiguan->Windshield wipers
+                new ModelPart { ModelPartId = 22, ModelId = 3, PartId = 31 },//Tiguan->Windshield wipers
                 new ModelPart { ModelPartId = 23, ModelId = 4, PartId = 32 },//Passat->Oil pump
                 new ModelPart { ModelPartId = 24, ModelId = 10, PartId = 34 },//GLE->Dashboard
                 new ModelPart { ModelPartId = 25, ModelId = 8, PartId = 35 }//3 series->Steering wheel
@@ -261,7 +261,7 @@ namespace RS1_2024_25.API.Data
                 new Part { PartId = 26, Name = "Alternator", Description = "German made battery charging part F10", CategoryId = 7, ManufacturerId = 1, Price = 350, IsFeatured = false, IsNewArrival = false, IsOnSale = false, PartImage = "/images/Alternator_BMW.jpg" },
                 new Part { PartId = 27, Name = "Radiator", Description = "High-quality cooling part for 308", CategoryId = 8, ManufacturerId = 2, Price = 200, IsFeatured = false, IsNewArrival = false, IsOnSale = false, PartImage = "/images/Radiator_308.jpg" },
                 new Part { PartId = 28, Name = "Headlights", Description = "Clear and blinding headlights for S63", CategoryId = 12, ManufacturerId = 1, Price = 320, IsFeatured = false, IsNewArrival = false, IsOnSale = false, PartImage = "/images/Headlight_S63.jpg" },
-                new Part { PartId = 29, Name = "Taillights", Description = "LED tailights,highly visible for A6", CategoryId = 12, ManufacturerId = 2, Price = 100, IsFeatured = false, IsNewArrival = false, IsOnSale = false, PartImage = "/images/Taillights-A6.jpg",TypeId=1 },
+                new Part { PartId = 29, Name = "Taillights", Description = "LED tailights,highly visible for A6", CategoryId = 12, ManufacturerId = 2, Price = 100, IsFeatured = false, IsNewArrival = false, IsOnSale = false, PartImage = "/images/Taillights-A6.jpg", TypeId = 1 },
                 new Part { PartId = 30, Name = "Car Battery", Description = "Long lasting battery with start-stop system for BMW 7-series", CategoryId = 7, ManufacturerId = 1, Price = 280, IsFeatured = false, IsNewArrival = false, IsOnSale = false, PartImage = "/images/Battery_BMW.jpg" },
                 new Part { PartId = 31, Name = "Windshield Wipers", Description = "Smooth and high quality wipers for Tiguan", CategoryId = 11, ManufacturerId = 4, Price = 54, IsFeatured = false, IsNewArrival = false, IsOnSale = false, PartImage = "/images/Wipers_VW.jpg" },
                 new Part { PartId = 32, Name = "Oil Pump", Description = "Durable pump for Passat", CategoryId = 5, ManufacturerId = 2, Price = 140, IsFeatured = false, IsNewArrival = false, IsOnSale = false, PartImage = "/images/OilPump_Passat.jpg" },
@@ -294,7 +294,13 @@ namespace RS1_2024_25.API.Data
                 new Status { StatusId = 9, Name = "Draft" },
                 new Status { StatusId = 10, Name = "Submitted" }
 
-            ); 
+            );
+
+            modelBuilder.Entity<PromoCode>().HasData(
+                new PromoCode { Id = 1, Code = "DRIVEPARTS10", Discount = 10 },
+                new PromoCode { Id = 2, Code = "SAVE20", Discount = 20 },
+                new PromoCode { Id = 3, Code = "WELCOME5", Discount = 5 }
+            );
         }
     }
 }

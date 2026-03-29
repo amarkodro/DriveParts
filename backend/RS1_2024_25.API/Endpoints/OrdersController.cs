@@ -238,8 +238,20 @@ namespace RS1_2024_25.API.Endpoints
                 if (cartItems.Any())
                     _db.CartItems.RemoveRange(cartItems);
 
+                if (request.PromoCodeId.HasValue && request.PromoCodeId.Value > 0)
+                {
+                    _db.PromoCodeUsages.Add(new PromoCodeUsage
+                    {
+                        PromoCodeId = request.PromoCodeId.Value,
+                        UserId = request.UserId,
+                        UsedAt = DateTime.UtcNow
+                    });
+                }
+
                 _db.SaveChanges();
                 transaction.Commit();
+
+                
 
                 return Ok(new OrderResponse
                 {

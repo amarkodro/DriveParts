@@ -37,6 +37,7 @@ namespace RS1_2024_25.API.Data
         public DbSet<Message> Messages { get; set; }
         public DbSet<MyPart> MyParts { get; set; }
         public DbSet<PasswordResetToken> PasswordResetTokens { get; set; }
+        public DbSet<PromoCodeUsage> PromoCodeUsages { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
