@@ -395,7 +395,7 @@ namespace RS1_2024_25.API.Endpoints
 
                     AddTotalRow(totals, "Subtotal:", subtotal);
                     if (discount > 0)
-                        AddTotalRow(totals, $"Discount ({order.PromoCode?.Code ?? "Promo"}):", -discount);
+                        AddTotalRow(totals, $"Discount ({order.PromoCode?.Code ?? "Promo"}): ", -discount);
                     AddTotalRow(totals, "Tax (17%):", tax);
                     AddTotalRow(totals, "Total:", total, true);
 

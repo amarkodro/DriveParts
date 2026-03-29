@@ -288,6 +288,28 @@ namespace RS1_2024_25.API.Endpoints
                 if (!payload.TryGetProperty("email", out var emailProp))
                     return BadRequest("Email not found in token");
 
+                
+                var expectedClientId = _configuration["Google:ClientId"];
+                if (payload.TryGetProperty("aud", out var aud) && aud.GetString() != expectedClientId)
+                    return BadRequest("Invalid token audience.");
+
+               
+                if (payload.TryGetProperty("iss", out var iss))
+                {
+                    var issuer = iss.GetString();
+                    if (issuer != "https://accounts.google.com" && issuer != "accounts.google.com")
+                        return BadRequest("Invalid token issuer.");
+                }
+                else
+                {
+                    return BadRequest("Token issuer not found.");
+                }
+
+               
+                if (!payload.TryGetProperty("email_verified", out var emailVerified) ||
+                    emailVerified.GetString() != "true")
+                    return BadRequest("Email is not verified.");
+
                 var email = emailProp.GetString();
                 var name = payload.TryGetProperty("given_name", out var n) ? n.GetString() : "";
                 var surname = payload.TryGetProperty("family_name", out var s) ? s.GetString() : "";

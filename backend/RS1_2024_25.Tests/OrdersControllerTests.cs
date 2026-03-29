@@ -22,17 +22,28 @@ namespace RS1_2024_25.Tests
             db.Statuses.Add(new Status { StatusId = 1, Name = "Pending" });
             db.Users.Add(new User
             {
-                Id = 1, Name = "Test", Surname = "User", Email = "test@test.com",
-                Username = "testuser", Password = "hashed", PhoneNumber = "123",
-                Address = "Test St", IsAdmin = false, isUser = true
+                Id = 1,
+                Name = "Test",
+                Surname = "User",
+                Email = "test@test.com",
+                Username = "testuser",
+                Password = "hashed",
+                PhoneNumber = "123",
+                Address = "Test St",
+                IsAdmin = false,
+                isUser = true
             });
             db.Suppliers.Add(new Supplier { SupplierId = 1, Name = "Test Supplier", Address = "Test Address", Contact = "123456789" });
             db.Payments.Add(new Payment { PaymentId = 1, PaymentMethod = "Card" });
             db.PromoCodes.Add(new PromoCode { Id = 1, Code = "SAVE10", Discount = 10 });
             db.Parts.Add(new Part
             {
-                PartId = 1, Name = "Brake Pad", Price = 50,
-                Description = "Test brake pad", CategoryId = 0, ManufacturerId = 0
+                PartId = 1,
+                Name = "Brake Pad",
+                Price = 50,
+                Description = "Test brake pad",
+                CategoryId = 0,
+                ManufacturerId = 0
             });
             db.SaveChanges();
 
@@ -61,7 +72,6 @@ namespace RS1_2024_25.Tests
                     {
                         PartId = 1,
                         Quantity = 2,
-                        Price = 50
                     }
                 }
             };
@@ -83,12 +93,14 @@ namespace RS1_2024_25.Tests
 
             foreach (var item in request.Items)
             {
+                var part = db.Parts.Find(item.PartId);
                 db.OrderItems.Add(new OrderItem
                 {
                     OrderId = order.OrderId,
                     PartId = item.PartId,
                     Quantity = item.Quantity,
-                    Price = (long)item.Price,
+                    Price = (decimal)part.Price
+
                 });
             }
             db.SaveChanges();
@@ -101,7 +113,7 @@ namespace RS1_2024_25.Tests
             Assert.Equal(100m, savedOrder.TotalAmount);
             Assert.Single(savedOrder.Items);
             Assert.Equal(2, savedOrder.Items[0].Quantity);
-            Assert.Equal(50, savedOrder.Items[0].Price);
+            Assert.Equal(50m, savedOrder.Items[0].Price);
         }
 
         [Fact]
