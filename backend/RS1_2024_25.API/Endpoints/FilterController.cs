@@ -24,7 +24,7 @@ namespace RS1_2024_25.API.Endpoints
             public int Id { get; set; }
             public int PartId { get; set; }
             public string Name { get; set; }
-            public double Price { get; set; }
+            public decimal Price { get; set; }
             public string Description { get; set; }
             public string CategoryName { get; set; }
             public string ManufacturerName { get; set; }
@@ -93,9 +93,9 @@ namespace RS1_2024_25.API.Endpoints
         [HttpGet("models")]
         public ActionResult<FilterDataResponse> GetModelsName([FromQuery] int carId)
         {
-            var models = _db.Models.Where(x=>x.CarId==carId).Select(x => new FilterDataResponse
+            var models = _db.Models.Where(x => x.CarId == carId).Select(x => new FilterDataResponse
             {
-                Id=x.ModelId,
+                Id = x.ModelId,
                 Name = x.Name,
             });
 
@@ -126,8 +126,8 @@ namespace RS1_2024_25.API.Endpoints
                             (categoryId == null || x.Part.CategoryId == categoryId) &&
                             (partId == null || x.PartId == partId) &&
                             (modelId == null || x.ModelId == modelId) &&
-                            (typeId == null || x.Part.TypeId== typeId) &&
-                            (carId==null || x.Model.CarId==carId))
+                            (typeId == null || x.Part.TypeId == typeId) &&
+                            (carId == null || x.Model.CarId == carId))
                         .Select(x => new FilterResponse
                         {
                             Id = x.PartId,
@@ -143,12 +143,6 @@ namespace RS1_2024_25.API.Endpoints
                             PartImage = x.Part.PartImage,
 
                         }).ToArray();
-
-            if (!parts.Any())
-            {
-                return NotFound(new { Message = "No parts found for the given filters." });
-            }
-
 
             return Ok(parts);
         }

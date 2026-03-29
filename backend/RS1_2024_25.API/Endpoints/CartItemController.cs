@@ -170,7 +170,7 @@ namespace RS1_2024_25.API.Endpoints
         public int PartId { get; set; }
         public string PartName { get; set; }
         public string Image { get; set; }
-        public double Price { get; set; }
+        public decimal Price { get; set; }
         public int Quantity { get; set; }
         public bool IsSavedForLater { get; set; }
     }

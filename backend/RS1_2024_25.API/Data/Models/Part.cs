@@ -7,7 +7,7 @@ namespace RS1_2024_25.API.Data.Models
         public int PartId { get; set; }
         public string Name { get; set; }
 
-        public double Price { get; set; }
+        public decimal Price { get; set; }
         public string Description { get; set; }
 
         [ForeignKey(nameof(Category))]
@@ -19,7 +19,7 @@ namespace RS1_2024_25.API.Data.Models
         public int ManufacturerId { get; set; }
         public Manufacturer Manufacturer { get; set; }
 
-       public string? PartImage { get; set; }
+        public string? PartImage { get; set; }
 
         public bool IsFeatured { get; set; } = false;
         public bool IsOnSale { get; set; } = false;

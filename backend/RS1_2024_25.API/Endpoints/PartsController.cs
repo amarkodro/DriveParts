@@ -16,7 +16,7 @@ namespace RS1_2024_25.API.Endpoints
         public class PartRequest
         {
             public string Name { get; set; }
-            public double Price { get; set; }
+            public decimal Price { get; set; }
             public string Description { get; set; }
             public int CategoryId { get; set; }
             public int ManufacturerId { get; set; }
@@ -32,7 +32,7 @@ namespace RS1_2024_25.API.Endpoints
         {
             public int PartId { get; set; }
             public string Name { get; set; }
-            public double Price { get; set; }
+            public decimal Price { get; set; }
             public string Description { get; set; }
             public int CategoryId { get; set; }
             public int ManufacturerId { get; set; }
@@ -52,8 +52,8 @@ namespace RS1_2024_25.API.Endpoints
             [FromQuery] string? name = null,
             [FromQuery] int? categoryId = null,
             [FromQuery] int? manufacturerId = null,
-            [FromQuery] double? minPrice = null,
-            [FromQuery] double? maxPrice = null)
+            [FromQuery] decimal? minPrice = null,
+            [FromQuery] decimal? maxPrice = null)
         {
             IQueryable<Part> query = _db.Parts
                 .Include(p => p.Category)
@@ -231,7 +231,7 @@ namespace RS1_2024_25.API.Endpoints
         public class PartUpdateRequest
         {
             public string Name { get; set; }
-            public double Price { get; set; }
+            public decimal Price { get; set; }
             public string Description { get; set; }
             public int CategoryId { get; set; }
             public int ManufacturerId { get; set; }
