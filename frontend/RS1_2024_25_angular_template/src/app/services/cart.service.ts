@@ -15,16 +15,17 @@ export class CartService {
   cartItems$ = this.cartItemsSubject.asObservable();
   private discount: number = 0;
   private cartItemId: any;
+  private currentUserId: number = 0;
+
 
   constructor(private http: HttpClient, ) {
-    const savedItems = localStorage.getItem('cartItems');
+  }
+
+  initForUser(userId: number) {
+    this.currentUserId = userId;
+    const savedItems = localStorage.getItem(`cartItems-${userId}`);
     if (savedItems) {
       this.cartItemsSubject.next(JSON.parse(savedItems));
-    }
-
-    const savedDiscount = localStorage.getItem('discount');
-    if (savedDiscount) {
-      this.discount = parseFloat(savedDiscount);
     }
   }
 
@@ -41,7 +42,7 @@ export class CartService {
     this.http.get<any[]>(`${this.apiUrl}/getAll`).subscribe({
       next: (items) => {
         this.cartItemsSubject.next(items);
-        localStorage.setItem('cartItems', JSON.stringify(items)); // ✅ dodano
+        localStorage.setItem(`cartItems-${this.currentUserId}`, JSON.stringify(items));
       },
       error: (err) => console.error('Error loading cart items', err)
     });
@@ -56,9 +57,9 @@ export class CartService {
     this.cartUpdatedSoruce.next();
   }
 
-  clearCart(){
-    localStorage.removeItem('cartItems');
-    localStorage.removeItem('discount');
+  clearCart() {
+    localStorage.removeItem(`cartItems-${this.currentUserId}`);
+    localStorage.removeItem(`discount-${this.currentUserId}`);
     return this.http.delete(`${this.apiUrl}/clear`);
   }
 

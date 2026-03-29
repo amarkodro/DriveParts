@@ -4,6 +4,7 @@ import {AuthService} from '../services/auth-services/auth.service';
 import {Router} from '@angular/router';
 import {ToastrService} from 'ngx-toastr';
 import emailjs from '@emailjs/browser';
+import { CartService } from '../services/cart.service';
 
 
 declare const google: any;
@@ -50,7 +51,7 @@ export class LoginComponent implements OnInit  {
 
 
 
-  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router, private toastr : ToastrService) {
+  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router, private toastr : ToastrService, private cartService: CartService) {
     this.loginForm = this.fb.group({
       username: ['', [Validators.required, Validators.minLength(3)]],
       password: ['', [Validators.required, Validators.minLength(5)]],
@@ -93,6 +94,9 @@ export class LoginComponent implements OnInit  {
         this.authService.getUserProfile().subscribe({
           next: user => {
             this.authService.setUserInfo(user);
+            const userId = this.authService.getUserId();
+            this.cartService.initForUser(userId);
+            this.cartService.loadCartItems();
             this.router.navigate(['/']);
           },
           error: err => console.error("Error in getUserProfile:", err)
@@ -167,6 +171,9 @@ export class LoginComponent implements OnInit  {
           this.authService.getUserProfile().subscribe({
             next: (user) => {
               this.authService.setUserInfo(user);
+              const userId = this.authService.getUserId();
+              this.cartService.initForUser(userId);
+              this.cartService.loadCartItems();
               this.router.navigate(['/']);
             },
             error: () => {
