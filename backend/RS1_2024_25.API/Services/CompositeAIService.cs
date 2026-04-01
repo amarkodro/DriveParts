@@ -8,7 +8,7 @@ public class CompositeAIService
     private readonly OpenAIService _openAIService;
     private readonly LocalAIService _localAIService;
     private static bool _useFallback = false;
-    private DateTime _fallbackUntil = DateTime.MinValue;
+    private static DateTime _fallbackUntil = DateTime.MinValue;
     private static readonly TimeSpan FallbackDuration = TimeSpan.FromMinutes(5);
 
     public CompositeAIService(OpenAIService openAIService, LocalAIService localAIService)
