@@ -224,8 +224,13 @@
             </li>
 
             <li class="list-group-item d-flex justify-content-between">
-              <span class="fw-bold fs-6 text-dark">Total</span>
-              <strong class="fw-bold fs-6 text-dark">{{ total - discount | number:'1.2-2' }} KM</strong>
+              <span>Tax (17%)</span>
+              <strong>{{ (total - discount) * 0.17 | number:'1.2-2' }} KM</strong>
+            </li>
+
+            <li class="list-group-item d-flex justify-content-between">
+              <span class="fw-bold fs-6 text-dark">Total (incl. tax)</span>
+              <strong class="fw-bold fs-6 text-dark">{{ (total - discount) * 1.17 | number:'1.2-2' }} KM</strong>
             </li>
           </ul>
           <p *ngIf="cartItems.length === 0" class="text-muted">No items in cart.</p>

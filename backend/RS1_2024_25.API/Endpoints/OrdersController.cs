@@ -46,6 +46,7 @@ namespace RS1_2024_25.API.Endpoints
 
             [Required]
             public List<OrderItemRequest> Items { get; set; }
+            public string? StripeSessionId { get; set; }
         }
 
         public class OrderResponse
@@ -81,23 +82,28 @@ namespace RS1_2024_25.API.Endpoints
         [Authorize]
         public ActionResult<OrderResponse[]> GetOrders()
         {
-            var orders = _db.Orders
+            var query = _db.Orders
                 .AsNoTracking()
-                            .Include(x => x.Status)
-                            .Include(x => x.User)
-                            .Include(x => x.Supplier)
-                            .Include(x => x.Payment)
-                            .Select(x => new OrderResponse
-                            {
-                                OrderId = x.OrderId,
-                                Date = x.Date,
-                                StatusName = x.Status != null ? x.Status.Name : "Unknown",
-                                Username = x.User != null ? x.User.Username : "Unknown",
-                                SupplierName = x.Supplier != null ? x.Supplier.Name : "Unknown",
-                                PaymentMethod = x.Payment != null ? x.Payment.PaymentMethod : "Unknown",
-                                PromoCode = x.PromoCode != null ? x.PromoCode.Code : "Unknown",
-                                Discount = x.PromoCode != null ? x.PromoCode.Discount : 0,
-                            }).ToArray();
+                .Include(x => x.Status)
+                .Include(x => x.User)
+                .Include(x => x.Supplier)
+                .Include(x => x.Payment)
+                .AsQueryable();
+
+            if (!IsAdmin())
+                query = query.Where(o => o.UserId == GetCurrentUserId());
+
+            var orders = query.Select(x => new OrderResponse
+            {
+                OrderId = x.OrderId,
+                Date = x.Date,
+                StatusName = x.Status != null ? x.Status.Name : "Unknown",
+                Username = x.User != null ? x.User.Username : "Unknown",
+                SupplierName = x.Supplier != null ? x.Supplier.Name : "Unknown",
+                PaymentMethod = x.Payment != null ? x.Payment.PaymentMethod : "Unknown",
+                PromoCode = x.PromoCode != null ? x.PromoCode.Code : "Unknown",
+                Discount = x.PromoCode != null ? x.PromoCode.Discount : 0,
+            }).ToArray();
 
             return orders;
 
@@ -177,6 +183,13 @@ namespace RS1_2024_25.API.Endpoints
                 if (!_db.Payments.Any(p => p.PaymentId == request.PaymentId))
                     return BadRequest("Invalid PaymentId");
 
+                if (!string.IsNullOrEmpty(request.StripeSessionId))
+                {
+                    var exists = _db.Orders.Any(o => o.StripeSessionId == request.StripeSessionId);
+                    if (exists)
+                        return BadRequest("Order with this session ID already exists.");
+                }
+
                 if (request.PromoCodeId.HasValue && request.PromoCodeId.Value > 0)
                 {
                     var promo = _db.PromoCodes.Find(request.PromoCodeId.Value);
@@ -212,6 +225,8 @@ namespace RS1_2024_25.API.Endpoints
                         calculatedTotal -= (calculatedTotal * (decimal)promo.Discount / 100);
                 }
 
+                calculatedTotal = calculatedTotal * 1.17m;
+
                 var order = new Order
                 {
                     Date = DateTime.UtcNow,
@@ -220,7 +235,8 @@ namespace RS1_2024_25.API.Endpoints
                     SupplierId = request.SupplierId,
                     PaymentId = request.PaymentId,
                     PromoCodeId = request.PromoCodeId,
-                    TotalAmount = calculatedTotal
+                    TotalAmount = calculatedTotal,
+                    StripeSessionId = request.StripeSessionId
                 };
 
                 _db.Orders.Add(order);
@@ -251,7 +267,7 @@ namespace RS1_2024_25.API.Endpoints
                 _db.SaveChanges();
                 transaction.Commit();
 
-                
+
 
                 return Ok(new OrderResponse
                 {
@@ -304,6 +320,9 @@ namespace RS1_2024_25.API.Endpoints
                 var order = _db.Orders.Find(id);
                 if (order == null) return NotFound("Order not found");
 
+                if (!IsAdmin() && order.UserId != GetCurrentUserId())
+                    return Forbid();
+
                 var orderItems = _db.OrderItems.Where(oi => oi.OrderId == id);
                 _db.OrderItems.RemoveRange(orderItems);
 
@@ -319,6 +338,7 @@ namespace RS1_2024_25.API.Endpoints
                 return StatusCode(500, "An error occurred while deleting the order.");
             }
         }
+
         [HttpGet("GenerateReceipt/{orderId:int}")]
         [Authorize]
         public IActionResult GenerateReceipt(int orderId)
@@ -344,9 +364,11 @@ namespace RS1_2024_25.API.Endpoints
                     return Forbid();
 
                 decimal subtotal = order.Items.Sum(i => i.Price * i.Quantity);
-                decimal discount = subtotal - (order.TotalAmount ?? subtotal);
-                decimal tax = (order.TotalAmount ?? subtotal) * 0.17m;
-                decimal total = (order.TotalAmount ?? subtotal) + tax;
+                decimal discount = order.PromoCode != null
+                    ? subtotal * ((decimal)order.PromoCode.Discount / 100)
+                    : 0;
+                decimal tax = subtotal * 0.17m;
+                decimal total = order.TotalAmount ?? (subtotal - discount + tax);
 
                 using (MemoryStream ms = new MemoryStream())
                 {

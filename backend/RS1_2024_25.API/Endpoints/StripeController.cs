@@ -25,20 +25,23 @@ namespace RS1_2024_25.API.Endpoints
             try
             {
                 var lineItems = new List<SessionLineItemOptions>();
+                long subtotalCents = 0;
 
                 foreach (var item in order.Items)
                 {
-                    
                     var part = _db.Parts.Find(item.PartId);
                     if (part == null)
                         return BadRequest($"Part {item.PartId} not found.");
+
+                    long unitAmount = (long)(part.Price * 100);
+                    subtotalCents += unitAmount * item.Quantity;
 
                     lineItems.Add(new SessionLineItemOptions
                     {
                         PriceData = new SessionLineItemPriceDataOptions
                         {
                             Currency = "bam",
-                            UnitAmount = (long)(part.Price * 100), 
+                            UnitAmount = unitAmount,
                             ProductData = new SessionLineItemPriceDataProductDataOptions
                             {
                                 Name = part.Name
@@ -48,18 +51,33 @@ namespace RS1_2024_25.API.Endpoints
                     });
                 }
 
+
+                long taxAmount = (long)(subtotalCents * 0.17m);
+                lineItems.Add(new SessionLineItemOptions
+                {
+                    PriceData = new SessionLineItemPriceDataOptions
+                    {
+                        Currency = "bam",
+                        UnitAmount = taxAmount,
+                        ProductData = new SessionLineItemPriceDataProductDataOptions
+                        {
+                            Name = "Tax (17% PDV)"
+                        }
+                    },
+                    Quantity = 1
+                });
+
                 var options = new SessionCreateOptions
                 {
                     PaymentMethodTypes = new List<string> { "card" },
                     LineItems = lineItems,
                     Mode = "payment",
-                    SuccessUrl = _configuration["Stripe:SuccessUrl"],
+                    SuccessUrl = _configuration["Stripe:SuccessUrl"] + "?session_id={CHECKOUT_SESSION_ID}",
                     CancelUrl = _configuration["Stripe:CancelUrl"]
                 };
 
                 var service = new SessionService();
                 Session session = service.Create(options);
-
                 return Ok(new { sessionId = session.Id });
             }
             catch (Exception ex)
@@ -71,9 +89,9 @@ namespace RS1_2024_25.API.Endpoints
 
     public class StripeOrderItem
     {
-        public int PartId { get; set; }  
+        public int PartId { get; set; }
         public int Quantity { get; set; }
-       
+
     }
 
     public class StripeOrderItemRequest
@@ -82,9 +100,9 @@ namespace RS1_2024_25.API.Endpoints
     }
 }
 
-    
 
-    
-    
+
+
+
 
 

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Routing.Constraints;
 using Microsoft.EntityFrameworkCore;
 using RS1_2024_25.API.Data;
 using RS1_2024_25.API.Data.Models;
+using System.ComponentModel.DataAnnotations;
 namespace RS1_2024_25.API.Endpoints
 {
     [ApiController]
@@ -178,7 +179,11 @@ namespace RS1_2024_25.API.Endpoints
 
     public class CartItemRequests
     {
+        [Required]
         public int PartId { get; set; }
+
+        [Required]
+        [Range(1, 1000, ErrorMessage = "Quantity must be between 1 and 1000.")]
         public int Quantity { get; set; }
     }
 }

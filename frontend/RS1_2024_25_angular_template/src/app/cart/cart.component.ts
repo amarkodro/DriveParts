@@ -63,8 +63,12 @@ export class CartComponent implements OnInit {
     return this.cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
   }
 
+  get tax(): number {
+    return (this.totalPrice - this.discount) * 0.17;
+  }
+
   get finalTotal(): number {
-    return this.totalPrice - this.discount;
+    return (this.totalPrice - this.discount) * 1.17; // ✅ Sa porezom
   }
 
   applyCoupon(): void {
@@ -221,5 +225,9 @@ export class CartComponent implements OnInit {
       }
     });
   }
+
+
+
+
 
 }

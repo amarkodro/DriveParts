@@ -17,6 +17,15 @@ namespace RS1_2024_25.API.Endpoints
     [Authorize]
     public class UsersController(ApplicationDbContext _db, IPasswordHasher<UserAccount> _passwordHasher) : ControllerBase
     {
+        private int GetCurrentUserId() =>
+            int.Parse(User.FindFirst("id")?.Value ?? "0");
+
+        private bool IsAdmin() =>
+            User.IsInRole("Admin") ||
+            User.FindFirst("role")?.Value == "Admin" ||
+            User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value == "Admin";
+
+
         public class UserRequest
         {
             public string? Name { get; set; }
@@ -226,6 +235,11 @@ namespace RS1_2024_25.API.Endpoints
         [HttpPut("update-profile/{id}")]
         public async Task<IActionResult> UpdateProfile(int id, [FromForm] UserRequest request)
         {
+            if (!IsAdmin() && id != GetCurrentUserId())
+                return Forbid();
+
+
+
             var user = await _db.Users.FindAsync(id);
             if (user == null)
                 return NotFound("User not found.");
@@ -277,6 +291,10 @@ namespace RS1_2024_25.API.Endpoints
         [HttpPut("update-info/{id}")]
         public async Task<IActionResult> UpdateInfo(int id, [FromBody] UpdateProfileRequest request)
         {
+
+            if (!IsAdmin() && id != GetCurrentUserId())
+                return Forbid();
+
             var user = await _db.Users.FindAsync(id);
             if (user == null)
                 return NotFound("User not found.");

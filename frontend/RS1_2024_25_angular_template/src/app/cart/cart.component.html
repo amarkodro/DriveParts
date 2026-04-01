@@ -79,10 +79,18 @@
           <hr class="line">
 
           <div class="d-flex justify-content-between information">
-            <span>Subtotal</span><span>{{ totalPrice }} KM</span>
+            <span>Subtotal</span><span>{{ totalPrice | number:'1.2-2' }} KM</span>
+          </div>
+          <div *ngIf="discount > 0" class="d-flex justify-content-between information">
+            <span class="text-success">Discount</span>
+            <span class="text-success">-{{ discount | number:'1.2-2' }} KM</span>
           </div>
           <div class="d-flex justify-content-between information">
-            <span>Total (Incl. taxes)</span><span>{{ finalTotal }} KM</span>
+            <span>Tax (17%)</span><span>{{ tax | number:'1.2-2' }} KM</span>
+          </div>
+          <div class="d-flex justify-content-between information">
+            <span><strong>Total (Incl. taxes)</strong></span>
+            <span><strong>{{ finalTotal | number:'1.2-2' }} KM</strong></span>
           </div>
         </form>
         <button

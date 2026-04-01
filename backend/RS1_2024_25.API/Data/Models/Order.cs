@@ -32,5 +32,7 @@ namespace RS1_2024_25.API.Data.Models
 
         public List<OrderItem> Items { get; set; }
 
+        public string? StripeSessionId { get; set; }
+
     }
 }

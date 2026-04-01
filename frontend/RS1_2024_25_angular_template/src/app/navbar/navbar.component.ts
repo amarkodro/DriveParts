@@ -338,7 +338,7 @@ export class NavbarComponent implements OnInit {
     }
   }
 
-  getCartTotal() {
+  getCartTotal(): number {
     return this.cartItems.reduce((sum, item) => sum + item.quantity * item.price, 0);
   }
 

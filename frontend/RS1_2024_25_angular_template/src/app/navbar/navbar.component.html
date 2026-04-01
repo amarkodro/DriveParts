@@ -52,10 +52,12 @@
           </div>
 
           <div class="cart-footer">
-            <p class="total">Total: {{ getCartTotal()}} KM</p>
-            <button (click)="clearEntireCart(); $event.stopPropagation()" class="clear-cart-btn">Clear Cart</button>
-            <button class="checkout-btn" (click)="goToCart()">Go to Checkout</button>
-
+            <p class="total">Subtotal: {{ getCartTotal() | number:'1.2-2' }} KM</p>
+            <p class="total">Total (incl. 17% tax): {{ getCartTotal() * 1.17 | number:'1.2-2' }} KM</p>
+            <div class="cart-footer-buttons">
+              <button (click)="clearEntireCart(); $event.stopPropagation()" class="clear-cart-btn">Clear Cart</button>
+              <button class="checkout-btn" (click)="goToCart()">Go to Checkout</button>
+            </div>
           </div>
         </div>
       </div>
